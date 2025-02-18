@@ -1,0 +1,4 @@
+"node_modules/" 
+"backend/build/" 
+"ai-server/__pycache__/" 
+".env" 
