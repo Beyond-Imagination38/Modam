@@ -17,84 +17,58 @@ export function Main() {
       postId: 1,
       userId: 10,
       title: "세이노의 가르침",
-      location: "이대역",
       time: "2.11 8시",
-      transactionStatus: "ON_SALE",
       representativeImage: "https://picsum.photos/600/300",
-      createdAt: "2025-02-15T12:34:56",
-      updatedAt: "2025-02-15T12:34:56",
     },
     {
       postId: 4,
       userId: 20,
       title: "앵무새 죽이기",
-      location: "이대역",
       time: "2.15 9시",
-      transactionStatus: "ON_SALE",
       representativeImage: "https://picsum.photos/600/100",
-      createdAt: "2025-02-15T12:34:56",
-      updatedAt: "2025-02-15T12:34:56",
     },
     {
       postId: 5,
       userId: 20,
       title: "자아폭발",
-      location: "학교 정문",
       time: "2.13 4시",
-      transactionStatus: "RESERVED",
       representativeImage: "https://picsum.photos/600/200",
-      createdAt: "2025-02-14T15:12:30",
-      updatedAt: "2025-02-14T15:12:30",
     },
     {
       title: "참을 수 없는 존재의 가벼움",
       time: "2.11 8시",
-      transactionStatus: "SOLD_OUT",
       representativeImage: "https://picsum.photos/600/300?random=3",
-      category: "식품",
     },
 
     {
       title: "왜 나는 너를 사랑하는가",
       time: "2.11 10시",
-      transactionStatus: "ON_SALE",
       representativeImage: "https://picsum.photos/600/300?random=4",
-      category: "레저/스포츠",
     },
     {
       title: "데미안",
       time: "2.16 8시",
-      transactionStatus: "ON_SALE",
       representativeImage: "https://picsum.photos/600/300?random=5",
-      category: "전자기기",
     },
     {
       title: "죽음의 수용소에서",
       time: "2.15 8시",
-      transactionStatus: "RESERVED",
       representativeImage: "https://picsum.photos/600/300?random=6",
-      category: "패션",
     },
     {
       title: "싯다르타",
       time: "2.15 4시",
-      transactionStatus: "ON_SALE",
       representativeImage: "https://picsum.photos/600/300?random=7",
-      category: "생활가전",
     },
     {
       title: "소크라테스 익스프레스",
       time: "2.11 6시",
-      transactionStatus: "SOLD_OUT",
       representativeImage: "https://picsum.photos/600/300?random=8",
-      category: "식품",
     },
     {
       title: "소공녀",
       time: "2.11 8시",
-      transactionStatus: "ON_SALE",
       representativeImage: "https://picsum.photos/600/300?random=9",
-      category: "티켓/문화",
     },
   ];
 
@@ -156,6 +130,10 @@ export function Main() {
         <S.SearchButton>🔍</S.SearchButton>
         <Link to="/Register">
           <S.RegisterButton>모임 등록하기</S.RegisterButton>
+        </Link>
+
+        <Link to="/Chat">
+          <S.RegisterButton>채팅방 입장</S.RegisterButton>
         </Link>
       </S.SearchContainer>
 
