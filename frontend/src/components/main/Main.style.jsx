@@ -130,8 +130,6 @@ export const PageButton = styled.button`
   margin: 0 5px;
   padding: 8px 12px;
   border: none;
-  background-color: ${($active) => ($active ? "#007bff" : "#ddd")};
-  color: ${($active) => ($active ? "#fff" : "#000")};
   cursor: pointer;
   border-radius: 5px;
 

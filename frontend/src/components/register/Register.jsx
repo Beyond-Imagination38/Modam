@@ -11,13 +11,17 @@ export function Register() {
 
   const [images, setImages] = useState([]);
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [itemCondition, setitemCondition] = useState("");
+  const [meetingDate, setMeetingDate] = useState("");
+  const [time, setTime] = useState("");
   const [content, setContent] = useState("");
-  const [price, setPrice] = useState("");
-  const [isFree, setIsFree] = useState(false);
-  const [location, setLocation] = useState([]);
-  const [transactionStatus, setTransactionStatus] = useState("");
+
+  //이미지 파일을 업로드할 때 미리보기
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const imageUrls = files.map((file) => URL.createObjectURL(file));
+    setImages(imageUrls);
+  };
+
   /*
   useEffect(() => {
     if (isEditMode) {
@@ -27,18 +31,8 @@ export function Register() {
             method: "GET",
           });
           if (response) {
-            const postData = response.data || response;
-            setTitle(postData.title || "");
-            setCategory(postData.category || "");
-            setitemCondition(postData.itemCondition || "");
-            setContent(postData.content || "");
-            setPrice(postData.price || "");
-            setLocation(postData.location || "");
-            setTransactionStatus(postData.transactionStatus || "ON_SALE");
-
-            if (postData.price === 0) {
-              setIsFree(true);
-            }
+          //추가
+          
             if (postData.images) {
               setImages(postData.images);
             }
@@ -53,20 +47,13 @@ export function Register() {
   }, [isEditMode, postId]);
 */
 
-  //이미지 파일을 업로드할 때 미리보기
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setImages(imageUrls);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const postData = {
       title,
-      category,
-      itemCondition,
+      meetingDate,
+      time,
       content,
     };
 
@@ -138,18 +125,18 @@ export function Register() {
 
           <S.Label>날짜</S.Label>
           <S.Select
-            name="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            name="meetingDate"
+            value={meetingDate}
+            onChange={(e) => setMeetingDate(e.target.value)}
           >
             <option>선택하세요</option>
           </S.Select>
 
           <S.Label>시간</S.Label>
           <S.Select
-            name="itemCondition"
-            value={itemCondition}
-            onChange={(e) => setitemCondition(e.target.value)}
+            name="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
           >
             <option>선택하세요</option>
           </S.Select>

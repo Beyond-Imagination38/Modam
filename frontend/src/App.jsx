@@ -1,5 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Main, Home, Login, Signup, MyPage, Register } from "./components";
+import {
+  Main,
+  Home,
+  Login,
+  Signup,
+  MyPage,
+  Register,
+  Chat,
+} from "./components";
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
@@ -24,6 +32,7 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register/:postId" element={<Register />} />
+        <Route path="/chat" element={<Chat />} />
       </Routes>
     </BrowserRouter>
   );
