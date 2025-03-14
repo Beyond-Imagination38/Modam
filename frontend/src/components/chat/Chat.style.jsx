@@ -2,9 +2,15 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
-  flex-direction: column;
   height: 100vh;
   background: #f5f5f5;
+  flex-direction: row;
+`;
+
+export const ChatSection = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Header = styled.div`
@@ -32,7 +38,6 @@ export const NoteText = styled.div`
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
-  margin-left: auto;
   font-size: 14px;
 
   &:hover {
@@ -55,19 +60,51 @@ export const ExitButton = styled.button`
 
 export const ChatBox = styled.div`
   flex: 1;
-  width: auto;
   background: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  overflow-y: auto;
 `;
 
 export const Message = styled.div`
-  overflow-y: auto;
   margin-bottom: 15px;
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 5px;
   background: #f9f9f9;
+`;
+
+export const MemoSection = styled.div`
+  width: 300px;
+  padding: 10px;
+  border-left: 1px solid #ccc;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  order: 1;
+`;
+
+export const MemoTitle = styled.h3`
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #333;
+`;
+
+export const MemoInput = styled.textarea`
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: none;
+  box-sizing: border-box;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+  }
 `;
 
 export const InputContainer = styled.div`
