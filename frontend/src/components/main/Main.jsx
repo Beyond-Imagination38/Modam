@@ -120,7 +120,7 @@ export function Main() {
       <S.SearchContainer>
         <S.SearchInput
           type="text"
-          placeholder="상품명 검색"
+          placeholder="모임명 검색"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -134,6 +134,9 @@ export function Main() {
 
         <Link to="/Chat">
           <S.RegisterButton>채팅방 입장</S.RegisterButton>
+        </Link>
+        <Link to="/Bookreport">
+          <S.RegisterButton>소감문 제출하기</S.RegisterButton>
         </Link>
       </S.SearchContainer>
 

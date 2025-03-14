@@ -103,7 +103,7 @@ export const MemoInput = styled.textarea`
   outline: none;
 
   &:focus {
-    border-color: #007bff;
+    border-color: rgb(18, 1, 114);
   }
 `;
 
