@@ -15,7 +15,7 @@ export default function Header() {
 
   return (
     <S.Header>
-      <Link to="/">
+      <Link to="/main">
         <S.Logo>Modam</S.Logo>
       </Link>
       <S.Nav>
@@ -24,9 +24,6 @@ export default function Header() {
             <S.Button>로그인</S.Button>
           </Link>
         )}
-        <Link to="/main">
-          <S.Button>독서모임</S.Button>
-        </Link>
         <Link to="/mypage">
           <S.MypageButton>
             <img src={buttonmypagepng} alt="마이페이지" />

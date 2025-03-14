@@ -7,6 +7,7 @@ import {
   MyPage,
   Register,
   Chat,
+  Bookreport,
 } from "./components";
 import { createGlobalStyle } from "styled-components";
 
@@ -33,6 +34,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/register/:postId" element={<Register />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/bookreport" element={<Bookreport />} />
       </Routes>
     </BrowserRouter>
   );
