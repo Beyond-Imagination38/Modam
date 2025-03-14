@@ -58,7 +58,7 @@ export function Register() {
     };
 
     console.log("📌 서버로 보낼 데이터:", JSON.stringify(postData, null, 2));
-
+    /*
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -87,7 +87,7 @@ export function Register() {
     } catch (error) {
       console.error("🚨 요청 실패:", error);
       alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
-    }
+    }*/
   };
 
   return (
