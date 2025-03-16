@@ -8,6 +8,7 @@ import {
   Register,
   Chat,
   Bookreport,
+  Detail,
 } from "./components";
 import { createGlobalStyle } from "styled-components";
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="/register/:postId" element={<Register />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/bookreport" element={<Bookreport />} />
+        <Route path="/post/:postId" element={<Detail />} />
       </Routes>
     </BrowserRouter>
   );

@@ -16,12 +16,12 @@ export function Main() {
     {
       postId: 1,
       userId: 10,
-      title: "세이노의 가르침",
+      title: "군주론",
       time: "2.11 8시",
       representativeImage: "https://picsum.photos/600/300",
     },
     {
-      postId: 4,
+      postId: 2,
       userId: 20,
       title: "앵무새 죽이기",
       time: "2.15 9시",
@@ -130,13 +130,6 @@ export function Main() {
         <S.SearchButton>🔍</S.SearchButton>
         <Link to="/Register">
           <S.RegisterButton>모임 등록하기</S.RegisterButton>
-        </Link>
-
-        <Link to="/Chat">
-          <S.RegisterButton>채팅방 입장</S.RegisterButton>
-        </Link>
-        <Link to="/Bookreport">
-          <S.RegisterButton>소감문 제출하기</S.RegisterButton>
         </Link>
       </S.SearchContainer>
 
