@@ -24,17 +24,41 @@ repositories {
 }
 
 dependencies {
+
+	// Spring Boot 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// MySQL 연결
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// DevTools & Lombok 설정
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// Spring Security (JWT 인증 필요 시)
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// ➕ CORS 문제 해결을 위한 추가 의존성 (Spring Security 사용 시 권장)
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	//CORS 정책 문제 해결을 위한 WebFlux 추가
+
+	// ➕ AI 서버(Flask)와 통신을 위한 REST 클라이언트 (Flask 연동)
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	// WebClient 사용 가능
+
+	//테스트 관련 의존성
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// ➕ JSON 파싱을 위한 Jackson (Flask 응답 처리 시 필요할 수도 있음)
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+
+
 }
 
 tasks.named('test') {
