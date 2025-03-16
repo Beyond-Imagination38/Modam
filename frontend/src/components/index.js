@@ -7,3 +7,4 @@ export * from "./signup";
 export * from "./register";
 export * from "./chat";
 export * from "./bookreport";
+export * from "./detail";

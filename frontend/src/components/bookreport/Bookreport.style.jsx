@@ -35,7 +35,7 @@ export const Textarea = styled.textarea`
   border: 1px solid #ccc;
   border-radius: 5px;
   resize: none;
-  background-color: ${(props) => (props.readOnly ? "#f5f5f5" : "#fff")};
+  background-color: ${(props) => (props.readOnly ? "#65558f5" : "#fff")};
   color: ${(props) => (props.readOnly ? "#aaa" : "black")};
   box-sizing: border-box;
 
@@ -66,11 +66,10 @@ export const Button = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background-color: ${(props) => props.bg || "#d9d9d9"};
-  color: ${(props) => props.color || "black"};
+  background-color: #65558f;
+  color: white;
 
   &:hover {
-    background-color: ${(props) =>
-      props.bgHover || (props.bg === "#d9d9d9" ? "#c7c7c7" : "#5c4091")};
+    background-color: #c7c7c7;
   }
 `;
