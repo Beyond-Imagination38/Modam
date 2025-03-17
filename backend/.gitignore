@@ -1,5 +1,8 @@
 src/main/resources/application.properties
 
+.idea/
+out/
+
 HELP.md
 .gradle
 build/
