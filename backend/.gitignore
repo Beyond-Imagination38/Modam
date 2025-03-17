@@ -1,7 +1,6 @@
 # 로컬 전용 설정 파일 (깃허브에 올리지 않음)
 src/main/resources/application_2nd.properties
 
-
 # IntelliJ IDEA 프로젝트 파일들 무시
 .idea/
 
