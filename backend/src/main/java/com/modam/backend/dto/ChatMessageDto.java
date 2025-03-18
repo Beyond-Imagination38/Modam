@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatMessageDto {
-    private String roomId;
-    private String sender;
+    private int clubId;
+    private String userId;
     private String content;
-    private String timestamp;
+    private LocalDateTime timestamp;
 }

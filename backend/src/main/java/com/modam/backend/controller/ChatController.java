@@ -19,14 +19,15 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/chat/{roomId}")
-    public ChatMessageDto sendMessage(ChatMessageDto message) {
-        return chatService.saveMessage(message);
+    @MessageMapping("/chat/{clubId}")
+    @SendTo("/topic/chat/{clubId}")
+    public ChatMessageDto sendMessage(@PathVariable int clubId, ChatMessageDto message) {
+        return chatService.saveMessage(clubId, message);
     }
 
-    @GetMapping("/history/{roomId}")
-    public List<ChatMessageDto> getChatHistory(@PathVariable String roomId) {
-        return chatService.getChatHistory(roomId);
+
+    @GetMapping("/history/{clubId}")
+    public List<ChatMessageDto> getChatHistory(@PathVariable String clubId) {
+        return chatService.getChatHistory(clubId);
     }
 }
