@@ -23,7 +23,7 @@ public class UserService {
         user.setUserId(userDto.getUserId());
         user.setUserName(userDto.getUserName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setPw(userDto.getPw());
         user.setProfileImage(userDto.getProfileImage());
         //user.setCoins(userDto.getCoins());
 
@@ -33,7 +33,7 @@ public class UserService {
     // 로그인
     public boolean login(UserDto userDto) {
         Optional<User> user = userRepository.findByUserId(userDto.getUserId());
-        return user.isPresent() && user.get().getPassword().equals(userDto.getPassword());
+        return user.isPresent() && user.get().getPw().equals(userDto.getPw());
     }
 
 
@@ -46,7 +46,7 @@ public class UserService {
                 user.getUserId(),
                 user.getUserName(),
                 user.getEmail(),
-                user.getPassword(),
+                user.getPw(),
                 user.getProfileImage(),
                 user.getCoins()
         );

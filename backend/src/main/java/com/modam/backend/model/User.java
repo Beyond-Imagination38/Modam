@@ -22,8 +22,8 @@ public class User {
     @Column(name = "email", length = 255, nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", length = 255, nullable = false)
-    private String password;  // pw → password 변경 (더 직관적)
+    @Column(name = "pw", length = 255, nullable = false)
+    private String pw;
 
     @Column(name = "profileImage", columnDefinition = "TEXT")
     private String profileImage;
