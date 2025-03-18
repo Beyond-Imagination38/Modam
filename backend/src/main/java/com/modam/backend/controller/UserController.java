@@ -35,7 +35,7 @@ public class UserController {
         return ResponseEntity.ok("로그아웃 완료");
     }
 
-    // 회원 정보 조회 (userId 기반 조회)
+    // 회원 정보 조회 (userId 기반)
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUserInfo(@PathVariable String userId) {
         UserDto userDto = userService.getUserByUserId(userId);  // userId로 조회하도록 변경
