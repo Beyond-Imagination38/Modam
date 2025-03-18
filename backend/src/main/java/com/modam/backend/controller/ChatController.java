@@ -27,7 +27,7 @@ public class ChatController {
 
 
     @GetMapping("/history/{clubId}")
-    public List<ChatMessageDto> getChatHistory(@PathVariable String clubId) {
+    public List<ChatMessageDto> getChatHistory(@PathVariable int clubId) {
         return chatService.getChatHistory(clubId);
     }
 }
