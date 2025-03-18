@@ -3,6 +3,8 @@ package com.modam.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -14,8 +16,17 @@ public class ChatMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String roomId;
-    private String sender;
+    @ManyToOne
+    @JoinColumn(name = "clubId", nullable = false)
+    private BookClub bookClub;
+
+    @Column(nullable = false)
+    private String userId;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
-    private String timestamp;
+
+    @Column(nullable = false)
+    private LocalDateTime timestamp; // 기존 String → LocalDateTime으로 변경;
+
 }
