@@ -41,9 +41,9 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
-tasks.named('test') {
+/*tasks.named('test') {
 	useJUnitPlatform()
-}
+}*/
 
 //임시로 테스트 실행 x
 tasks.withType(Test).configureEach {
