@@ -17,7 +17,7 @@ export function Chat() {
     const client = Stomp.over(socket);
 
     client.connet({}, () => {
-      client.subscribe("/topic/messages", (message) => {
+      client.subscribe("/topic/chat", (message) => {
         const receiveMessage = JSON.parse(message.body);
         setMessages((prevMessages) => [...prevMessages, receiveMessage]);
       });
@@ -43,7 +43,7 @@ export function Chat() {
         userName,
         content: message
       };
-      stompClient.send('/chat',         {
+      stompClient.send('/topic/chat',         {
         Authorization: 'Bearer ' + accessToken,
         'Content-Type': 'application/json',
       },
