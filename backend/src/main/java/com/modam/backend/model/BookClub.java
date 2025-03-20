@@ -22,6 +22,9 @@ public class BookClub {
     @JoinColumn(name = "hostId", nullable = false)
     private User host;
 
+    @Column(name = "bookId", nullable = false) // **변경된 부분**
+    private String bookId;
+
     @Column(name = "meetingDate", nullable = false)
     private LocalDateTime meetingDate;
 
