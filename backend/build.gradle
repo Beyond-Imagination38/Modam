@@ -34,16 +34,16 @@ dependencies {
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+
 }
 
-/*tasks.named('test') {
+tasks.named('test') {
 	useJUnitPlatform()
-}*/
+}
 
 //임시로 테스트 실행 x
 tasks.withType(Test).configureEach {
