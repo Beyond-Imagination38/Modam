@@ -11,6 +11,13 @@ export const Page = styled.div`
 export const ContentWrap = styled.div`
   margin-top: 32px;
   flex: 1;
+  position: relative;
+`;
+
+export const InputTitle = styled.div`
+  font-size: 12px;
+  font-weight: 600;
+  color: #262626;
 `;
 
 export const Title = styled.h1`
@@ -24,12 +31,6 @@ export const Title = styled.h1`
   &:hover {
     transform: scale(1.1);
   }
-`;
-
-export const InputTitle = styled.div`
-  font-size: 12px;
-  font-weight: 600;
-  color: #262626;
 `;
 
 export const InputWrap = styled.div`
@@ -73,20 +74,24 @@ export const ErrorMessageWrap = styled.div`
   font-size: 12px;
 `;
 
-export const BottomText = styled.div`
+export const SignupLink = styled.a`
+  display: block;
   margin-top: 16px;
   font-size: 14px;
+  color: rgb(2, 2, 2);
+  text-align: right;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+export const GoButton = styled.p`
+  position: absolute;
+  font-size: 14px;
   color: rgb(0, 0, 0);
-  text-align: center;
+  cursor: pointer;
 
-  span {
-    color: #65558f;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: #56487a;
-    }
+  &:hover {
+    text-decoration: underline;
   }
 `;

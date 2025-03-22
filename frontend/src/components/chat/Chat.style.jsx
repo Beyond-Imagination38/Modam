@@ -3,14 +3,20 @@ import styled from "styled-components";
 export const Container = styled.div`
   display: flex;
   height: 100vh;
-  background: #f5f5f5;
-  flex-direction: row;
+  background: rgb(255, 255, 255);
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
 `;
 
 export const ChatSection = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  max-width: 700px;
+  height: 100%;
 `;
 
 export const Header = styled.div`
@@ -21,11 +27,13 @@ export const Header = styled.div`
   padding: 12px 16px;
   color: white;
   font-size: 18px;
+  border-radius: 8px;
 `;
 
 export const RightSection = styled.div`
   display: flex;
   align-items: center;
+  gap: 8px;
 `;
 
 export const Title = styled.div`
@@ -41,7 +49,7 @@ export const NoteText = styled.div`
   font-size: 14px;
 
   &:hover {
-    background-color: #ccc;
+    background-color: #eaeaea;
   }
 `;
 
@@ -52,9 +60,10 @@ export const ExitButton = styled.button`
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
+  border: 1px solid #ccc;
 
   &:hover {
-    background-color: #ccc;
+    background-color: #eaeaea;
   }
 `;
 
@@ -62,26 +71,28 @@ export const ChatBox = styled.div`
   flex: 1;
   background: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 16px;
   overflow-y: auto;
+  border-radius: 8px;
 `;
 
 export const Message = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 8px;
+  border-radius: 6px;
   background: #f9f9f9;
 `;
 
 export const MemoSection = styled.div`
-  width: 300px;
+  width: 250px;
   padding: 10px;
   border-left: 1px solid #ccc;
   background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
-  order: 1;
+  border-radius: 8px;
+  height: 100%;
 `;
 
 export const MemoTitle = styled.h3`
@@ -94,11 +105,10 @@ export const MemoInput = styled.textarea`
   flex: 1;
   width: 100%;
   height: 100%;
-  padding: 10px;
+  padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
-  resize: none;
   box-sizing: border-box;
   outline: none;
 
@@ -111,7 +121,8 @@ export const InputContainer = styled.div`
   display: flex;
   align-items: center;
   background: #e0e0e0;
-  padding: 8px 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
 `;
 
 export const Input = styled.input`
@@ -121,7 +132,6 @@ export const Input = styled.input`
   border-radius: 20px;
   outline: none;
   font-size: 16px;
-  margin: 0 8px;
   background: white;
 `;
 
@@ -134,6 +144,6 @@ export const SendButton = styled.button`
   font-weight: bold;
 
   &:hover {
-    background-color: #ccc;
+    background-color: #eaeaea;
   }
 `;

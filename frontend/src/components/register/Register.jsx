@@ -15,7 +15,6 @@ export function Register() {
   const [time, setTime] = useState("");
   const [content, setContent] = useState("");
 
-  //이미지 파일을 업로드할 때 미리보기
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const imageUrls = files.map((file) => URL.createObjectURL(file));
@@ -39,7 +38,7 @@ export function Register() {
           }
         } catch (err) {
           console.error(err);
-          alert("게시글 정보를 불러오는 데 실패했습니다.");
+          alert("모임 정보를 불러오는 데 실패했습니다.");
         }
       }
       fetchPostDetail();
@@ -56,7 +55,8 @@ export function Register() {
       time,
       content,
     };
-
+    alert("모임이 등록되었습니다.");
+    navigate("/main");
     console.log("📌 서버로 보낼 데이터:", JSON.stringify(postData, null, 2));
     /*
     try {
@@ -75,10 +75,10 @@ export function Register() {
         body: JSON.stringify(postData),
       });
 
-      console.log("📌 게시글 등록 API 응답:", response);
+      console.log("📌 모임 등록 API 응답:", response);
 
       if (response && (response.status === 200 || response.status === 201)) {
-        alert("게시글이 등록되었습니다.");
+        alert("모임이 등록되었습니다.");
         navigate("/main");
       } else {
         console.error("🚨 오류 응답:", response);
@@ -124,22 +124,18 @@ export function Register() {
           />
 
           <S.Label>날짜</S.Label>
-          <S.Select
-            name="meetingDate"
+          <S.Input
+            type="date"
             value={meetingDate}
             onChange={(e) => setMeetingDate(e.target.value)}
-          >
-            <option>선택하세요</option>
-          </S.Select>
+          ></S.Input>
 
           <S.Label>시간</S.Label>
-          <S.Select
-            name="time"
+          <S.Input
+            type="time"
             value={time}
             onChange={(e) => setTime(e.target.value)}
-          >
-            <option>선택하세요</option>
-          </S.Select>
+          />
 
           <S.Label>설명</S.Label>
           <S.TextArea
