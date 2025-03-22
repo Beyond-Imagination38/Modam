@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as S from "./Bookreport.style";
+import Header from "../common/Header";
 
 export function Bookreport() {
   const [input, setInput] = useState("");
   const [editedFeedback, setEditedFeedback] = useState("");
   const [remainingEdits, setRemainingEdits] = useState(5);
-  const navigate = useNavigate();
+  const { postId } = 1;
 
   const handleSubmit = () => {
-    navigate("/chat");
+    alert("소감문이 성공적으로 제출되었습니다.");
   };
 
   const handleEdit = async () => {
@@ -57,7 +58,7 @@ export function Bookreport() {
 
   return (
     <S.Container>
-      <S.Header>소감문 작성</S.Header>
+      <Header />
       <S.TextareaContainer>
         <S.Textarea
           placeholder="소감문을 입력해주세요. 첨삭은 최대 5번 가능합니다!"
@@ -76,9 +77,15 @@ export function Bookreport() {
         <S.Button onClick={handleEdit} bg="#674ea7" color="white">
           동의 후 첨삭
         </S.Button>
-        <S.Button onClick={handleSubmit} bg="#674ea7" color="white">
-          제출
-        </S.Button>
+        <Link
+          to={`/post/${postId}`}
+          key={postId}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <S.Button onClick={handleSubmit} bg="#674ea7" color="white">
+            제출
+          </S.Button>
+        </Link>
       </S.Actions>
     </S.Container>
   );

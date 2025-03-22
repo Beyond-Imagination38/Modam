@@ -11,17 +11,22 @@ export function Detail() {
     clubId: 2,
     bookTitle: "군주론",
     author: "니콜로 마키아벨리",
-    meetingDate: "2025-02-13T19:30:00Z",
+    meetingDate: "2025-02-13 9:30",
     maxMembers: 4,
     currentMembers: 2,
     summary:
       "책의 의미를 현대적 관점에서 해석하며 현실 정치와 리더십에 대해 탐구합니다.",
   });
   const { postId } = useParams();
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     setData(data);
   }, [postId]);
+
+  const handleHeartClick = () => {
+    setLiked(!liked);
+  };
 
   /*
   useEffect(() => {
@@ -66,12 +71,14 @@ export function Detail() {
           </div>
           <S.ButtonContainer>
             <Link to="/Chat">
-              <S.Button primary>모임시작</S.Button>
+              <S.Button primary>모임 시작</S.Button>
             </Link>
             <Link to="/Bookreport">
               <S.Button>독후감 작성</S.Button>
             </Link>
-            <S.HeartIcon>♡</S.HeartIcon>
+            <S.HeartIcon onClick={handleHeartClick}>
+              {liked ? "❤" : "♡"}
+            </S.HeartIcon>
           </S.ButtonContainer>
         </S.Content>
       </S.Container>

@@ -17,17 +17,16 @@ export function Signup() {
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
-    const regex = //정규표현식- 영문, 문자 또는 숫자... 뒤에 com과 같은 최상위 도메인이 들어갈 자리 2-3자리 지정
+    const regex =
       /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
     if (regex.test(e.target.value)) {
-      setEmailValid(true); //valid하면 값을 true로 변경
+      setEmailValid(true);
     } else {
-      setEmailValid(false); //valid 하지 않으면 false로 유지
+      setEmailValid(false);
     }
   };
 
   const handlepw = (e) => {
-    //event 받아줌
     setpw(e.target.value);
     const regex = /^[A-Za-z0-9]{8,20}$/;
     if (regex.test(e.target.value)) {
@@ -42,6 +41,8 @@ export function Signup() {
       alert("입력한 정보를 다시 확인해주세요.");
       return;
     }
+    alert("회원가입이 완료되었습니다!");
+    navigate("/login");
     /*
     try {
       const signupResponse = await fetchApi(API_URLS.signup, {
@@ -50,21 +51,20 @@ export function Signup() {
         body: JSON.stringify({ email, userName, pw, confirmpw }),
       });
 
-      console.log("📌 회원가입 API 응답:", signupResponse);
+      console.log("회원가입 API 응답:", signupResponse);
 
       if (signupResponse.status === 200 && signupResponse.data?.userId) {
-        // ✅ 회원가입 후 바로 로그인 요청
         const loginResponse = await fetchApi(API_URLS.login, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, pw }),
         });
 
-        console.log("📌 로그인 API 응답:", loginResponse);
+        console.log("로그인 API 응답:", loginResponse);
 
         if (loginResponse.status === 200 && loginResponse.data?.token) {
           localStorage.setItem("token", loginResponse.data.token);
-          localStorage.setItem("userId", loginResponse.data.userId); // ✅ userId 저장
+          localStorage.setItem("userId", loginResponse.data.userId); 
 
           alert("회원가입이 완료되었습니다! 자동 로그인되었습니다.");
           navigate("/main");
@@ -78,7 +78,7 @@ export function Signup() {
         alert(signupResponse?.data?.error || "회원가입에 실패했습니다.");
       }
     } catch (error) {
-      console.error("🚨 회원가입 오류:", error);
+      console.error("회원가입 오류:", error);
       alert(
         error.response?.data?.error ||
           "서버 오류가 발생했습니다. 다시 시도해주세요."
@@ -88,6 +88,7 @@ export function Signup() {
 
   return (
     <S.Page>
+      <S.Title onClick={() => navigate("/")}>Modam</S.Title>
       <S.ContentWrap>
         <S.InputTitle marginTop="100px">이메일</S.InputTitle>
         <S.InputWrap>
@@ -133,6 +134,10 @@ export function Signup() {
         </S.InputWrap>
 
         <S.BottomButton onClick={handleSignup}>회원가입</S.BottomButton>
+        <S.BottomText>
+          이미 계정이 있으시다면?{" "}
+          <span onClick={() => navigate("/login")}>로그인하기</span>
+        </S.BottomText>
       </S.ContentWrap>
     </S.Page>
   );
