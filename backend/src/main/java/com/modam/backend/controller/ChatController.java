@@ -22,7 +22,7 @@ public class ChatController {
     @MessageMapping("/chat/{clubId}")
     @SendTo("/topic/chat/{clubId}")
     public ChatMessageDto sendMessage(@PathVariable int clubId, ChatMessageDto message) {
-        return chatService.saveMessage(clubId, message);
+        return chatService.saveChatMessage(clubId, message);
     }
 
 
