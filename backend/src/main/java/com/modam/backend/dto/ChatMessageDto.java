@@ -13,5 +13,6 @@ public class ChatMessageDto {
     private int clubId;
     private String userId;
     private String content;
-    private LocalDateTime timestamp;
+    private LocalDateTime createdTime;  // 이름 통일
 }
+
