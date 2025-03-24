@@ -2,13 +2,14 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
-  width: 100%;
+  width: 70%;
   height: 700px;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
+  margin: 0 auto;
+  position: relative;
 `;
 
 export const BookCover = styled.img`
@@ -73,11 +74,13 @@ export const Button = styled.button`
 `;
 
 export const HeartIcon = styled.button`
+  position: absolute;
+  top: 16px;
+  right: 16px;
   background: none;
   border: none;
   font-size: 32px;
   color: #ff6b6b;
   cursor: pointer;
   padding: 0;
-  margin-left: auto;
 `;
