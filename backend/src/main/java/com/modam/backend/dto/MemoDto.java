@@ -1,19 +1,21 @@
 package com.modam.backend.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-public class ChatMessageDto {
+@AllArgsConstructor
+public class MemoDto {
+    private Long memoId;
     private int clubId;
     private String userId;
-    private String userName;
     private String content;
-    private LocalDateTime createdTime;  // 이름 통일
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
 }
-
