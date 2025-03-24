@@ -1,7 +1,12 @@
 package com.modam.backend.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -40,7 +45,16 @@ public class BookClub {
     @Column(name = "searchIndex", columnDefinition = "TEXT")
     private String searchIndex;
 
-    @Column(name = "createdTime", nullable = false, updatable = false)
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdTime;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedTime;
+
+
+    /*    @Column(name = "createdTime", nullable = false, updatable = false)
     private LocalDateTime createdTime;
 
     @Column(name = "updatedTime")
@@ -54,5 +68,5 @@ public class BookClub {
     @PreUpdate
     protected void onUpdate() {
         updatedTime = LocalDateTime.now();
-    }
+    }*/
 }

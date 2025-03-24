@@ -1,7 +1,12 @@
 package com.modam.backend.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -31,10 +36,18 @@ public class ChatMessage {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(nullable = false)
-    private LocalDateTime createdTime; // `timestamp` → `createdTime` 변경
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdTime;
 
-/*    // 새로운 생성자 (messageId 포함)
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedTime;
+
+    //@Column(nullable = false)
+    //private LocalDateTime createdTime; // `timestamp` → `createdTime` 변경
+
+    /*    // 새로운 생성자 (messageId 포함)
     public ChatMessage(Long messageId, BookClub bookClub, String userId, String userName, String content, LocalDateTime createdTime) {
         this.messageId = messageId;
         this.bookClub = bookClub;

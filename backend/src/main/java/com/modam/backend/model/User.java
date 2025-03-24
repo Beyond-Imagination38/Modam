@@ -1,9 +1,16 @@
 package com.modam.backend.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "User")  // 테이블명
@@ -30,4 +37,12 @@ public class User {
 
     @Column(name = "coins", nullable = false, columnDefinition = "INT DEFAULT 0")
     private int coins;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdTime;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedTime;
 }
