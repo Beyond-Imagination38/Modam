@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,8 +35,8 @@ public class ChatService {
                 bookClub,
                 dto.getUserId(),
                 user.getUserName(), // userName 필드 추가 활용
-                dto.getContent(),
-                LocalDateTime.now() // createdTime으로 통일
+                dto.getContent()
+                //LocalDateTime.now() // createdTime으로 통일
         );
 
         chatMessageRepository.save(chatMessage);

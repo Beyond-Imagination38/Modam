@@ -20,49 +20,35 @@ import java.time.LocalDateTime;
 public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "messageId") // `id` → `messageId`
+    @Column(name = "messageId")
     private Long messageId;
 
     @ManyToOne
     @JoinColumn(name = "clubId", nullable = false)
     private BookClub bookClub;
 
-    @Column(nullable = false)
+    @Column(name = "userId")
     private String userId;
 
-    @Column(nullable = false)
+    @Column(name = "userName")
     private String userName;  // 추가
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
+    @Column(name = "createdTime", nullable = false, updatable = false)
     private LocalDateTime createdTime;
 
     @UpdateTimestamp
-    @Column(nullable = false)
+    @Column(name = "updatedTime", nullable = false)
     private LocalDateTime updatedTime;
 
-    //@Column(nullable = false)
-    //private LocalDateTime createdTime; // `timestamp` → `createdTime` 변경
-
-    /*    // 새로운 생성자 (messageId 포함)
-    public ChatMessage(Long messageId, BookClub bookClub, String userId, String userName, String content, LocalDateTime createdTime) {
-        this.messageId = messageId;
+    public ChatMessage(BookClub bookClub, String userId, String userName, String content) {
         this.bookClub = bookClub;
         this.userId = userId;
         this.userName = userName;
         this.content = content;
-        this.createdTime = createdTime;
-    }*/
-
-    // ID 없이 생성할 경우 자동으로 생성되도록 하는 생성자
-    public ChatMessage(BookClub bookClub, String userId, String userName, String content, LocalDateTime createdTime) {
-        this.bookClub = bookClub;
-        this.userId = userId;
-        this.userName = userName;
-        this.content = content;
-        this.createdTime = createdTime;
     }
+
 }
