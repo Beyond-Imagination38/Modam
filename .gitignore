@@ -1,9 +1,12 @@
-"node_modules/" 
-"backend/build/"
-
-"ai-server/__pycache__/" 
-".env" 
-"out/"
+node_modules/
+backend/build/
+.env
+out/
 /.idea/
 
-out/
+backend.tar.gz
+
+
+"ai-server/__pycache__/" 
+
+
