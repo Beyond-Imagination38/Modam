@@ -19,11 +19,11 @@ public class UserService {
     // 회원가입
     public void register(UserDto user_dto) {
         User user = new User();
-        user.setUser_id(user_dto.getUser_id());
-        user.setUser_name(user_dto.getUser_name());
+        user.setUserId(user_dto.getUser_id());
+        user.setUserName(user_dto.getUser_name());
         user.setEmail(user_dto.getEmail());
         user.setPw(user_dto.getPw());
-        user.setProfile_image(user_dto.getProfile_image());
+        user.setProfileImage(user_dto.getProfile_image());
         user_repository.save(user);
     }
 
@@ -34,16 +34,16 @@ public class UserService {
     }
 
     // 회원 정보 조회
-    public UserDto getUserByUserId(String user_id) {
+    public UserDto getUserbyuserid(String user_id) {
         User user = user_repository.findByUserId(user_id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return new UserDto(
-                user.getUser_id(),
-                user.getUser_name(),
+                user.getUserId(),
+                user.getUserName(),
                 user.getEmail(),
                 user.getPw(),
-                user.getProfile_image(),
+                user.getProfileImage(),
                 user.getCoins()
         );
     }

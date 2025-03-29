@@ -20,13 +20,14 @@ public class MemoController {
 
     @PostMapping("/{room_id}/memo")
     public MemoDto saveMemo(@PathVariable("room_id") int room_id, @RequestBody MemoDto dto) {
-        dto.setClub_id(room_id); // URL에서 받은 room_id를 DTO에 설정
+        dto.setClubId(room_id); // URL에서 받은 room_id를 DTO에 설정
         return memo_service.saveMemo(dto);
     }
 
     @PostMapping("/{room_id}/memos")
     public List<MemoDto> getMemos(@PathVariable("room_id") int room_id) {
-        return memo_service.getMemosByClubId(room_id);
+        return memo_service.getMemosbyclubid(room_id);
     }
 }
 */
+

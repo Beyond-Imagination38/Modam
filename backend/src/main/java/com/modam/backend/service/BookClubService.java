@@ -15,7 +15,7 @@ public class BookClubService {
         this.book_club_repository = book_club_repository;
     }
 
-    public List<BookClub> getBookClubsByBookId(String book_id) {
+    public List<BookClub> getBookclubsbybookid(String book_id) {
         return book_club_repository.findByBookId(book_id);
     }
 }

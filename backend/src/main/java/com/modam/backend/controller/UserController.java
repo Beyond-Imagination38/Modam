@@ -37,8 +37,8 @@ public class UserController {
 
     // 회원 정보 조회
     @GetMapping("/{user_id}")
-    public ResponseEntity<UserDto> getUserInfo(@PathVariable("user_id") String user_id) {
-        UserDto user_dto = user_service.getUserByUserId(user_id);
+    public ResponseEntity<UserDto> getUserinfo(@PathVariable("user_id") String user_id) {
+        UserDto user_dto = user_service.getUserbyuserid(user_id);
         return ResponseEntity.ok(user_dto);
     }
 }
