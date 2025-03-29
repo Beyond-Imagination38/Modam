@@ -12,7 +12,8 @@ RUN chmod +x ./gradlew
 
 # application_2nd.properties 명시적으로 복사
 # 이미 COPY . /app 으로 포함되긴 하지만 명시적으로 한 번 더
-COPY application_2nd.properties /app/application_2nd.properties
+COPY src/main/resources/application_2nd.properties /app/src/main/resources/application_2nd.properties
+
 
 # 앱 빌드
 RUN ./gradlew build --no-daemon
