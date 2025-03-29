@@ -8,13 +8,14 @@ import java.util.List;
 
 @Service
 public class BookClubService {
-    private final BookClubRepository bookClubRepository;
 
-    public BookClubService(BookClubRepository bookClubRepository) {
-        this.bookClubRepository = bookClubRepository;
+    private final BookClubRepository book_club_repository;
+
+    public BookClubService(BookClubRepository book_club_repository) {
+        this.book_club_repository = book_club_repository;
     }
 
-    public List<BookClub> getBookClubsByBookId(String bookId) { // 기존 int → String 변경
-        return bookClubRepository.findByBookId(bookId);
+    public List<BookClub> getBookClubsByBookId(String book_id) {
+        return book_club_repository.findByBookId(book_id);
     }
 }

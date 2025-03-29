@@ -6,40 +6,41 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "memo")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "memo")
 public class Memo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memoId;
+    @Column(name = "memo_id")
+    private Long memo_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clubId", nullable = false)
-    private BookClub bookClub;
+    @JoinColumn(name = "club_id", nullable = false)
+    private BookClub book_club;
 
-    @Column(nullable = false)
-    private String userId;
+    @Column(name = "user_id", nullable = false)
+    private String user_id;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "createdTime", nullable = false, updatable = false)
-    private LocalDateTime createdTime;
+    @Column(name = "created_time", nullable = false, updatable = false)
+    private LocalDateTime created_time;
 
-    @Column(name = "updatedTime")
-    private LocalDateTime updatedTime;
+    @Column(name = "updated_time")
+    private LocalDateTime updated_time;
 
     @PrePersist
     protected void onCreate() {
-        this.createdTime = LocalDateTime.now();
+        this.created_time = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedTime = LocalDateTime.now();
+        this.updated_time = LocalDateTime.now();
     }
 }

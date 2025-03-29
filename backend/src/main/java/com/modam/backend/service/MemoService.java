@@ -19,43 +19,44 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MemoService {
-    private final MemoRepository memoRepository;
-    private final BookClubRepository bookClubRepository;
 
-    public List<MemoDto> getMemosByClubId(int clubId) {
-        return memoRepository.findByBookClub_ClubId(clubId).stream()
+    private final MemoRepository memo_repository;
+    private final BookClubRepository book_club_repository;
+
+    public List<MemoDto> getMemosByClubId(int club_id) {
+        return memo_repository.findByBookClub_ClubId(club_id).stream()
                 .map(memo -> new MemoDto(
-                        memo.getMemoId(),
-                        memo.getBookClub().getClubId(),
-                        memo.getUserId(),
+                        memo.getMemo_id(),
+                        memo.getBookClub().getClub_id(),
+                        memo.getUser_id(),
                         memo.getContent(),
-                        memo.getCreatedTime(),
-                        memo.getUpdatedTime()
+                        memo.getCreated_time(),
+                        memo.getUpdated_time()
                 )).collect(Collectors.toList());
     }
 
     public MemoDto saveMemo(MemoDto dto) {
-        BookClub bookClub = bookClubRepository.findById(dto.getClubId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid clubId"));
+        BookClub book_club = book_club_repository.findById(dto.getClub_id())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid club_id"));
 
         Memo memo = new Memo();
-        memo.setBookClub(bookClub);
-        memo.setUserId(dto.getUserId());
+        memo.setBookClub(book_club);
+        memo.setUser_id(dto.getUser_id());
         memo.setContent(dto.getContent());
-        memo.setCreatedTime(LocalDateTime.now());  // 직접 지정해도 무방
-        memo.setUpdatedTime(LocalDateTime.now());
+        memo.setCreated_time(LocalDateTime.now());
+        memo.setUpdated_time(LocalDateTime.now());
 
-        Memo saved = memoRepository.save(memo);
+        Memo saved = memo_repository.save(memo);
 
         return new MemoDto(
-                saved.getMemoId(),
-                saved.getBookClub().getClubId(),
-                saved.getUserId(),
+                saved.getMemo_id(),
+                saved.getBookClub().getClub_id(),
+                saved.getUser_id(),
                 saved.getContent(),
-                saved.getCreatedTime(),
-                saved.getUpdatedTime()
+                saved.getCreated_time(),
+                saved.getUpdated_time()
         );
     }
 }
 
-*/
+ */

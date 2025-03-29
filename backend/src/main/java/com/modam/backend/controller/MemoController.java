@@ -1,7 +1,6 @@
 
 //추후에 MEMO 레포와 함께 추가
 
-
 /*
 package com.modam.backend.controller;
 
@@ -17,17 +16,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemoController {
 
-    private final MemoService memoService;
+    private final MemoService memo_service;
 
-    @PostMapping("/{roomId}/memo")
-    public MemoDto saveMemo(@PathVariable("roomId") int roomId, @RequestBody MemoDto dto) {
-        dto.setClubId(roomId); // URL에서 받은 roomId를 DTO에 설정
-        return memoService.saveMemo(dto);
+    @PostMapping("/{room_id}/memo")
+    public MemoDto saveMemo(@PathVariable("room_id") int room_id, @RequestBody MemoDto dto) {
+        dto.setClub_id(room_id); // URL에서 받은 room_id를 DTO에 설정
+        return memo_service.saveMemo(dto);
     }
 
-    @PostMapping("/{roomId}/memos")
-    public List<MemoDto> getMemos(@PathVariable("roomId") int roomId) {
-        return memoService.getMemosByClubId(roomId);
+    @PostMapping("/{room_id}/memos")
+    public List<MemoDto> getMemos(@PathVariable("room_id") int room_id) {
+        return memo_service.getMemosByClubId(room_id);
     }
 }
 */

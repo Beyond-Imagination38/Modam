@@ -18,49 +18,46 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChatService {
 
-    private final ChatMessageRepository chatMessageRepository;
-    private final BookClubRepository bookClubRepository;
-    private final UserRepository userRepository;
+    private final ChatMessageRepository chat_message_repository;
+    private final BookClubRepository book_club_repository;
+    private final UserRepository user_repository;
 
-    // 채팅 메시지 저장
     @Transactional
-    public ChatMessageDto saveChatMessage(int clubId, ChatMessageDto dto) {
-        BookClub bookClub = bookClubRepository.findById(clubId)
-                .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
+    public ChatMessageDto saveChatMessage(int club_id, ChatMessageDto dto) {
+        BookClub book_club = book_club_repository.findById(club_id)
+                .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + club_id));
 
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+        User user = user_repository.findById(dto.getUser_id())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUser_id()));
 
-        ChatMessage chatMessage = new ChatMessage(
-                bookClub,
-                dto.getUserId(),
-                user.getUserName(), // userName 필드 추가 활용
+        ChatMessage chat_message = new ChatMessage(
+                book_club,
+                dto.getUser_id(),
+                user.getUser_name(),
                 dto.getContent()
-                //LocalDateTime.now() // createdTime으로 통일
         );
 
-        chatMessageRepository.save(chatMessage);
+        chat_message_repository.save(chat_message);
 
         return new ChatMessageDto(
-                clubId,
-                dto.getUserId(),
-                user.getUserName(),            //userName 추가
+                club_id,
+                dto.getUser_id(),
+                user.getUser_name(),
                 dto.getContent(),
-                chatMessage.getCreatedTime() // getTimestamp() → getCreatedTime()
+                chat_message.getCreated_time()
         );
     }
 
-    // 채팅 기록 조회
     @Transactional(readOnly = true)
-    public List<ChatMessageDto> getChatHistory(int clubId) {
-        return chatMessageRepository.findByBookClub_ClubId(clubId)
+    public List<ChatMessageDto> getChatHistory(int club_id) {
+        return chat_message_repository.findByBookClub_ClubId(club_id)
                 .stream()
                 .map(msg -> new ChatMessageDto(
-                        clubId,
-                        msg.getUserId(),
-                        msg.getUserName(),      //userName 추가
+                        club_id,
+                        msg.getUser_id(),
+                        msg.getUser_name(),
                         msg.getContent(),
-                        msg.getCreatedTime() // getTimestamp() → getCreatedTime()
+                        msg.getCreated_time()
                 ))
                 .collect(Collectors.toList());
     }

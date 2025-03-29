@@ -9,45 +9,41 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private final UserRepository user_repository;
+
+    public UserService(UserRepository user_repository) {
+        this.user_repository = user_repository;
     }
 
     // 회원가입
-    public void register(UserDto userDto) {
-
+    public void register(UserDto user_dto) {
         User user = new User();
-
-        user.setUserId(userDto.getUserId());
-        user.setUserName(userDto.getUserName());
-        user.setEmail(userDto.getEmail());
-        user.setPw(userDto.getPw());
-        user.setProfileImage(userDto.getProfileImage());
-        //user.setCoins(userDto.getCoins());
-
-        userRepository.save(user);
+        user.setUser_id(user_dto.getUser_id());
+        user.setUser_name(user_dto.getUser_name());
+        user.setEmail(user_dto.getEmail());
+        user.setPw(user_dto.getPw());
+        user.setProfile_image(user_dto.getProfile_image());
+        user_repository.save(user);
     }
 
     // 로그인
-    public boolean login(UserDto userDto) {
-        Optional<User> user = userRepository.findByUserId(userDto.getUserId());
-        return user.isPresent() && user.get().getPw().equals(userDto.getPw());
+    public boolean login(UserDto user_dto) {
+        Optional<User> user = user_repository.findByUserId(user_dto.getUser_id());
+        return user.isPresent() && user.get().getPw().equals(user_dto.getPw());
     }
 
-
     // 회원 정보 조회
-    public UserDto getUserByUserId(String userId) {
-        User user = userRepository.findByUserId(userId)
+    public UserDto getUserByUserId(String user_id) {
+        User user = user_repository.findByUserId(user_id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return new UserDto(
-                user.getUserId(),
-                user.getUserName(),
+                user.getUser_id(),
+                user.getUser_name(),
                 user.getEmail(),
                 user.getPw(),
-                user.getProfileImage(),
+                user.getProfile_image(),
                 user.getCoins()
         );
     }

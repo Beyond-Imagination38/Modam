@@ -12,15 +12,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookClubDto {
-    private int clubId;
-    private String hostId;
-    private String hostUserName;
-    private String bookId;
-    private LocalDateTime meetingDate;
+
+    private int club_id;
+    private String host_id;
+    private String host_user_name;
+    private String book_id;
+    private LocalDateTime meeting_date;
     private String status;
     private int likes;
     private String summary;
-    private String searchIndex;
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
+    private String search_index;
+    private LocalDateTime created_time;
+    private LocalDateTime updated_time;
 }

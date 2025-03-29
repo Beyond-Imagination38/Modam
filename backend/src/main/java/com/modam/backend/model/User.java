@@ -13,18 +13,18 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "User")  // 테이블명
+@Table(name = "user")
 @Getter
 @Setter
 @NoArgsConstructor
 public class User {
 
     @Id
-    @Column(name = "userId", length = 50, nullable = false, unique = true)
-    private String userId;
+    @Column(name = "user_id", length = 50, nullable = false, unique = true)
+    private String user_id;
 
-    @Column(name = "userName", length = 100, nullable = false)
-    private String userName;
+    @Column(name = "user_name", length = 100, nullable = false)
+    private String user_name;
 
     @Column(name = "email", length = 255, nullable = false, unique = true)
     private String email;
@@ -32,17 +32,17 @@ public class User {
     @Column(name = "pw", length = 255, nullable = false)
     private String pw;
 
-    @Column(name = "profileImage", columnDefinition = "TEXT")
-    private String profileImage;
+    @Column(name = "profile_image", columnDefinition = "TEXT")
+    private String profile_image;
 
     @Column(name = "coins", nullable = false, columnDefinition = "INT DEFAULT 0")
     private int coins;
 
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdTime;
+    @Column(name = "created_time", nullable = false, updatable = false)
+    private LocalDateTime created_time;
 
     @UpdateTimestamp
-    @Column(nullable = false)
-    private LocalDateTime updatedTime;
+    @Column(name = "updated_time", nullable = false)
+    private LocalDateTime updated_time;
 }

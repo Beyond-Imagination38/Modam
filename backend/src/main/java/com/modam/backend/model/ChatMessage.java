@@ -10,45 +10,44 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-
 @Entity
+@Table(name = "chat_message")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "chatmessage")
 public class ChatMessage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "messageId")
-    private Long messageId;
+    @Column(name = "message_id")
+    private Long message_id;
 
     @ManyToOne
-    @JoinColumn(name = "clubId", nullable = false)
-    private BookClub bookClub;
+    @JoinColumn(name = "club_id", nullable = false)
+    private BookClub book_club;
 
-    @Column(name = "userId")
-    private String userId;
+    @Column(name = "user_id")
+    private String user_id;
 
-    @Column(name = "userName")
-    private String userName;  // 추가
+    @Column(name = "user_name")
+    private String user_name;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @CreationTimestamp
-    @Column(name = "createdTime", nullable = false, updatable = false)
-    private LocalDateTime createdTime;
+    @Column(name = "created_time", nullable = false, updatable = false)
+    private LocalDateTime created_time;
 
     @UpdateTimestamp
-    @Column(name = "updatedTime", nullable = false)
-    private LocalDateTime updatedTime;
+    @Column(name = "updated_time", nullable = false)
+    private LocalDateTime updated_time;
 
-    public ChatMessage(BookClub bookClub, String userId, String userName, String content) {
-        this.bookClub = bookClub;
-        this.userId = userId;
-        this.userName = userName;
+    public ChatMessage(BookClub book_club, String user_id, String user_name, String content) {
+        this.book_club = book_club;
+        this.user_id = user_id;
+        this.user_name = user_name;
         this.content = content;
     }
-
 }

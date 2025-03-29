@@ -11,7 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "BookClub")
+@Table(name = "book_club")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,18 +20,18 @@ public class BookClub {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "clubId")
-    private int clubId;
+    @Column(name = "club_id")
+    private int club_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hostId", nullable = false)
+    @JoinColumn(name = "host_id", nullable = false)
     private User host;
 
-    @Column(name = "bookId", nullable = false) // **변경된 부분**
-    private String bookId;
+    @Column(name = "book_id", nullable = false)
+    private String book_id;
 
-    @Column(name = "meetingDate", nullable = false)
-    private LocalDateTime meetingDate;
+    @Column(name = "meeting_date", nullable = false)
+    private LocalDateTime meeting_date;
 
     @Column(name = "status", nullable = false, columnDefinition = "ENUM('PENDING', 'ONGOING', 'COMPLETED') DEFAULT 'PENDING'")
     private String status;
@@ -42,31 +42,14 @@ public class BookClub {
     @Column(name = "summary", columnDefinition = "TEXT")
     private String summary;
 
-    @Column(name = "searchIndex", columnDefinition = "TEXT")
-    private String searchIndex;
+    @Column(name = "search_index", columnDefinition = "TEXT")
+    private String search_index;
 
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdTime;
+    @Column(name = "created_time", nullable = false, updatable = false)
+    private LocalDateTime created_time;
 
     @UpdateTimestamp
-    @Column(nullable = false)
-    private LocalDateTime updatedTime;
-
-
-    /*    @Column(name = "createdTime", nullable = false, updatable = false)
-    private LocalDateTime createdTime;
-
-    @Column(name = "updatedTime")
-    private LocalDateTime updatedTime;
-
-    @PrePersist
-    protected void onCreate() {
-        createdTime = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedTime = LocalDateTime.now();
-    }*/
+    @Column(name = "updated_time", nullable = false)
+    private LocalDateTime updated_time;
 }

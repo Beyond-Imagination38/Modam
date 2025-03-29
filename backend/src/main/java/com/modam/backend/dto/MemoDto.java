@@ -12,10 +12,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemoDto {
-    private Long memoId;
-    private int clubId;
-    private String userId;
+
+    private Long memo_id;
+    private int club_id;
+    private String user_id;
     private String content;
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
+    private LocalDateTime created_time;
+    private LocalDateTime updated_time;
 }

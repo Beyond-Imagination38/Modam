@@ -8,13 +8,14 @@ import java.util.Optional;
 
 @Service
 public class BookService {
-    private final BookRepository bookRepository;
 
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    private final BookRepository book_repository;
+
+    public BookService(BookRepository book_repository) {
+        this.book_repository = book_repository;
     }
 
-    public Optional<Book> getBookById(String bookId) {  // 기존 int → String 변경
-        return bookRepository.findById(bookId);
+    public Optional<Book> getBookById(String book_id) {
+        return book_repository.findById(book_id);
     }
 }

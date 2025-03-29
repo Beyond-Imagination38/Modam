@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatMessageDto {
-    private int clubId;
-    private String userId;
-    private String userName;
-    private String content;
-    private LocalDateTime createdTime;  // 이름 통일
-}
 
+    private int club_id;
+    private String user_id;
+    private String user_name;
+    private String content;
+    private LocalDateTime created_time;
+}

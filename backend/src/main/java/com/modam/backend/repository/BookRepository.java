@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, String> {  // 기존 Integer → String 변경
+public interface BookRepository extends JpaRepository<Book, String> {
 }

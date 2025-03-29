@@ -9,16 +9,17 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class ChatWebSocketHandler extends TextWebSocketHandler {
-    private final Set<WebSocketSession> sessions = new CopyOnWriteArraySet<>();
+
+    private final Set<WebSocketSession> web_socket_sessions = new CopyOnWriteArraySet<>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        sessions.add(session);
+        web_socket_sessions.add(session);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-        for (WebSocketSession s : sessions) {
+        for (WebSocketSession s : web_socket_sessions) {
             if (s.isOpen()) {
                 s.sendMessage(message);
             }
@@ -27,6 +28,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        sessions.remove(session);
+        web_socket_sessions.remove(session);
     }
 }
