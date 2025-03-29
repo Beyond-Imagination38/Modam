@@ -1,3 +1,5 @@
+#docker-compose.yml
+
 version: "3.8"
 
 services:
@@ -8,12 +10,14 @@ services:
       context: ./backend
     container_name: spring-server
 
-    #environment:
-    #  SPRING_DATASOURCE_URL: jdbc:mysql://db-modam:3306/modam_db?serverTimezone=Asia/Seoul
-    #  SPRING_DATASOURCE_USERNAME: root
-    #  SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "8080:8080"
+
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+
     depends_on:
       - db-modam
     networks:
@@ -26,9 +30,10 @@ services:
     container_name: db-modam
     environment:
       MYSQL_DATABASE: modam_db
-      MYSQL_ROOT_PASSWORD: 0000 #절대 깃헙 업로드 금지
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
     ports:
-      - "3306:3306"
+      - "3307:3306"  # 호스트 3307 → 컨테이너 3306
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -55,30 +60,6 @@ services:
         - "5000:5000"
     networks:
         - modam-net
-
-  ##frontend 예시
-  #fe-modam:
-  #  build:
-  #    context: ./frontend
-  #  container_name: react-client
-  #  ports:
-  #    - "3000:80"   # Nginx 사용?
-  #  networks:
-  #    - modam-net
-  #  depends_on:
-  #    - backend-server
-
-
-  ##ai-server 예시
-  #ai-modam:
-  #  build: ./ai-server
-  #  container_name: ai-server
-  #  ports:
-  #      - "5000:5000"
-  #  networks:
-  #      - modam-net
-
-
 
 networks:
   modam-net:

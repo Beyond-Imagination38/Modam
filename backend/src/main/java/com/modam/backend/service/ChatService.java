@@ -18,46 +18,46 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChatService {
 
-    private final ChatMessageRepository chat_message_repository;
-    private final BookClubRepository book_club_repository;
-    private final UserRepository user_repository;
+    private final ChatMessageRepository chatMessageRepository;
+    private final BookClubRepository bookClubRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public ChatMessageDto saveChatMessage(int club_id, ChatMessageDto dto) {
-        BookClub book_club = book_club_repository.findById(club_id)
-                .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + club_id));
+    public ChatMessageDto saveChatMessage(int clubId, ChatMessageDto dto) {
+        BookClub bookClub = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
 
-        User user = user_repository.findById(dto.getUser_id())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUser_id()));
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
 
-        ChatMessage chat_message = new ChatMessage(
-                book_club,
-                dto.getUser_id(),
-                user.getUser_name(),
+        ChatMessage chatMessage = new ChatMessage(
+                bookClub,
+                dto.getUserId(),
+                user.getUserName(),
                 dto.getContent()
         );
 
-        chat_message_repository.save(chat_message);
+        chatMessageRepository.save(chatMessage);
 
         return new ChatMessageDto(
-                club_id,
-                dto.getUser_id(),
-                user.getUser_name(),
+                clubId,
+                dto.getUserId(),
+                user.getUserName(),
                 dto.getContent(),
-                chat_message.getCreated_time()
+                chatMessage.getCreatedTime()
         );
     }
 
     @Transactional(readOnly = true)
-    public List<ChatMessageDto> getChatHistory(int club_id) {
-        return chat_message_repository.findByBookClub_ClubId(club_id)
+    public List<ChatMessageDto> getChatHistory(int clubId) {
+        return chatMessageRepository.findByBookClubClubId(clubId)
                 .stream()
                 .map(msg -> new ChatMessageDto(
-                        club_id,
-                        msg.getUser_id(),
-                        msg.getUser_name(),
+                        clubId,
+                        msg.getUserId(),
+                        msg.getUserName(),
                         msg.getContent(),
-                        msg.getCreated_time()
+                        msg.getCreatedTime()
                 ))
                 .collect(Collectors.toList());
     }

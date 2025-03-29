@@ -19,4 +19,4 @@ COPY . .
 EXPOSE 5000
 
 # Flask 서버 실행
-CMD ["python", "app.py"]
+CMD ["python", "app_ex.py"]

@@ -21,33 +21,33 @@ public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id")
-    private Long message_id;
+    private Long messageId;
 
     @ManyToOne
     @JoinColumn(name = "club_id", nullable = false)
-    private BookClub book_club;
+    private BookClub bookClub;
 
     @Column(name = "user_id")
-    private String user_id;
+    private String userId;
 
     @Column(name = "user_name")
-    private String user_name;
+    private String userName;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @CreationTimestamp
     @Column(name = "created_time", nullable = false, updatable = false)
-    private LocalDateTime created_time;
+    private LocalDateTime createdTime;
 
     @UpdateTimestamp
     @Column(name = "updated_time", nullable = false)
-    private LocalDateTime updated_time;
+    private LocalDateTime updatedTime;
 
-    public ChatMessage(BookClub book_club, String user_id, String user_name, String content) {
-        this.book_club = book_club;
-        this.user_id = user_id;
-        this.user_name = user_name;
+    public ChatMessage(BookClub bookClub, String userId, String userName, String content) {
+        this.bookClub = bookClub;
+        this.userId = userId;
+        this.userName = userName;
         this.content = content;
     }
 }

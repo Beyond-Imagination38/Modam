@@ -21,10 +21,10 @@ public class User {
 
     @Id
     @Column(name = "user_id", length = 50, nullable = false, unique = true)
-    private String user_id;
+    private String userId;
 
     @Column(name = "user_name", length = 100, nullable = false)
-    private String user_name;
+    private String userName;
 
     @Column(name = "email", length = 255, nullable = false, unique = true)
     private String email;
@@ -33,16 +33,16 @@ public class User {
     private String pw;
 
     @Column(name = "profile_image", columnDefinition = "TEXT")
-    private String profile_image;
+    private String profileImage;
 
     @Column(name = "coins", nullable = false, columnDefinition = "INT DEFAULT 0")
     private int coins;
 
     @CreationTimestamp
     @Column(name = "created_time", nullable = false, updatable = false)
-    private LocalDateTime created_time;
+    private LocalDateTime createdTime;
 
     @UpdateTimestamp
     @Column(name = "updated_time", nullable = false)
-    private LocalDateTime updated_time;
+    private LocalDateTime updatedTime;
 }

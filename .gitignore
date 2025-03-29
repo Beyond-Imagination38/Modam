@@ -5,3 +5,5 @@
 ".env" 
 "out/"
 /.idea/
+
+out/
