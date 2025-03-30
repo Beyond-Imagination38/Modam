@@ -17,7 +17,7 @@ export function Chat() {
     const client = Stomp.over(socket);
 
     client.connet({}, () => {
-      client.subscribe("/topic/chat", (message) => {
+      client.subscribe("/topic/message", (message) => {
         const receiveMessage = JSON.parse(message.body);
         setMessages((prevMessages) => [...prevMessages, receiveMessage]);
       });
