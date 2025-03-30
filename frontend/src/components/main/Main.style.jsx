@@ -47,6 +47,8 @@ export const ProductGrid = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   padding: 0 24px;
+  max-width: 80%;
+  margin: 0 auto;
 `;
 
 export const ProductCard = styled.div`
@@ -99,17 +101,23 @@ export const ProductTime = styled.p`
 export const RegisterButton = styled.button`
   bottom: 24px;
   left: 24px;
-  background-color: #65558f;
-  color: white;
+  color: #65558f;
   padding: 12px 16px;
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
-  margin-left: 12px;
+  margin-left: 24px;
+  font-weight: 600;
+  border: none;
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: #65558f;
-    color: white;
+    color: #4a3c6a;
+    text-decoration: underline;
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 `;
 
@@ -130,8 +138,6 @@ export const PageButton = styled.button`
   margin: 0 5px;
   padding: 8px 12px;
   border: none;
-  background-color: ${($active) => ($active ? "#007bff" : "#ddd")};
-  color: ${($active) => ($active ? "#fff" : "#000")};
   cursor: pointer;
   border-radius: 5px;
 

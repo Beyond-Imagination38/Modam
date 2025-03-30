@@ -25,20 +25,27 @@ export const Nav = styled.div`
 
 export const Button = styled.button`
   display: inline-block;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: 1px solid #e2e0e0;
-  font-size: 16px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 18px;
+  font-weight: 500;
   cursor: pointer;
-  color: white;
-  width: 150px;
-  text-align: center;
-  transition: background 0.3s;
-  background-color: #65558f;
   color: #fff;
+  background-color: #65558f;
+  width: 180px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.1s ease;
 
   &:hover {
-    opacity: 0.8;
+    background-color: #56487a;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    background-color: #4c3f6b;
+    transform: translateY(0);
   }
 `;
 

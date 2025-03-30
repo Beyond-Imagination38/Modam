@@ -1,0 +1,20 @@
+# Git
+.git
+.gitignore
+
+# IDE
+#.idea
+*.iml
+
+# Node
+node_modules/
+
+# Logs & Build
+build/
+out/
+*.log
+
+# OS & Cache
+.DS_Store
+.gradle
+.env

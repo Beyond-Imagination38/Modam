@@ -11,13 +11,16 @@ export function Register() {
 
   const [images, setImages] = useState([]);
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [itemCondition, setitemCondition] = useState("");
+  const [meetingDate, setMeetingDate] = useState("");
+  const [time, setTime] = useState("");
   const [content, setContent] = useState("");
-  const [price, setPrice] = useState("");
-  const [isFree, setIsFree] = useState(false);
-  const [location, setLocation] = useState([]);
-  const [transactionStatus, setTransactionStatus] = useState("");
+
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const imageUrls = files.map((file) => URL.createObjectURL(file));
+    setImages(imageUrls);
+  };
+
   /*
   useEffect(() => {
     if (isEditMode) {
@@ -27,25 +30,15 @@ export function Register() {
             method: "GET",
           });
           if (response) {
-            const postData = response.data || response;
-            setTitle(postData.title || "");
-            setCategory(postData.category || "");
-            setitemCondition(postData.itemCondition || "");
-            setContent(postData.content || "");
-            setPrice(postData.price || "");
-            setLocation(postData.location || "");
-            setTransactionStatus(postData.transactionStatus || "ON_SALE");
-
-            if (postData.price === 0) {
-              setIsFree(true);
-            }
+          //추가
+          
             if (postData.images) {
               setImages(postData.images);
             }
           }
         } catch (err) {
           console.error(err);
-          alert("게시글 정보를 불러오는 데 실패했습니다.");
+          alert("모임 정보를 불러오는 데 실패했습니다.");
         }
       }
       fetchPostDetail();
@@ -53,25 +46,19 @@ export function Register() {
   }, [isEditMode, postId]);
 */
 
-  //이미지 파일을 업로드할 때 미리보기
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setImages(imageUrls);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const postData = {
       title,
-      category,
-      itemCondition,
+      meetingDate,
+      time,
       content,
     };
-
+    alert("모임이 등록되었습니다.");
+    navigate("/main");
     console.log("📌 서버로 보낼 데이터:", JSON.stringify(postData, null, 2));
-
+    /*
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -88,10 +75,10 @@ export function Register() {
         body: JSON.stringify(postData),
       });
 
-      console.log("📌 게시글 등록 API 응답:", response);
+      console.log("📌 모임 등록 API 응답:", response);
 
       if (response && (response.status === 200 || response.status === 201)) {
-        alert("게시글이 등록되었습니다.");
+        alert("모임이 등록되었습니다.");
         navigate("/main");
       } else {
         console.error("🚨 오류 응답:", response);
@@ -100,7 +87,7 @@ export function Register() {
     } catch (error) {
       console.error("🚨 요청 실패:", error);
       alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
-    }
+    }*/
   };
 
   return (
@@ -137,22 +124,18 @@ export function Register() {
           />
 
           <S.Label>날짜</S.Label>
-          <S.Select
-            name="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option>선택하세요</option>
-          </S.Select>
+          <S.Input
+            type="date"
+            value={meetingDate}
+            onChange={(e) => setMeetingDate(e.target.value)}
+          ></S.Input>
 
           <S.Label>시간</S.Label>
-          <S.Select
-            name="itemCondition"
-            value={itemCondition}
-            onChange={(e) => setitemCondition(e.target.value)}
-          >
-            <option>선택하세요</option>
-          </S.Select>
+          <S.Input
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+          />
 
           <S.Label>설명</S.Label>
           <S.TextArea

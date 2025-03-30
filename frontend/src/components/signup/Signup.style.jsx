@@ -13,6 +13,19 @@ export const ContentWrap = styled.div`
   flex: 1;
 `;
 
+export const Title = styled.h1`
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  color: #65558f;
+  margin-bottom: 24px;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
 export const InputTitle = styled.div`
   font-size: 12px;
   font-weight: 600;
@@ -58,4 +71,22 @@ export const ErrorMessageWrap = styled.div`
   margin-top: 8px;
   color: #ef0000;
   font-size: 12px;
+`;
+
+export const BottomText = styled.div`
+  margin-top: 16px;
+  font-size: 14px;
+  color: rgb(0, 0, 0);
+  text-align: center;
+
+  span {
+    color: #65558f;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #56487a;
+    }
+  }
 `;
