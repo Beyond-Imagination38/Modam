@@ -28,8 +28,8 @@ export const Textarea = styled.textarea`
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: ${(props) => (props.readOnly ? "#65558f5" : "#fff")};
-  color: ${(props) => (props.readOnly ? "#aaa" : "black")};
+  background-color: #fff;
+  color: black;
   box-sizing: border-box;
   margin: 0 10px;
 
@@ -39,14 +39,6 @@ export const Textarea = styled.textarea`
   }
 `;
 
-export const RemainingCount = styled.div`
-  text-align: right;
-  font-size: 14px;
-  color: #4a4a4a;
-  margin-bottom: 10px;
-  margin-right: 200px;
-`;
-
 export const Actions = styled.div`
   display: flex;
   justify-content: center;
@@ -54,8 +46,8 @@ export const Actions = styled.div`
 `;
 
 export const Button = styled.button`
-  width: 300px; /* 버튼 너비 제한 */
-  margin: 0 5px; /* 버튼 사이 간격 유지 */
+  width: 300px;
+  margin: 0 5px;
   padding: 10px;
   font-size: 14px;
   border: none;
