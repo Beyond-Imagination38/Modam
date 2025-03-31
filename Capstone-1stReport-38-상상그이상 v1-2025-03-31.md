@@ -12,8 +12,6 @@
 <br>
 
 # Project-Summary
-
-# Project-Summary
 | 항목 | 내용 |
 |:---  |---  |
 | (1) 문제 정의 | *본 과제를 통하여 해결/완화하고자하는 문제에 대하여 기술. Target Customer 정의와 해결해야 할 문제점들(pain points)대한 내용 기술*  |
