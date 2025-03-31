@@ -3,9 +3,8 @@
 
 import os
 from dotenv import load_dotenv
-from langchain.vectorstores import Chroma
-from langchain.embeddings.openai import OpenAIEmbeddings
-
+from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings
 
 # .env 로드
 load_dotenv()
