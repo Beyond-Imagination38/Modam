@@ -9,4 +9,4 @@ backend.tar.gz
 
 "ai-server/__pycache__/" 
 
-
+#chroma_store/ 
