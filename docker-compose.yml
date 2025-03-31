@@ -1,0 +1,77 @@
+#docker-compose.yml
+
+version: "3.8"
+
+services:
+
+  #spring-server
+  be-modam:
+    build:
+      context: ./backend
+    container_name: spring-server
+    ports:
+      - "8080:8080"
+
+    #실시간 반영 설정 추가
+    volumes:
+      - ./backend:/app
+    working_dir: /app
+    command: ./gradlew bootRun
+
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+
+    depends_on:
+      - db-modam
+    networks:
+      - modam-net
+
+  #database
+  db-modam:
+    image: mysql:8.0
+    restart: always
+    container_name: db-modam
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: modam_db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+    ports:
+      - "3307:3306"  # 호스트 3307 → 컨테이너 3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - modam-net
+
+  ##frontend 예시
+  fe-modam:
+    build:
+      context: ./frontend
+    container_name: react-client
+    ports:
+      - "3000:3000"
+    networks:
+      - modam-net
+    depends_on:
+      - be-modam
+
+
+  ##ai-server 예시
+  ai-modam:
+    build: ./ai-server
+    container_name: ai-server
+    environment:
+      SPRING_SERVER_URL: http://be-modam:8080
+    ports:
+        - "5000:5000"
+    networks:
+        - modam-net
+
+networks:
+  modam-net:
+    driver: bridge
+
+volumes:
+  mysql_data:

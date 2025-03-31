@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface BookClubRepository extends JpaRepository<BookClub, Integer> {
 
-    List<BookClub> findByStatus(String status);
+    List<BookClub> findByBookId(String book_id);  // 필드명이 book_id로 변경됨
 }

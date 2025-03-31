@@ -1,4 +1,4 @@
-# 로컬 전용 설정 파일 (깃허브에 올리지 않음)
+# 로컬 전용 DB 설정 파일 무시
 src/main/resources/application_2nd.properties
 
 # IntelliJ IDEA 프로젝트 파일들 무시
@@ -13,6 +13,9 @@ out/
 *.propertie
 
 
+backend.tar.gz
+gradlew
+gradlew.bat
 HELP.md
 .gradle
 build/
@@ -50,3 +53,4 @@ out/
 
 ### VS Code ###
 .vscode/
+

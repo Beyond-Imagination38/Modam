@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserService userService;
+    private final UserService user_service;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserService user_service) {
+        this.user_service = user_service;
     }
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@RequestBody UserDto userDto) {
-        userService.register(userDto);
+    public ResponseEntity<String> registerUser(@RequestBody UserDto user_dto) {
+        user_service.register(user_dto);
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserDto userDto) {
-        boolean success = userService.login(userDto);
+    public ResponseEntity<String> loginUser(@RequestBody UserDto user_dto) {
+        boolean success = user_service.login(user_dto);
         return success ? ResponseEntity.ok("로그인 성공") : ResponseEntity.badRequest().body("로그인 실패");
     }
 
@@ -35,10 +35,10 @@ public class UserController {
         return ResponseEntity.ok("로그아웃 완료");
     }
 
-    // 회원 정보 조회 (userId 기반)
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUserInfo(@PathVariable String userId) {
-        UserDto userDto = userService.getUserByUserId(userId);  // userId로 조회하도록 변경
-        return ResponseEntity.ok(userDto);
+    // 회원 정보 조회
+    @GetMapping("/{user_id}")
+    public ResponseEntity<UserDto> getUserinfo(@PathVariable("user_id") String user_id) {
+        UserDto user_dto = user_service.getUserbyuserid(user_id);
+        return ResponseEntity.ok(user_dto);
     }
 }

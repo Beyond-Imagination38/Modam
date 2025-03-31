@@ -8,12 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Repository
-@Transactional(readOnly = true)  // 읽기 전용으로 설정(성능 최적화)
+@Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, String> {
+
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByUserId(String userId);
-
-    //Optional<User> findByUserName(String userName);
-
+    Optional<User> findByUserId(String user_id);  // userId → user_id로 수정
 }

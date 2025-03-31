@@ -10,8 +10,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatMessageDto {
+
     private int clubId;
     private String userId;
+    private String userName;
     private String content;
-    private LocalDateTime timestamp;
+    private LocalDateTime createdTime;
 }
