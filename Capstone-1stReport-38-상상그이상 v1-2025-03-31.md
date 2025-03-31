@@ -14,7 +14,7 @@
 # Project-Summary
 | 항목 | 내용 |
 |:---  |---  |
-| (1) 문제 정의 | **Target Customer 정의**<br>
+| (1) 문제 정의 | **Target Customer 정의**
 1. **Target Customer 1: 대학생 000 (24세, 여성)**<br>
 - 책을 좋아하고 깊이 있는 사고를 즐김<br>
 - 마이너 장르를 선호해 대중적인 모임과는 잘 맞지 않음<br>
