@@ -3,7 +3,6 @@
 version: "3.8"
 
 services:
-
   #spring-server
   be-modam:
     build:
@@ -39,13 +38,13 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
     ports:
-      - "3307:3306"  # 호스트 3307 → 컨테이너 3306
+      - "3307:3306" # 호스트 3307 → 컨테이너 3306
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - modam-net
 
-  ##frontend 예시
+  ##frontend
   fe-modam:
     build:
       context: ./frontend
@@ -56,7 +55,12 @@ services:
       - modam-net
     depends_on:
       - be-modam
-
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: yarn start
+    environment:
+      - CHOKIDAR_USEPOLLING=true
 
   ##ai-server 예시
   ai-modam:
@@ -65,9 +69,9 @@ services:
     environment:
       SPRING_SERVER_URL: http://be-modam:8080
     ports:
-        - "5000:5000"
+      - "5000:5000"
     networks:
-        - modam-net
+      - modam-net
 
 networks:
   modam-net:

@@ -1,5 +1,4 @@
-export const COMMON_API_URL =
-  "http://ec2-3-147-254-253.us-east-2.compute.amazonaws.com";
+export const COMMON_API_URL = "http://3.147.254.253:3000";
 
 export const API_URLS = {
   user: `${COMMON_API_URL}/user`,
