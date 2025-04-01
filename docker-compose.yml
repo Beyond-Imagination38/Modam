@@ -63,15 +63,23 @@ services:
       - CHOKIDAR_USEPOLLING=true
 
   ##ai-server 예시
-  ai-modam:
-    build: ./ai-server
-    container_name: ai-server
-    environment:
-      SPRING_SERVER_URL: http://be-modam:8080
-    ports:
-      - "5000:5000"
-    networks:
-      - modam-net
+    ai-modam:
+      build:
+        context: ./ai-server         # Dockerfile이 위치한 곳
+      container_name: ai-server
+      ports:
+        - "5000:5000"                # 호스트:컨테이너
+      volumes:
+        - ./ai-server:/app           # 코드 수정 시 즉시 반영
+      working_dir: /app              # 작업 디렉토리 명시
+      command: python app.py         # 실행 명령 (Flask 직접 실행)
+      environment:
+        - SPRING_SERVER_URL=http://be-modam:8080
+      networks:
+        - modam-net
+      depends_on:
+        - be-modam
+
 
 networks:
   modam-net:
