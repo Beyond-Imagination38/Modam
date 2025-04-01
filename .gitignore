@@ -6,7 +6,8 @@ out/
 
 backend.tar.gz
 
-
-"ai-server/__pycache__/" 
+.vscode/
+__pycache__/
+*.html
 
 #chroma_store/ 
