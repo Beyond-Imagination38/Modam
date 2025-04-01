@@ -2,21 +2,16 @@
 # 책 pdf를 벡터화하여 chromaDB에 저장
 # pip install langchain chromadb openai pypdf
 # pip install python-dotenv
-# pip install -U langchain-community langchain-openai
+# pip install langchain chromadb pypdf sentence-transformers
+# pip install torch
+# pip install -U langchain-huggingface
 
 import os
-from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
-
-# .env 파일 로드(OpenAI key)
-load_dotenv()
-openai_api_key = os.getenv("OPENAI_API_KEY")
-
-
-def save_pdf_to_chroma(book_id, pdf_path, chroma_root="chroma_store"):
+def save_pdf_to_chroma(book_id, pdf_path, chroma_root="core/chroma_store"):
     """
     PDF 문서를 벡터화하여 ChromaDB로 저장
 
@@ -30,8 +25,8 @@ def save_pdf_to_chroma(book_id, pdf_path, chroma_root="chroma_store"):
     loader = PyPDFLoader(pdf_path)
     docs = loader.load()
 
-    # 임베딩 모델 초기화 (OpenAI)
-    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+    # 임베딩 모델 초기화 (HuggingFace)
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
     # 저장 경로 설정
     persist_path = os.path.join(chroma_root, book_id)

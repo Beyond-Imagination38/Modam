@@ -2,14 +2,8 @@
 # chromaDB 로드
 
 import os
-from dotenv import load_dotenv
 from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
-
-# .env 로드
-load_dotenv()
-openai_api_key = os.getenv("OPENAI_API_KEY")
-
+from langchain_huggingface import HuggingFaceEmbeddings
 
 def load_chroma(book_id, chroma_root="core/chroma_store"):
     """
@@ -27,7 +21,7 @@ def load_chroma(book_id, chroma_root="core/chroma_store"):
     if not os.path.exists(persist_path):
         raise FileNotFoundError(f"ChromaDB not found at {persist_path}")
 
-    embedding = OpenAIEmbeddings(openai_api_key=openai_api_key)
+    embedding = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
     db = Chroma(
         persist_directory=persist_path,
