@@ -4,8 +4,11 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { API_URLS } from "../../consts";
 import { fetchApi } from "../../utils";
+import 군주론 from "./군주론.jpg";
+import 앵무새죽이기 from "./앵무새죽이기.jpg";
+import 자아폭발 from "./자아폭발.jpg";
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 3;
 
 export function Main() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,22 +20,22 @@ export function Main() {
       postId: 1,
       userId: 10,
       title: "군주론",
-      time: "2.11 8시",
-      representativeImage: "https://picsum.photos/600/300",
+      time: "2.11 20시",
+      representativeImage: 군주론,
     },
     {
       postId: 2,
       userId: 20,
       title: "앵무새 죽이기",
-      time: "2.15 9시",
-      representativeImage: "https://picsum.photos/600/100",
+      time: "2.15 21시",
+      representativeImage: 앵무새죽이기,
     },
     {
       postId: 5,
       userId: 20,
       title: "자아폭발",
-      time: "2.13 4시",
-      representativeImage: "https://picsum.photos/600/200",
+      time: "2.13 16시",
+      representativeImage: 자아폭발,
     },
     {
       title: "참을 수 없는 존재의 가벼움",
