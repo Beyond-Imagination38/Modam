@@ -62,7 +62,7 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
 
-  ##ai-server 예시
+  ##ai-server
     ai-modam:
       build:
         context: ./ai-server         # Dockerfile이 위치한 곳
