@@ -14,11 +14,12 @@ BADWORDS = [
 def contains_badword(text):
     return any(word in text for word in BADWORDS)
 
-# 모델 로드 (최초 1회)
-model_path = "/Users/bangminji/Desktop/Modam/ai-server/kc_electra_badword"
+# 모델 로드 (최초 1회, HuggingFace에서 로드)
+model_path = "mjBANG/Modam_hate_filter"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = AutoModelForSequenceClassification.from_pretrained(model_path).to(device)
+
 tokenizer = AutoTokenizer.from_pretrained(model_path)
+model = AutoModelForSequenceClassification.from_pretrained(model_path).to(device)
 model.eval()
 
 # 모델 예측
@@ -44,7 +45,7 @@ def final_filter(text):
     }
 
 # Flask API 핸들러
-def filter_chat_api(request):
+def filter_chat_api():
     data = request.get_json()
     text = data.get("text")
 
@@ -57,3 +58,11 @@ def filter_chat_api(request):
         "is_blocked": is_blocked,
         "detail": detail
     })
+
+if __name__ == "__main__":
+    from flask import Flask
+
+    app = Flask(__name__)
+    app.add_url_rule("/chat-filter", view_func=filter_chat_api, methods=["POST"])
+
+    app.run(host="0.0.0.0", port=5000, debug=True)
