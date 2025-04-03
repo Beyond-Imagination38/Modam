@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 3000
 
 # 개발 서버 실행 (npm start)
-CMD ["npm", "start"]
+CMD ["npm", "start", "--", "--host", "0.0.0.0"]
