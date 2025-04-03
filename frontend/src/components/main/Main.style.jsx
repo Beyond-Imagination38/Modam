@@ -44,10 +44,10 @@ export const SearchButton = styled.button`
 
 export const ProductGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 24px;
   padding: 0 24px;
-  max-width: 80%;
+  max-width: 700px;
   margin: 0 auto;
 `;
 

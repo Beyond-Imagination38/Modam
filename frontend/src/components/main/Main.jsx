@@ -4,8 +4,11 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { API_URLS } from "../../consts";
 import { fetchApi } from "../../utils";
+import 군주론 from "./군주론.jpg";
+import 앵무새죽이기 from "./앵무새죽이기.jpg";
+import 자아폭발 from "./자아폭발.jpg";
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 3;
 
 export function Main() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,22 +20,22 @@ export function Main() {
       postId: 1,
       userId: 10,
       title: "군주론",
-      time: "2.11 8시",
-      representativeImage: "https://picsum.photos/600/300",
+      time: "2025-04-10 20:00",
+      representativeImage: 군주론,
     },
     {
       postId: 2,
       userId: 20,
       title: "앵무새 죽이기",
-      time: "2.15 9시",
-      representativeImage: "https://picsum.photos/600/100",
+      time: "2025-04-15 21:00",
+      representativeImage: 앵무새죽이기,
     },
     {
       postId: 5,
       userId: 20,
       title: "자아폭발",
-      time: "2.13 4시",
-      representativeImage: "https://picsum.photos/600/200",
+      time: "2025-04-13 16:00",
+      representativeImage: 자아폭발,
     },
     {
       title: "참을 수 없는 존재의 가벼움",
@@ -73,7 +76,9 @@ export function Main() {
   ];
 
   useEffect(() => {
-    setItems(data);
+    const storedData = data;
+    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    setItems([...storedPosts, ...storedData]);
   }, []);
 
   /*const fetchItems = async () => {
@@ -82,16 +87,16 @@ export function Main() {
         method: "GET",
       });
   
-      console.log("📌 게시글 API 응답:", response); // 응답 확인용 로그 추가
+      console.log("게시글 API 응답:", response); 
   
       if (response.status === 200 && response.data?.content) {
-        setItems(response.data.content); // ✅ 올바른 데이터 경로로 설정
+        setItems(response.data.content); 
       } else {
-        console.error("🚨 게시글 데이터가 비어 있습니다:", response);
+        console.error("게시글 데이터가 비어 있습니다:", response);
         setItems([]);
       }
     } catch (err) {
-      console.error("🚨 게시글 불러오기 실패:", err);
+      console.error("게시글 불러오기 실패:", err);
     }
   };
   

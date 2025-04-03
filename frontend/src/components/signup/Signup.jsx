@@ -28,7 +28,8 @@ export function Signup() {
 
   const handlepw = (e) => {
     setpw(e.target.value);
-    const regex = /^[A-Za-z0-9]{8,20}$/;
+    const regex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
     if (regex.test(e.target.value)) {
       setPwValid(true);
     } else {
@@ -41,49 +42,32 @@ export function Signup() {
       alert("입력한 정보를 다시 확인해주세요.");
       return;
     }
-    alert("회원가입이 완료되었습니다!");
-    navigate("/login");
-    /*
+    alert("회원가입이 완료되었습니다!"); //연결 후 삭제
+    navigate("/login"); //연결 후 삭제
+
     try {
       const signupResponse = await fetchApi(API_URLS.signup, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, userName, pw, pwcheck }),
+        body: JSON.stringify({ email, userName, pw }),
       });
 
-      console.log("회원가입 API 응답:", signupResponse);
-
-      if (signupResponse.status === 200 && signupResponse.data?.userId) {
-        const loginResponse = await fetchApi(API_URLS.login, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, pw }),
-        });
-
-        console.log("로그인 API 응답:", loginResponse);
-
-        if (loginResponse.status === 200 && loginResponse.data?.token) {
-          localStorage.setItem("token", loginResponse.data.token);
-          localStorage.setItem("userId", loginResponse.data.userId); 
-
-          alert("회원가입이 완료되었습니다! 자동 로그인되었습니다.");
-          navigate("/main");
-        } else {
-          alert(
-            "회원가입은 완료되었지만 자동 로그인에 실패했습니다. 로그인 페이지로 이동합니다."
-          );
-          navigate("/login");
-        }
-      } else {
-        alert(signupResponse?.data?.error || "회원가입에 실패했습니다.");
+      if (!signupResponse.ok) {
+        throw new Error("회원가입에 실패했습니다. 다시 시도해주세요.");
       }
+
+      const data = await signupResponse.json();
+      console.log("회원가입 성공:", data);
+
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userName", userName);
+
+      alert("회원가입이 완료되었습니다!");
+      navigate("/login");
     } catch (error) {
       console.error("회원가입 오류:", error);
-      alert(
-        error.response?.data?.error ||
-          "서버 오류가 발생했습니다. 다시 시도해주세요."
-      );
-    }*/
+      alert("회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (
@@ -102,18 +86,20 @@ export function Signup() {
 
         <S.InputTitle marginTop="26px">비밀번호</S.InputTitle>
         <S.InputWrap>
-          <S.Input type="pw" value={pw} onChange={handlepw} />
+          <S.Input type="password" value={pw} onChange={handlepw} />
         </S.InputWrap>
         <S.ErrorMessageWrap>
           {!pwValid && pw.length > 0 && (
-            <div>올바른 비밀번호를 입력해주세요.</div>
+            <div>
+              비밀번호는 8~20자이며, 영문, 숫자, 특수문자를 포함해야 합니다.
+            </div>
           )}
         </S.ErrorMessageWrap>
 
         <S.InputTitle>비밀번호 확인</S.InputTitle>
         <S.InputWrap>
           <S.Input
-            type="pw"
+            type="password"
             value={pwcheck}
             onChange={(e) => setPwcheck(e.target.value)}
           />

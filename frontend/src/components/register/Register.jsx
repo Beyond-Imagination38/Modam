@@ -21,6 +21,25 @@ export function Register() {
     setImages(imageUrls);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newPost = {
+      postId: Date.now(), // 임시 ID
+      title,
+      time: `${meetingDate} ${time}`,
+      representativeImage:
+        images.length > 0 ? images[0] : "https://via.placeholder.com/150",
+    };
+
+    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    const updatedPosts = [newPost, ...storedPosts];
+    localStorage.setItem("posts", JSON.stringify(updatedPosts));
+
+    alert("모임이 등록되었습니다.");
+    navigate("/main");
+  };
+
   /*
   useEffect(() => {
     if (isEditMode) {
@@ -44,8 +63,8 @@ export function Register() {
       fetchPostDetail();
     }
   }, [isEditMode, postId]);
-*/
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -58,7 +77,7 @@ export function Register() {
     alert("모임이 등록되었습니다.");
     navigate("/main");
     console.log("📌 서버로 보낼 데이터:", JSON.stringify(postData, null, 2));
-    /*
+    
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -87,8 +106,8 @@ export function Register() {
     } catch (error) {
       console.error("🚨 요청 실패:", error);
       alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
-    }*/
-  };
+    }
+  };*/
 
   return (
     <>

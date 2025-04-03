@@ -11,7 +11,7 @@ export function Detail() {
     clubId: 2,
     bookTitle: "군주론",
     author: "니콜로 마키아벨리",
-    meetingDate: "2025-02-13 9:30",
+    meetingDate: "2025-02-11 20:00",
     maxMembers: 4,
     currentMembers: 2,
     summary:
@@ -57,6 +57,7 @@ export function Detail() {
       <Header />
       <S.Container>
         <S.BookCover
+
         //src={`/images/book-cover-${data.clubId}.jpg`}
         //alt={data.bookTitle}
         />
