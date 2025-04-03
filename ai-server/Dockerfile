@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # 의존성 설치 파일 복사
-COPY requirements_ex.txt .
+COPY requirements.txt .
 
 # 최신 pip 업그레이드 + 의존성 설치
 RUN pip install --no-cache-dir --upgrade pip
