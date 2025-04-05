@@ -2,8 +2,6 @@ import React from "react";
 import * as S from "./MyPage.style";
 import Header from "../common/Header";
 import { Link } from "react-router-dom";
-import { fetchApi } from "../../utils";
-import { API_URLS } from "../../consts";
 
 export function MyPage() {
   return (
@@ -13,7 +11,7 @@ export function MyPage() {
         <Link to="/mypage/myinfo" style={{ textDecorationLine: "none" }}>
           <S.Button>내 정보 관리</S.Button>
         </Link>
-        <Link to="/mypage/mymeetings" style={{ textDecorationLine: "none" }}>
+        <Link to="/mygroups" style={{ textDecorationLine: "none" }}>
           <S.Button>독서 모임 관리</S.Button>
         </Link>
         <Link to="/mypage/like" style={{ textDecorationLine: "none" }}>

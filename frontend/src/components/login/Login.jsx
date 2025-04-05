@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import * as S from "./Login.style";
 import { API_URLS } from "../../consts";
@@ -15,20 +15,33 @@ export function Login() {
 
   const navigate = useNavigate();
 
+  // 페이지 로드 시 localStorage에서 token과 userId를 확인하여 이미 로그인 상태라면 바로 main 페이지로 이동
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+
+    if (token && userId) {
+      navigate("/main"); // 이미 로그인된 상태면 메인 페이지로 리다이렉트
+    }
+  }, [navigate]);
+
   const onClickConfirmButton = () => {
     if (email === User.email && pw === User.pw) {
+      localStorage.setItem("token", "true");
+      localStorage.setItem("userId", "123");
+
       alert("로그인에 성공했습니다.");
       navigate("/main");
     } else {
       alert("이메일 또는 비밀번호를 확인해 주세요. ");
     }
-    /*
-  const onClickConfirmButton = async () => {
+
+    /*const onClickConfirmButton = async () => {
     try {
       const response = await fetchApi(API_URLS.login, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, pw }),
       });
 
       console.log("로그인 API 응답:", response);

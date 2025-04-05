@@ -9,6 +9,7 @@ import {
   Chat,
   Bookreport,
   Detail,
+  MyGroups,
 } from "./components";
 import { createGlobalStyle } from "styled-components";
 
@@ -32,6 +33,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mygroups" element={<MyGroups />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register/:postId" element={<Register />} />
         <Route path="/chat" element={<Chat />} />

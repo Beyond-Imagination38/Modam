@@ -6,10 +6,8 @@ export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const storedLogin = localStorage.getItem("token");
-    if (storedLogin === "true") {
-      setIsLoggedIn(true);
-    }
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(token === "true");
   }, []);
 
   return (
