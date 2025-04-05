@@ -3,24 +3,44 @@
 # 라이브러리, api 수정 필요
 
 import os
+import numpy as np
+from dotenv import load_dotenv
+from flask import request, jsonify
 from langchain.vectorstores import Chroma
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
-from langchain.chains import RetrievalQA
+#from langchain.chains import RetrievalQA
+from langchain.embeddings.base import Embeddings
+from sentence_transformers import SentenceTransformer
 
+# .env 파일 로드
+load_dotenv()
+API_KEY = os.getenv("OPENAI_API_KEY")
+
+# 직접 구현한 Hugging Face 임베딩 wrapper
+class HuggingFaceEmbeddings(Embeddings):
+    def __init__(self, model_name: str = "sentence-transformers/all-MiniLM-L6-v2"):
+        self.model = SentenceTransformer(model_name)
+
+    def embed_documents(self, texts):
+        return [self.model.encode(text).tolist() for text in texts]
+
+    def embed_query(self, text):
+        return self.model.encode(text).tolist()
+    
 class RAGBookEngine:
     def __init__(self, book_id: str, api_key: str, chroma_root: str = "./chroma_store"):
         self.book_id = book_id
-        self.api_key = api_key
+        self.api_key = API_KEY
         self.chroma_path = os.path.join(chroma_root, book_id)
 
         if not os.path.exists(self.chroma_path):
             raise FileNotFoundError(f"No ChromaDB found for book_id: {book_id}")
 
-        embedding = OpenAIEmbeddings(openai_api_key=api_key)
+        embedding = HuggingFaceEmbeddings()
         self.db = Chroma(persist_directory=self.chroma_path, embedding_function=embedding)
         self.retriever = self.db.as_retriever()
-        self.llm = ChatOpenAI(model_name="gpt-4", api_key=api_key)
+        self.llm = ChatOpenAI(model_name="gpt-4", api_key=self.api_key)
 
     def generate_topics(self, user_responses):
         system_message = (
@@ -40,3 +60,21 @@ class RAGBookEngine:
         # 응답 후처리
         topics = [t.strip() for t in response.split("\n") if t.strip()]
         return topics if len(topics) >= 3 else []
+    
+# API 함수 정의
+def generate_topics_api():
+    data = request.json
+    book_id = data.get("book_id")
+    user_responses = data.get("user_responses")
+
+    if not all([book_id, user_responses]):
+        return jsonify({"error": "Missing required fields"}), 400
+
+    try:
+        rag_engine = RAGBookEngine(book_id=book_id)
+        topics = rag_engine.generate_topics(user_responses)
+        return jsonify({"topics": topics})
+    except FileNotFoundError as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

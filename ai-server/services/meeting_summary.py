@@ -2,17 +2,22 @@
 # 독서 모임 요약
 # api 수정 필요
 
-from flask import jsonify
-from langchain.chat_models import ChatOpenAI
 import os
+from flask import jsonify, request
+from langchain_community.chat_models import ChatOpenAI
 
 def summarize_meeting_api(request):
     data = request.get_json()
     topics = data.get("topics")
     all_responses = data.get("all_responses")
 
-    if not topics or not all_responses or len(topics) != len(all_responses):
-        return jsonify({"error": "Invalid input"}), 400
+    # 유효성 검사 강화
+    if not isinstance(topics, list) or not isinstance(all_responses, list):
+        return jsonify({"error": "topics와 all_responses는 리스트여야 합니다."}), 400
+    if not topics or not all_responses:
+        return jsonify({"error": "topics 또는 all_responses가 비어 있습니다."}), 400
+    if len(topics) != len(all_responses):
+        return jsonify({"error": "topics와 all_responses의 길이가 일치하지 않습니다."}), 400
 
     try:
         llm = ChatOpenAI(model_name="gpt-4", api_key=os.getenv("OPENAI_API_KEY"))
