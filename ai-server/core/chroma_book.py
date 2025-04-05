@@ -25,7 +25,7 @@ def save_pdf_to_chroma(book_id, pdf_path, chroma_root="core/chroma_store"):
     loader = PyPDFLoader(pdf_path)
     docs = loader.load()
 
-    # 임베딩 모델 초기화 (HuggingFace)
+    # 임베딩 모델 초기화 (HuggingFace), 버전 충돌로 인해 수정 필요
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
     # 저장 경로 설정

@@ -9,5 +9,6 @@ backend.tar.gz
 .vscode/
 __pycache__/
 *.html
+.env
 
 #chroma_store/ 
