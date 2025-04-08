@@ -41,7 +41,7 @@ export function Login() {
       const response = await fetchApi(API_URLS.login, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, pw }),
+        body: JSON.stringify({ email, password }),
       });
 
       console.log("로그인 API 응답:", response);
