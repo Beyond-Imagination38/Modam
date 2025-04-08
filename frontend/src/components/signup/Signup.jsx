@@ -8,7 +8,7 @@ export function Signup() {
   const [email, setEmail] = useState("");
   const [userName, setuserName] = useState("");
   const [pw, setpw] = useState("");
-  const [confirmpw, setConfirmpw] = useState("");
+  const [pwcheck, setPwcheck] = useState("");
 
   const navigate = useNavigate();
 
@@ -38,7 +38,7 @@ export function Signup() {
   };
 
   const handleSignup = async () => {
-    if (!emailValid || !pwValid || pw !== confirmpw) {
+    if (!emailValid || !pwValid || pw !== pwcheck) {
       alert("입력한 정보를 다시 확인해주세요.");
       return;
     }
@@ -49,7 +49,7 @@ export function Signup() {
       const signupResponse = await fetchApi(API_URLS.signup, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, userName, pw}),
+        body: JSON.stringify({ email, userName, pw }),
       });
 
       if (!signupResponse.ok) {
@@ -99,13 +99,13 @@ export function Signup() {
         <S.InputTitle>비밀번호 확인</S.InputTitle>
         <S.InputWrap>
           <S.Input
-            type="pw"
+            type="password"
             value={pwcheck}
             onChange={(e) => setPwcheck(e.target.value)}
           />
         </S.InputWrap>
         <S.ErrorMessageWrap>
-          {pw !== confirmpw && confirmpw.length > 0 && (
+          {pw !== pwcheck && pwcheck.length > 0 && (
             <div>비밀번호가 일치하지 않습니다.</div>
           )}
         </S.ErrorMessageWrap>
@@ -121,7 +121,7 @@ export function Signup() {
 
         <S.BottomButton onClick={handleSignup}>회원가입</S.BottomButton>
         <S.BottomText>
-          이미 계정이 있으시다면?{" "}
+          이미 계정이 있다면?{" "}
           <span onClick={() => navigate("/login")}>로그인하기</span>
         </S.BottomText>
       </S.ContentWrap>
