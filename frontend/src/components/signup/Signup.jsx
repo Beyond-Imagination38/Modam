@@ -49,7 +49,7 @@ export function Signup() {
       const signupResponse = await fetchApi(API_URLS.signup, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, userName, pw }),
+        body: JSON.stringify({ email, userName, pw}),
       });
 
       if (!signupResponse.ok) {
