@@ -1,12 +1,16 @@
 node_modules/
 backend/build/
+
 .env
+
 out/
 /.idea/
 
 backend.tar.gz
 
+.vscode/
+__pycache__/
+*.html
+.env
 
-"ai-server/__pycache__/" 
-
-
+#chroma_store/ 
