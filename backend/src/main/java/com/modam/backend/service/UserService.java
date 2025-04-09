@@ -34,7 +34,7 @@ public class UserService {
     }
 
     // 회원 정보 조회
-    public UserDto getUserbyuserid(String user_id) {
+    public UserDto getUserbyuserid(Integer user_id) {
         User user = user_repository.findByUserId(user_id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

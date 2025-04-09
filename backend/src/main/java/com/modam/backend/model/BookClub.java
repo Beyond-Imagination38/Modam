@@ -11,7 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "book_club")
+@Table(name = "bookclub")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,11 +27,12 @@ public class BookClub {
     @JoinColumn(name = "host_id", nullable = false)
     private User host;
 
+    // ✅ camelCase 필드명 + DB 컬럼명 유지
     @Column(name = "book_id", nullable = false)
-    private String book_id;
+    private String bookId;
 
     @Column(name = "meeting_date", nullable = false)
-    private LocalDateTime meeting_date;
+    private LocalDateTime meetingDate;
 
     @Column(name = "status", nullable = false, columnDefinition = "ENUM('PENDING', 'ONGOING', 'COMPLETED') DEFAULT 'PENDING'")
     private String status;
@@ -43,13 +44,13 @@ public class BookClub {
     private String summary;
 
     @Column(name = "search_index", columnDefinition = "TEXT")
-    private String search_index;
+    private String searchIndex;
 
     @CreationTimestamp
     @Column(name = "created_time", nullable = false, updatable = false)
-    private LocalDateTime created_time;
+    private LocalDateTime createdTime;
 
     @UpdateTimestamp
     @Column(name = "updated_time", nullable = false)
-    private LocalDateTime updated_time;
+    private LocalDateTime updatedTime;
 }
