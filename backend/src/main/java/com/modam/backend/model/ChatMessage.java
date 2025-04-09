@@ -1,53 +1,38 @@
 package com.modam.backend.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
-@Table(name = "chat_message")
+@Table(name = "chatmessage")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ChatMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id")
-    private Long messageId;
+    private int messageId;
 
-    @ManyToOne
-    @JoinColumn(name = "club_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_club", nullable = false)
     private BookClub bookClub;
-
-    @Column(name = "user_id")
-    private String userId;
-
-    @Column(name = "user_name")
-    private String userName;
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @CreationTimestamp
     @Column(name = "created_time", nullable = false, updatable = false)
-    private LocalDateTime createdTime;
+    private Timestamp createdTime;
 
-    @UpdateTimestamp
-    @Column(name = "updated_time", nullable = false)
-    private LocalDateTime updatedTime;
-
-    public ChatMessage(BookClub bookClub, String userId, String userName, String content) {
-        this.bookClub = bookClub;
-        this.userId = userId;
-        this.userName = userName;
-        this.content = content;
-    }
 }

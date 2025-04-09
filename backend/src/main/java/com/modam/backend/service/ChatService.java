@@ -30,18 +30,17 @@ public class ChatService {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
 
-        ChatMessage chatMessage = new ChatMessage(
-                bookClub,
-                dto.getUserId(),
-                user.getUserName(),
-                dto.getContent()
-        );
+        ChatMessage chatMessage = ChatMessage.builder()
+                .bookClub(bookClub)
+                .user(user)
+                .content(dto.getContent())
+                .build();
 
         chatMessageRepository.save(chatMessage);
 
         return new ChatMessageDto(
                 clubId,
-                dto.getUserId(),
+                user.getUserId(),
                 user.getUserName(),
                 dto.getContent(),
                 chatMessage.getCreatedTime()
@@ -50,15 +49,19 @@ public class ChatService {
 
     @Transactional(readOnly = true)
     public List<ChatMessageDto> getChatHistory(int clubId) {
-        return chatMessageRepository.findByBookClubClubId(clubId)
+        BookClub bookClub = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
+
+        return chatMessageRepository.findByBookClubOrderByCreatedTimeAsc(bookClub)
                 .stream()
                 .map(msg -> new ChatMessageDto(
                         clubId,
-                        msg.getUserId(),
-                        msg.getUserName(),
+                        msg.getUser().getUserId(),
+                        msg.getUser().getUserName(),
                         msg.getContent(),
                         msg.getCreatedTime()
                 ))
                 .collect(Collectors.toList());
     }
+
 }

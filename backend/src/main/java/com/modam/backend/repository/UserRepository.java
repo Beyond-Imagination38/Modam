@@ -9,9 +9,9 @@ import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByUserId(String user_id);  // userId → user_id로 수정
+    Optional<User> findByUserId(int user_id);
 }

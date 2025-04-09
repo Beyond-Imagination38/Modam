@@ -1,29 +1,28 @@
-# 로컬 전용 DB 설정 파일 무시
-src/main/resources/application_2nd.properties
+# BE 전용: 로컬 전용 설정 파일 무시
+backend/src/main/resources/application_2nd.properties
 
-# IntelliJ IDEA 프로젝트 파일들 무시
+# BE 전용: 빌드 결과 및 캐시 무시
+backend/.gradle/
+backend/build/
+
+# Gradle Wrapper는 꼭 포함해야 하므로 무시 금지
+!backend/gradlew
+!backend/gradlew.bat
+!backend/gradle/wrapper/gradle-wrapper.jar
+!backend/gradle/wrapper/gradle-wrapper.properties
+
+# 오타 수정
+*.properties
+*.class
+
+# IntelliJ IDEA
 .idea/
-
-# 빌드 아티팩트 파일들 무시
+*.iml
+*.iws
+*.ipr
 out/
 
-# 프로젝트의 빌드 관련 파일들
-*.iml
-*.class
-*.propertie
-
-
-backend.tar.gz
-gradlew
-gradlew.bat
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### STS ###
+# STS(Spring Tool Suite)
 .apt_generated
 .classpath
 .factorypath
@@ -35,22 +34,16 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-### NetBeans ###
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
+# VS Code
 .vscode/
 
+# 아카이브 등 빌드 산출물 무시
+*.tar.gz
+*.zip
