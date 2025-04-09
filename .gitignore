@@ -1,18 +1,21 @@
 node_modules/
+
+
+#backend
 backend/build/
-
 .env
-
 out/
 /.idea/
-
 backend.tar.gz
+0001-edit-WebSocketConfig.patch
+
+
 
 .vscode/
 __pycache__/
 *.html
-.env
 
-0001-edit-WebSocketConfig.patch
+
+
 
 #chroma_store/ 
