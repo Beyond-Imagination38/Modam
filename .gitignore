@@ -13,4 +13,6 @@ __pycache__/
 *.html
 .env
 
+0001-edit-WebSocketConfig.patch
+
 #chroma_store/ 
