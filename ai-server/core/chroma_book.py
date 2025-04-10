@@ -11,7 +11,11 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
-def save_pdf_to_chroma(book_id, pdf_path, chroma_root="core/chroma_store"):
+# 현재 파일 기준으로 chroma_store 위치 고정
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CHROMA_ROOT = os.path.join(BASE_DIR, "chroma_store")
+
+def save_pdf_to_chroma(book_id, pdf_path, chroma_root=CHROMA_ROOT):
     """
     PDF 문서를 벡터화하여 ChromaDB로 저장
 
