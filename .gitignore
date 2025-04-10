@@ -15,7 +15,9 @@ backend.tar.gz
 __pycache__/
 *.html
 
-
-
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
 
 #chroma_store/ 
