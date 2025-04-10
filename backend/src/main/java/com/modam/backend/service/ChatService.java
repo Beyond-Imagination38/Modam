@@ -24,6 +24,9 @@ public class ChatService {
 
     @Transactional
     public ChatMessageDto saveChatMessage(int clubId, ChatMessageDto dto) {
+
+        System.out.println("메시지 저장 요청: " + dto);
+
         BookClub bookClub = bookClubRepository.findById(clubId)
                 .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
 
