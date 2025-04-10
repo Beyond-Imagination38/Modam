@@ -4,7 +4,8 @@ backend/src/main/resources/application_2nd.properties
 # BE 전용: 빌드 결과 및 캐시 무시
 backend/.gradle/
 backend/build/
-
+build/
+.gradle/
 # Gradle Wrapper는 꼭 포함해야 하므로 무시 금지
 !backend/gradlew
 !backend/gradlew.bat
