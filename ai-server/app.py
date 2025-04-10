@@ -1,5 +1,5 @@
 # ai-server/app.py
-# 수정필요
+
 from flask import Flask, request
 from services.chat_filter import filter_chat_api
 from services.generate_topics import generate_topics_api

@@ -1,10 +1,5 @@
 # ai-server/core/chroma_book.py
 # 책 pdf를 벡터화하여 chromaDB에 저장
-# pip install langchain chromadb openai pypdf
-# pip install python-dotenv
-# pip install langchain chromadb pypdf sentence-transformers
-# pip install torch
-# pip install -U langchain-huggingface
 
 import os
 from langchain_community.document_loaders import PyPDFLoader

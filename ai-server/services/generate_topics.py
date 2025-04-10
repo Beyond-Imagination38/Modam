@@ -1,6 +1,5 @@
 # ai-server/services/generate_topics.py
 # 발제문 생성
-# 라이브러리, api 수정 필요
 
 import os
 import numpy as np
