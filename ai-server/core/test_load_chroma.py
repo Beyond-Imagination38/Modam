@@ -4,14 +4,14 @@
 from load_chroma import load_chroma
 
 # 불러올 책 ID
-book_id = "book1"
+book_id = "2"
 
 # ChromaDB 로드
 db = load_chroma(book_id)
 
 # 간단한 테스트 쿼리 실행
 retriever = db.as_retriever()
-query = "1984 소설의 주인공은 누구인가요"
+query = "레미제라블의 주인공은 누구인가요?"
 docs = retriever.get_relevant_documents(query)
 
 # 결과 출력
