@@ -1,17 +1,16 @@
 # ai-server/core/chroma_book.py
 # 책 pdf를 벡터화하여 chromaDB에 저장
-# pip install langchain chromadb openai pypdf
-# pip install python-dotenv
-# pip install langchain chromadb pypdf sentence-transformers
-# pip install torch
-# pip install -U langchain-huggingface
 
 import os
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
-def save_pdf_to_chroma(book_id, pdf_path, chroma_root="core/chroma_store"):
+# 현재 파일 기준으로 chroma_store 위치 고정
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CHROMA_ROOT = os.path.join(BASE_DIR, "chroma_store")
+
+def save_pdf_to_chroma(book_id, pdf_path, chroma_root=CHROMA_ROOT):
     """
     PDF 문서를 벡터화하여 ChromaDB로 저장
 
