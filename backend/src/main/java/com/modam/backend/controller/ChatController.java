@@ -2,14 +2,16 @@ package com.modam.backend.controller;
 
 import com.modam.backend.dto.ChatMessageDto;
 import com.modam.backend.model.BookClub;
+import com.modam.backend.model.MessageType;
 import com.modam.backend.service.BookClubService;
 import com.modam.backend.service.ChatService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -48,17 +50,9 @@ public class ChatController {
         messagingTemplate.convertAndSend("/topic/chat/" + clubId, saved);
 
         System.out.println("브로드캐스트 완료: /topic/chat/" + clubId); // debugging
-    }
 
-    @GetMapping("/history/{club_id}")
-    public List<ChatMessageDto> getChatHistory(@PathVariable("club_id") int club_id) {
-        return chatService.getChatHistory(club_id);
-    }
-
-    //4-1. 발제문 생성
-    @PostMapping("/start/{clubId}")
-    public ResponseEntity<String> startChatAndSendTopics(@PathVariable int clubId) {
-        try {
+        // 추가: ENTER 메시지일 경우 AI 발제문 호출
+        if (message.getMessageType() == MessageType.ENTER) {
             BookClub bookClub = bookClubService.getBookClub(clubId);
             int bookId = bookClub.getBook().getBookId();
 
@@ -68,15 +62,14 @@ public class ChatController {
                     "빅브라더의 감시는 현대 사회와도 닮은 것 같아요."
             );
 
-            // ChatService로 위임 (sendAiMainTopic 내부에 Flask 호출 + 메시지 전송 포함)
-            chatService.sendAiMainTopic(clubId, bookId, userResponses);
-
-            return ResponseEntity.ok("발제문 전송 완료");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류 발생: " + e.getMessage());
+            chatService.sendAiMainTopic(clubId, bookId, userResponses); // AI 진행자 메시지 추가 전송
         }
     }
+
+    @GetMapping("/history/{club_id}")
+    public List<ChatMessageDto> getChatHistory(@PathVariable("club_id") int club_id) {
+        return chatService.getChatHistory(club_id);
+    }
+
 
 }

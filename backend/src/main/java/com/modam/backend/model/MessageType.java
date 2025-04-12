@@ -2,6 +2,7 @@ package com.modam.backend.model;
 
 public enum MessageType {
 
+    ENTER,                //자동으로 AI 발제문 호출
     GREETING,             // 인사
     TOPIC_START,          // 대주제 시작
     SUBTOPIC,             // 사용자 의견

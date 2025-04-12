@@ -50,17 +50,19 @@ public class ChatService {
                 .stream()
                 .noneMatch(m -> m.getUser().equals(user));
 
-        MessageType messageType;
+        MessageType messageType = dto.getMessageType();
         Integer order = null;
 
-        if (isFirstMessage) {
-            messageType = MessageType.SUBTOPIC;
-            order = chatMessageRepository.countByBookClubAndMessageType(bookClub, MessageType.SUBTOPIC) + 1;
-            System.out.println("처음 메시지 → SUBTOPIC, 순서: " + order);
-        } else {
-            messageType = MessageType.DISCUSSION;
+        if (messageType == null) {
+            if (isFirstMessage) {
+                messageType = MessageType.SUBTOPIC;
+                order = chatMessageRepository.countByBookClubAndMessageType(bookClub, MessageType.SUBTOPIC) + 1;
+                System.out.println("처음 메시지 → SUBTOPIC, 순서: " + order);
+            }
+            else {
+                messageType = MessageType.DISCUSSION;
+            }
         }
-
         ChatMessage chatMessage = ChatMessage.builder()
                 .bookClub(bookClub)
                 .user(user)
@@ -70,6 +72,23 @@ public class ChatService {
                 .build();
 
         chatMessageRepository.save(chatMessage);
+
+        if (messageType == MessageType.ENTER) {
+            long enterCount = chatMessageRepository.findByBookClubOrderByCreatedTimeAsc(bookClub)
+                    .stream()
+                    .filter(m -> m.getMessageType() == MessageType.ENTER)
+                    .count();
+
+            if (enterCount == 4) {
+                int bookId = bookClub.getBook().getBookId();
+                List<String> dummyResponses = List.of(
+                        "나는 주인공 윈스턴의 외로움에 공감했어요.",
+                        "전체주의 사회의 공포가 정말 생생하게 느껴졌습니다.",
+                        "빅브라더의 감시는 현대 사회와도 닮은 것 같아요."
+                );
+                sendAiMainTopic(clubId, bookId, dummyResponses); // 👉 AI 호출
+            }
+        }
 
         return new ChatMessageDto(
                 messageType,
