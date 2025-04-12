@@ -34,31 +34,41 @@ public class ChatService {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
 
-        Integer order = null;
-        if (dto.getMessageType() == MessageType.SUBTOPIC) {
-            order = chatMessageRepository.countByBookClubAndMessageType(bookClub, MessageType.SUBTOPIC) + 1;
-            System.out.println("SUBTOPIC 감지됨. 현재 순서 = " + order);
+        // 유저가 이 club에서 처음 메시지 보내는지 확인
+        boolean isFirstMessage = chatMessageRepository
+                .findByBookClubOrderByCreatedTimeAsc(bookClub)
+                .stream()
+                .noneMatch(m -> m.getUser().equals(user));
 
+        MessageType messageType;
+        Integer order = null;
+
+        if (isFirstMessage) {
+            messageType = MessageType.SUBTOPIC;
+            order = chatMessageRepository.countByBookClubAndMessageType(bookClub, MessageType.SUBTOPIC) + 1;
+            System.out.println("처음 메시지 → SUBTOPIC, 순서: " + order);
+        } else {
+            messageType = MessageType.DISCUSSION;
         }
 
         ChatMessage chatMessage = ChatMessage.builder()
                 .bookClub(bookClub)
                 .user(user)
                 .content(dto.getContent())
-                .messageType(dto.getMessageType())
-                .subtopicOrder(order)   //사용자 의견 순서 지정
+                .messageType(messageType) // 클라이언트 input 무시
+                .subtopicOrder(order)
                 .build();
 
         chatMessageRepository.save(chatMessage);
 
         return new ChatMessageDto(
-                dto.getMessageType(),
+                messageType,
                 clubId,
                 user.getUserId(),
                 user.getUserName(),
                 dto.getContent(),
                 chatMessage.getCreatedTime(),
-                order   //dto로 전달
+                order
         );
     }
 
