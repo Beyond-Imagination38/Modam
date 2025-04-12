@@ -2,17 +2,14 @@ package com.modam.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.modam.backend.model.MessageType;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
 @Data
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChatMessageDto {
@@ -35,13 +32,29 @@ public class ChatMessageDto {
     @Schema(description = "메시지 생성 시간", example = "2025-04-10 16:50:41")
     private Timestamp createdTime;
 
-    //생성자
-    public ChatMessageDto(int clubId, int userId, String userName, String content, Timestamp createdTime) {
-        this.messageType = MessageType.DISCUSSION;
+    @Schema(description = "SUBTOPIC 순서", example = "1")
+    private Integer subtopicOrder;
+
+    // 생성자 1: 전체용
+    public ChatMessageDto(MessageType messageType, int clubId, int userId, String userName, String content, Timestamp createdTime, Integer subtopicOrder) {
+        this.messageType = messageType;
         this.clubId = clubId;
         this.userId = userId;
         this.userName = userName;
         this.content = content;
         this.createdTime = createdTime;
+        this.subtopicOrder = subtopicOrder;
     }
+
+    // 생성자 2: subtopicOrder 없이
+    public ChatMessageDto(MessageType messageType, int clubId, int userId, String userName, String content, Timestamp createdTime) {
+        this.messageType = messageType;
+        this.clubId = clubId;
+        this.userId = userId;
+        this.userName = userName;
+        this.content = content;
+        this.createdTime = createdTime;
+        this.subtopicOrder = null;
+    }
+
 }

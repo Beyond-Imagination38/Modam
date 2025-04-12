@@ -2,17 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import * as S from "./Chat.style";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom"; //soo: useParams추가
 
 export function Chat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [userId, setUserId] = useState(""); // soo: 문자열 → 숫자
-  //const [userId, setUserId] = useState("사용자"); // camelCase 적용
+  const [username, setUserName] = useState("사용자");
   const [stompClient, setStompClient] = useState(null);
   const [memoContent, setMemoContent] = useState("");
   const [isMemoVisible, setIsMemoVisible] = useState(false);
-  const [userName, setUserName] = useState("");
+
+  const { clubId } = useParams(); //soo: clubId 가져오기
 
   //const accessToken = localStorage.getItem("accessToken") || "";
 
@@ -32,31 +32,19 @@ export function Chat() {
   }, []);
 
   useEffect(() => {
-    console.log("WebSocket 연결 시도...");
-
-    const socketUrl = `http://localhost:8080/chat`;   //soo:
-    //const socketUrl = `https://3.132.203.26:8080/chat`;
-    const socket = new SockJS(socketUrl);
+    const socket = new SockJS("http://localhost:8080/chat"); //soo: 주소 수정
     const client = new Client({
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
       debug: (str) => console.log("STOMP Debug:", str),
 
       onConnect: () => {
-        console.log("WebSocket 연결 성공");
-        console.log("STOMP 연결 상태:", client.connected);
-
+        console.log("WebSocket 연결 성공"); //soo:Debug
+        window.stompClient = client; //soo: console에서 사용 가능
         client.subscribe(`/topic/chat/${clubId}`, (message) => {
-          try {
-            const receivedMessage = JSON.parse(message.body);
-            console.log("수신한 메시지:", receivedMessage);
-            setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-          } catch (e) {
-            console.error("메시지 파싱 오류:", e);
-          }
+          const receivedMessage = JSON.parse(message.body);
+          setMessages((prevMessages) => [...prevMessages, receivedMessage]);
         });
-
-        setStompClient(client);
       },
 
       onStompError: (frame) => {
@@ -100,9 +88,10 @@ export function Chat() {
 
       //soo 추가
       const chatMessage = {
-        userId: userId,
-        userName: userName,
-        club_id: clubId,
+        messageType: "DISCUSSION", //soo: 기본 메시지 타입 설정
+        clubId: parseInt(clubId), //soo: 문자열 clubId를 숫자로 변환
+        userId, //soo: localStorage에서 가져온 userId 사용
+        userName: username, //soo: localStorage에서 가져온 userName 사용
         content: message,
         messageType: "DISCUSSION",
       };
@@ -110,6 +99,7 @@ export function Chat() {
       // 발행
       stompClient.publish({
         destination: `/app/chat/${clubId}`,
+        destination: `/app/chat/${clubId}`, //soo: 동적으로 clubId 포함
         headers: {
           //Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -140,7 +130,7 @@ export function Chat() {
       <S.Container>
         <S.ChatSection>
           <S.Header>
-            <S.Title>『1984』 - 조지 오웰</S.Title>
+            <S.Title>『군주론』 - 마키아벨리</S.Title>
             <S.RightSection>
               <S.NoteText onClick={toggleMemo}>
                 {isMemoVisible ? "메모 닫기" : "메모 열기"}
@@ -153,7 +143,7 @@ export function Chat() {
 
           <S.ChatBox>
             {messages.map((msg, index) => (
-                <S.Message key={index} isMine={msg.userId === userId}>
+                <S.Message key={index} $isMine={msg.userName === username}> {/* soo: isMine → $isMine으로 변경하여 warning 해결 */}
                   <strong>{msg.userName}:</strong> {msg.content}
                 </S.Message>
             ))}
@@ -167,24 +157,20 @@ export function Chat() {
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && sendMessage()}
             />
-            <S.SendButton onClick={() => {
-                  sendMessage(message);
-                  setMessage("");
-              }}>보내기
-              </S.SendButton>
+            <S.SendButton onClick={sendMessage}>보내기</S.SendButton>
           </S.InputContainer>
         </S.ChatSection>
 
-        {isMemoVisible && (
-            <S.MemoSection>
-              <S.MemoTitle>메모</S.MemoTitle>
-              <S.MemoInput
-                  value={memoContent}
-                  onChange={handleMemoChange}
-                  placeholder="여기에 메모를 입력하세요."
-              />
-            </S.MemoSection>
-        )}
-      </S.Container>
+      {isMemoVisible && (
+        <S.MemoSection>
+          <S.MemoTitle>메모</S.MemoTitle>
+          <S.MemoInput
+            value={memoContent}
+            onChange={handleMemoChange}
+            placeholder="여기에 메모를 입력하세요."
+          />
+        </S.MemoSection>
+      )}
+    </S.Container>
   );
 }

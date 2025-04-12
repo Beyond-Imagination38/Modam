@@ -27,9 +27,14 @@ public class BookClub {
     @JoinColumn(name = "host_id", nullable = false)
     private User host;
 
-    // ✅ camelCase 필드명 + DB 컬럼명 유지
+    // camelCase 필드명 + DB 컬럼명 유지
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id", insertable = false, updatable = false)
+    private Book book;
+
     @Column(name = "book_id", nullable = false)
-    private String bookId;
+    private int bookId;
+
 
     @Column(name = "meeting_date", nullable = false)
     private LocalDateTime meetingDate;

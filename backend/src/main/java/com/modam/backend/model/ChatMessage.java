@@ -35,4 +35,14 @@ public class ChatMessage {
     @Column(name = "created_time", nullable = false, updatable = false)
     private Timestamp createdTime;
 
+
+    //4-2. 소주제 순서
+    @Column(name = "subtopic_order")
+    private Integer subtopicOrder;
+
+    @Column(name = "message_type")
+    @Enumerated(EnumType.STRING)
+    private MessageType messageType;
+
+
 }
