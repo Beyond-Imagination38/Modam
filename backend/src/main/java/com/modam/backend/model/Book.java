@@ -1,9 +1,6 @@
 package com.modam.backend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +17,9 @@ import java.time.LocalDate;
 public class Book {
 
     @Id
-    @Column(name = "book_id", length = 13, nullable = false)
-    private String book_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_id", nullable = false)
+    private int bookId;
 
     @Column(name = "book_title", nullable = false)
     private String book_title;
