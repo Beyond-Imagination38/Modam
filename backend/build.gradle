@@ -41,6 +41,13 @@ dependencies {
 
 	//소스 변경 후 서버 자동 재시작 기능
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	//api 명세서 자동 생성 관련
+	//implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+	implementation 'io.swagger.core.v3:swagger-annotations:2.2.20'
+
+
 }
 
 tasks.named('test') {
