@@ -9,9 +9,9 @@ export function Detail() {
   const [data, setData] = useState({
     postId: 1,
     clubId: 2,
-    bookTitle: "군주론",
-    author: "니콜로 마키아벨리",
-    meetingDate: "2025-02-11 20:00",
+    bookTitle: "1984",
+    author: "조지 오웰웰",
+    meetingDate: "2025-04-10 20:00",
     maxMembers: 4,
     currentMembers: 2,
     summary:

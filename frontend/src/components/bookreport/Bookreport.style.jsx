@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  height: 100%;
+  height: 90%;
   margin: 0 auto;
   padding: 0;
   box-sizing: border-box;
@@ -23,7 +23,7 @@ export const TextareaContainer = styled.div`
 export const Textarea = styled.textarea`
   width: 100%;
   max-width: 700px;
-  height: 600px;
+  height: 500px;
   padding: 10px;
   font-size: 14px;
   border: 1px solid #ccc;
