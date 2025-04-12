@@ -2,6 +2,9 @@ package com.modam.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.modam.backend.model.MessageType;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,15 +17,25 @@ import java.sql.Timestamp;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChatMessageDto {
 
+    @Schema(description = "메시지 타입 (DISCUSSION, ENTER, EXIT 등)", example = "DISCUSSION")
     private MessageType messageType;
 
+    @Schema(description = "북클럽 ID", example = "9")
     private int clubId;
+
+    @Schema(description = "보낸 유저의 ID", example = "1")
     private int userId;
+
+    @Schema(description = "보낸 유저의 이름", example = "사용자1")
     private String userName;
+
+    @Schema(description = "채팅 내용", example = "club_id:9의 첫 메세지")
     private String content;
+
+    @Schema(description = "메시지 생성 시간", example = "2025-04-10 16:50:41")
     private Timestamp createdTime;
 
-    // 올바른 생성자
+    //생성자
     public ChatMessageDto(int clubId, int userId, String userName, String content, Timestamp createdTime) {
         this.messageType = MessageType.DISCUSSION;
         this.clubId = clubId;
