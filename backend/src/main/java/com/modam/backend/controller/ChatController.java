@@ -51,7 +51,7 @@ public class ChatController {
         return chatService.getChatHistory(club_id);
     }
 
-    //발제문 생성
+    //4-1. 발제문 생성
     @PostMapping("/start/{clubId}")
     public ResponseEntity<String> startChatAndSendTopics(@PathVariable int clubId) {
         try {
