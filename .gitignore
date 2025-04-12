@@ -19,5 +19,6 @@ __pycache__/
 ._.DS_Store
 **/.DS_Store
 **/._.DS_Store
-
+.gradle/
+backend/.gradle/
 #chroma_store/ 
