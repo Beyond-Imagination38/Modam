@@ -1,12 +1,10 @@
 package com.modam.backend.service;
 
 import com.modam.backend.dto.ChatMessageDto;
-import com.modam.backend.model.BookClub;
-import com.modam.backend.model.ChatMessage;
-import com.modam.backend.model.MessageType;
-import com.modam.backend.model.User;
+import com.modam.backend.model.*;
 import com.modam.backend.repository.BookClubRepository;
 import com.modam.backend.repository.ChatMessageRepository;
+import com.modam.backend.repository.DiscussionTopicRepository;
 import com.modam.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -31,6 +29,7 @@ public class ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final BookClubRepository bookClubRepository;
     private final UserRepository userRepository;
+    private final DiscussionTopicRepository discussionTopicRepository;
     private final SimpMessagingTemplate messagingTemplate; // 추가
 
     @Transactional
@@ -86,7 +85,7 @@ public class ChatService {
                         "전체주의 사회의 공포가 정말 생생하게 느껴졌습니다.",
                         "빅브라더의 감시는 현대 사회와도 닮은 것 같아요."
                 );
-                sendAiMainTopic(clubId, bookId, dummyResponses); // 👉 AI 호출
+                sendAiMainTopic(clubId, bookId, dummyResponses); //  AI 호출
             }
         }
 
@@ -120,7 +119,7 @@ public class ChatService {
     }
 
     @Transactional
-    public void sendAiMainTopic(int clubId, int bookId, List<String> userResponses) { //soo: AI 대주제 발화
+    public void sendAiMainTopic(int clubId, int bookId, List<String> userResponses) {
         String flaskUrl = "http://localhost:5000/ai/generate-topics";
 
         Map<String, Object> requestBody = new HashMap<>();
@@ -139,25 +138,39 @@ public class ChatService {
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 List<String> topics = (List<String>) response.getBody().get("topics");
 
-                if (topics != null && !topics.isEmpty()) {
-                    String firstTopic = topics.get(0);
+                BookClub bookClub = bookClubRepository.findById(clubId)
+                        .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
 
+                for (int i = 0; i < topics.size(); i++) {
+                    String topic = topics.get(i);
+
+                    //  1. DB 저장 (discussion_topic)
+                    DiscussionTopic discussionTopic = DiscussionTopic.builder()
+                            .club(bookClub)
+                            .content(topic)
+                            .createdTime(new Timestamp(System.currentTimeMillis()))
+                            .version(i + 1)
+                            .build();
+                    discussionTopicRepository.save(discussionTopic);
+
+                    //  2. WebSocket 전송
                     ChatMessageDto topicMessage = new ChatMessageDto(
-                            MessageType.TOPIC_START, //soo: 메시지 타입은 TOPIC_START
+                            MessageType.TOPIC_START,
                             clubId,
-                            0, //soo: AI 사회자 userId는 0
-                            "AI 진행자", //soo: AI 이름 지정
-                            "대주제 1: " + firstTopic,
+                            0,
+                            "AI 진행자",
+                            "대주제 " + (i + 1) + ": " + topic,
                             new Timestamp(System.currentTimeMillis())
                     );
 
-                    // WebSocket 전송
                     messagingTemplate.convertAndSend("/topic/chat/" + clubId, topicMessage);
                 }
             }
+
         } catch (Exception e) {
             System.err.println("AI 토픽 생성 실패: " + e.getMessage());
         }
+
     }
 
 }
