@@ -28,7 +28,7 @@ class HuggingFaceEmbeddings(Embeddings):
         return self.model.encode(text).tolist()
     
 class RAGBookEngine:
-    def __init__(self, book_id: int, api_key: str, chroma_root: str = "./chroma_store"):
+    def __init__(self, book_id: int, api_key: str, chroma_root: str = "ai-server/core/chroma_store"):
         self.book_id = str(book_id)
         self.api_key = API_KEY
         self.chroma_path = os.path.join(chroma_root, str(book_id))
@@ -83,7 +83,7 @@ def generate_topics_api():
         return jsonify({"error": "Missing required fields"}), 400
 
     try:
-        rag_engine = RAGBookEngine(book_id=book_id, api_key=API_KEY, chroma_root="core/chroma_store")
+        rag_engine = RAGBookEngine(book_id=book_id, api_key=API_KEY)
         topics = rag_engine.generate_topics(user_responses)
         return jsonify({"topics": topics})
     except FileNotFoundError as e:
