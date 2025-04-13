@@ -24,6 +24,6 @@ __pycache__/
 .gradle/
 backend/.gradle/
 ai-server/core/chroma_store/**/*.bin
-ai-server/core/chroma_store/**/*.pickle
+#ai-server/core/chroma_store/**/*.pickle
 !ai-server/core/chroma_store/**/chroma.sqlite3
 
