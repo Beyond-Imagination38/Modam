@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { API_URLS } from "../../consts";
 import { fetchApi } from "../../utils";
-import 군주론 from "./군주론.jpg";
+import img1984 from "./1984.jpg";
 import 앵무새죽이기 from "./앵무새죽이기.jpg";
 import 자아폭발 from "./자아폭발.jpg";
 
@@ -19,9 +19,9 @@ export function Main() {
     {
       postId: 1,
       userId: 10,
-      title: "군주론",
+      title: "1984",
       time: "2025-04-10 20:00",
-      representativeImage: 군주론,
+      representativeImage: img1984,
     },
     {
       postId: 2,
@@ -145,7 +145,7 @@ export function Main() {
             >
               <S.ProductCard key={postId}>
                 <S.ImageContainer>
-                  <S.ProductImage src={representativeImage} alt="상품 이미지" />
+                  <S.ProductImage src={representativeImage} alt="도서 이미지" />
                 </S.ImageContainer>
                 <S.ProductTitle>{title}</S.ProductTitle>
                 <S.ProductTime>{time}</S.ProductTime>
