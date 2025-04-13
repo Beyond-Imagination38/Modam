@@ -22,6 +22,10 @@ __pycache__/
 
 .gradle/
 backend/.gradle/
+<<<<<<< HEAD
 #chroma_store/ 
 
 /ai-server/core/chroma_store/
+=======
+**/chroma_store/
+>>>>>>> ee7c1d260aaebffab22b251626c97dac380ac584
