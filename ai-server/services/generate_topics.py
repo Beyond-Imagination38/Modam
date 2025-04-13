@@ -31,7 +31,7 @@ class RAGBookEngine:
     def __init__(self, book_id: int, api_key: str, chroma_root: str = "./chroma_store"):
         self.book_id = str(book_id)
         self.api_key = API_KEY
-        self.chroma_path = os.path.join(chroma_root, book_id)
+        self.chroma_path = os.path.join(chroma_root, str(book_id))
 
         if not os.path.exists(self.chroma_path):
             raise FileNotFoundError(f"No ChromaDB found for book_id: {book_id}")
