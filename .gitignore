@@ -14,6 +14,7 @@ backend.tar.gz
 .vscode/
 __pycache__/
 *.html
+*.pyc
 
 .DS_Store
 ._.DS_Store
