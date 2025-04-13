@@ -21,7 +21,7 @@ export const SearchContainer = styled.div`
 `;
 
 export const SearchInput = styled.input`
-  width: 60%;
+  width: 40%;
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 24px;
@@ -47,7 +47,7 @@ export const ProductGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 24px;
   padding: 0 24px;
-  max-width: 700px;
+  max-width: 600px;
   margin: 0 auto;
 `;
 
@@ -58,6 +58,7 @@ export const ProductCard = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
   position: relative;
+  
 
   &:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
