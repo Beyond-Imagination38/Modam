@@ -10,7 +10,7 @@ export function Detail() {
     postId: 1,
     clubId: 2,
     bookTitle: "1984",
-    author: "조지 오웰웰",
+    author: "조지 오웰",
     meetingDate: "2025-04-10 20:00",
     maxMembers: 4,
     currentMembers: 2,
