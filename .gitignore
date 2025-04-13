@@ -24,3 +24,4 @@ __pycache__/
 .gradle/
 backend/.gradle/
 ai-server/core/chroma_store/**/*.bin
+

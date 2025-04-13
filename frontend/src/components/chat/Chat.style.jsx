@@ -95,14 +95,14 @@ export const Message = styled.div`
 // `;
 
 export const MemoSection = styled.div`
-  width: 250px;
+  width: 300px;
   padding: 10px;
   border-left: 1px solid #ccc;
   background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
   border-radius: 8px;
-  height: 100%;
+  height: 95%;
 `;
 
 export const MemoTitle = styled.h3`

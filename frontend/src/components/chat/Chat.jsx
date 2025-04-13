@@ -2,29 +2,29 @@ import React, { useState, useEffect } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import * as S from "./Chat.style";
-import { Link, useParams } from "react-router-dom"; //soo: useParams추가
+import { Link, useParams } from "react-router-dom"; 
 
 export function Chat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [userId, setUserId] = useState(() => Number(localStorage.getItem("userId") || 0)); //soo: localStorage에서 userId 가져오기
-  const [username, setUserName] = useState(() => localStorage.getItem("userName") || "사용자"); //soo: localStorage에서 userName 가져오기
+  const [userId, setUserId] = useState(() => Number(localStorage.getItem("userId") || 0)); 
+  const [username, setUserName] = useState(() => localStorage.getItem("userName") || "사용자"); 
   const [stompClient, setStompClient] = useState(null);
   const [memoContent, setMemoContent] = useState("");
   const [isMemoVisible, setIsMemoVisible] = useState(false);
 
-  const { clubId } = useParams(); //soo: clubId 가져오기
+  const { clubId } = useParams(); 
 
   const accessToken = localStorage.getItem("accessToken") || "";
 
   useEffect(() => {
-    const socket = new SockJS("http://localhost:8080/chat"); //soo: 주소 수정
+    const socket = new SockJS("http://localhost:8080/chat"); 
     const client = new Client({
       webSocketFactory: () => socket,
-      reconnectDelay: 5000, // 자동 재연결 (5초)
+      reconnectDelay: 5000, 
       onConnect: () => {
-        console.log("WebSocket 연결 성공"); //soo:Debug
-        window.stompClient = client; //soo: console에서 사용 가능
+        console.log("WebSocket 연결 성공"); 
+        window.stompClient = client; 
         client.subscribe(`/topic/chat/${clubId}`, (message) => {
           const receivedMessage = JSON.parse(message.body);
           setMessages((prevMessages) => [...prevMessages, receivedMessage]);
@@ -51,15 +51,15 @@ export function Chat() {
 
     if (message.trim()) {
       const chatMessage = {
-        messageType: "DISCUSSION", //soo: 기본 메시지 타입 설정
-        clubId: parseInt(clubId), //soo: 문자열 clubId를 숫자로 변환
-        userId, //soo: localStorage에서 가져온 userId 사용
-        userName: username, //soo: localStorage에서 가져온 userName 사용
+        messageType: "DISCUSSION", 
+        clubId: parseInt(clubId), 
+        userId, 
+        userName: username, 
         content: message,
       };
 
       stompClient.publish({
-        destination: `/app/chat/${clubId}`, //soo: 동적으로 clubId 포함
+        destination: `/app/chat/${clubId}`, 
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export function Chat() {
       <S.Container>
         <S.ChatSection>
           <S.Header>
-            <S.Title>『군주론』 - 마키아벨리</S.Title>
+            <S.Title>『1984』 - 조지 오웰</S.Title>
             <S.RightSection>
               <S.NoteText onClick={toggleMemo}>
                 {isMemoVisible ? "메모 닫기" : "메모 열기"}
@@ -96,7 +96,7 @@ export function Chat() {
 
           <S.ChatBox>
             {messages.map((msg, index) => (
-                <S.Message key={index} $isMine={msg.userName === username}> {/* soo: isMine → $isMine으로 변경하여 warning 해결 */}
+                <S.Message key={index} $isMine={msg.userName === username}> 
                   <strong>{msg.userName}:</strong> {msg.content}
                 </S.Message>
             ))}

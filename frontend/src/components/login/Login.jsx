@@ -16,14 +16,14 @@ export function Login() {
   const navigate = useNavigate();
 
   // 페이지 로드 시 localStorage에서 token과 userId를 확인하여 이미 로그인 상태라면 바로 main 페이지로 이동
-  useEffect(() => {
+ /* useEffect(() => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
 
     if (token && userId) {
       navigate("/main"); // 이미 로그인된 상태면 메인 페이지로 리다이렉트
     }
-  }, [navigate]);
+  }, [navigate]);*/
 
   const onClickConfirmButton = () => {
     if (email === User.email && pw === User.pw) {
