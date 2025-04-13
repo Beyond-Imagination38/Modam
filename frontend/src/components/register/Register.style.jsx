@@ -12,15 +12,15 @@ export const Container = styled.div`
 
 export const Title = styled.h2`
   color: #65558f;
-  margin-bottom: 20px;
-  font-size: 32px;
+  margin-bottom: 5px;
+  font-size: 20px;
 `;
 
 export const Form = styled.form`
   min-width: 500px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 `;
 
 export const Label = styled.label`
@@ -55,7 +55,7 @@ export const CheckboxContainer = styled.div`
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 5px;
 `;
 
 export const Button = styled.button`
@@ -75,8 +75,6 @@ export const Button = styled.button`
 
 export const ImagePreviewContainer = styled.div`
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
 `;
 
 export const ImagePreview = styled.img`

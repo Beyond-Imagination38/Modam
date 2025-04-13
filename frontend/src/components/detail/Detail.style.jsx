@@ -2,18 +2,19 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
-  width: 70%;
-  height: 700px;
+  width: 60%;
+  height: 600px;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 12px;
   box-sizing: border-box;
   margin: 0 auto;
+  margin-top: 20px;
   position: relative;
 `;
 
 export const BookCover = styled.img`
-  width: 30%;
+  width: 50%;
   height: auto;
   border-radius: 8px;
   object-fit: cover;
