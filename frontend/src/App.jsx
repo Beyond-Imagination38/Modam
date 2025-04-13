@@ -36,7 +36,8 @@ function App() {
         <Route path="/mygroups" element={<MyGroups />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register/:postId" element={<Register />} />
-        <Route path="/chat" element={<Chat />} />
+        <Route path="/chat" element={<Chat />} />         {/* soo: 일반 채팅 */}
+        <Route path="/chat/:clubId" element={<Chat />} />        {/* soo: /추가: clubId 있는 채팅 */}
         <Route path="/bookreport" element={<Bookreport />} />
         <Route path="/post/:postId" element={<Detail />} />
       </Routes>

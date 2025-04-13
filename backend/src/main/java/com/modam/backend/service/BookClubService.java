@@ -15,7 +15,12 @@ public class BookClubService {
         this.book_club_repository = book_club_repository;
     }
 
-    public List<BookClub> getBookclubsbybookid(String book_id) {
+    public BookClub getBookClub(int clubId) {
+        return book_club_repository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
+    }
+
+    public List<BookClub> getBookclubsbybookid(int book_id) {
         return book_club_repository.findByBookId(book_id);
     }
 }

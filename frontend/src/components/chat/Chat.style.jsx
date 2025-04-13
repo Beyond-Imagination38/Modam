@@ -81,8 +81,18 @@ export const Message = styled.div`
   border: 1px solid #ddd;
   padding: 8px;
   border-radius: 6px;
-  background: #f9f9f9;
-`;
+  background: ${(props) => (props.$isMine ? "#e6e6ff" : "#f9f9f9")}; //soo: 내가 보낸 메시지면 연보라색 배경
+  align-self: ${(props) => (props.$isMine ? "flex-end" : "flex-start")}; //soo: 내가 보낸 메시지는 오른쪽 정렬
+  max-width: 80%;
+`; //soo: isMine → $isMine으로 변경 & 스타일 분기 적용
+
+// export const Message = styled.div`
+//   margin-bottom: 12px;
+//   border: 1px solid #ddd;
+//   padding: 8px;
+//   border-radius: 6px;
+//   background: #f9f9f9;
+// `;
 
 export const MemoSection = styled.div`
   width: 250px;
