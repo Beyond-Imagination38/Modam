@@ -1,33 +1,36 @@
-
-//추후에 MEMO 레포와 함께 추가
-
-/*
 package com.modam.backend.controller;
 
 import com.modam.backend.dto.MemoDto;
 import com.modam.backend.service.MemoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/api/memo")
 @RequiredArgsConstructor
 public class MemoController {
 
-    private final MemoService memo_service;
+    private final MemoService memoService;
 
-    @PostMapping("/{room_id}/memo")
-    public MemoDto saveMemo(@PathVariable("room_id") int room_id, @RequestBody MemoDto dto) {
-        dto.setClubId(room_id); // URL에서 받은 room_id를 DTO에 설정
-        return memo_service.saveMemo(dto);
+    @GetMapping("/{clubId}/{userId}")
+    public ResponseEntity<MemoDto> getMemo(@PathVariable Integer clubId, @PathVariable Integer userId) {
+        MemoDto memoDto = memoService.getMemo(clubId, userId);
+        return ResponseEntity.ok(memoDto);
     }
 
-    @PostMapping("/{room_id}/memos")
-    public List<MemoDto> getMemos(@PathVariable("room_id") int room_id) {
-        return memo_service.getMemosbyclubid(room_id);
+    @PostMapping("/{clubId}/{userId}")
+    public ResponseEntity<MemoDto> saveMemo(@PathVariable Integer clubId,
+                                            @PathVariable Integer userId,
+                                            @RequestBody MemoDto memoDto) {
+        MemoDto saved = memoService.saveOrUpdateMemo(clubId, userId, memoDto.getContent());
+        return ResponseEntity.ok(saved);
+    }
+
+    @PostMapping("/{clubId}/{userId}/finalize")
+    public ResponseEntity<String> finalizeMemo(@PathVariable Integer clubId,
+                                               @PathVariable Integer userId) {
+        memoService.finalizeMemo(clubId, userId);
+        return ResponseEntity.ok("메모가 확정되었습니다.");
     }
 }
-*/
-

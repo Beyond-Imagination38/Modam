@@ -7,14 +7,22 @@ import com.modam.backend.repository.ChatMessageRepository;
 import com.modam.backend.repository.DiscussionTopicRepository;
 import com.modam.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,27 +82,46 @@ public class ChatService {
             boolean alreadyGenerated = discussionTopicRepository.existsByClub(bookClub);
 
             if (enterCount == 4 && !alreadyGenerated) {
-                int bookId = bookClub.getBook().getBookId();
-                List<String> userResponses = chatMessageRepository.findByBookClubOrderByCreatedTimeAsc(bookClub)
-                        .stream()
-                        .filter(m -> m.getMessageType() == MessageType.SUBTOPIC)
-                        .map(ChatMessage::getContent)
-                        .collect(Collectors.toList());
-                sendAiMainTopic(clubId, bookId, userResponses);
+                synchronized (this) { // 추가: 블록 단위 동기화로 다중 요청 충돌 방지
+                    // 한 번 더 체크 (동시성 대비 이중 확인)
+                    if (!discussionTopicRepository.existsByClub(bookClub)) {
+                        int bookId = bookClub.getBook().getBookId();
+
+                        List<String> userResponses = chatMessageRepository
+                                .findByBookClubOrderByCreatedTimeAsc(bookClub)
+                                .stream()
+                                .filter(m -> m.getMessageType() == MessageType.SUBTOPIC)
+                                .map(ChatMessage::getContent)
+                                .collect(Collectors.toList());
+
+                        sendAiMainTopic(clubId, bookId, userResponses);
+                    }
+                }
             }
         }
 
         // 수정2: SUBTOPIC 4개 완료되었을 때만 사용자 1 발언 안내
         if (messageType == MessageType.SUBTOPIC) {
             long subCount = chatMessageRepository.countByBookClubAndMessageType(bookClub, MessageType.SUBTOPIC);
-            if (subCount == 4) {
-                Optional<ChatMessage> first = chatMessageRepository.findFirstByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC);
-                first.ifPresent(firstMsg -> {
-                    messagingTemplate.convertAndSend("/topic/chat/" + clubId,
-                            new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자", FIRST_SUBTOPIC_NOTICE, new Timestamp(System.currentTimeMillis())));
+            if (subCount == 4)
+            {
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+                    @Override
+                    public void afterCommit() {
+                        Optional<ChatMessage> first = chatMessageRepository.findFirstByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC);
+                        Optional<DiscussionTopic> firstTopicOpt = discussionTopicRepository.findFirstByClubOrderByVersionAsc(bookClub);
 
-                    messagingTemplate.convertAndSend("/topic/chat/" + clubId,
-                            new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자", "안건: " + firstMsg.getContent(), new Timestamp(System.currentTimeMillis())));
+                        if (first.isPresent() && firstTopicOpt.isPresent()) {
+                            messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                                    new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자", GREETING_MESSAGE, new Timestamp(System.currentTimeMillis())));
+
+                            messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                                    new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자", "대주제 1: " + firstTopicOpt.get().getContent(), new Timestamp(System.currentTimeMillis())));
+
+                            messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                                    new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자", FIRST_SUBTOPIC_NOTICE, new Timestamp(System.currentTimeMillis())));
+                        }
+                    }
                 });
             }
         }
