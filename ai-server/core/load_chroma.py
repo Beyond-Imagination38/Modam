@@ -5,7 +5,7 @@ import os
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
-def load_chroma(book_id, chroma_root="core/chroma_store"):
+def load_chroma(book_id, chroma_root="chroma_store"):
     """
     저장된 ChromaDB를 불러오는 함수
 
@@ -20,6 +20,7 @@ def load_chroma(book_id, chroma_root="core/chroma_store"):
     # 현재 파일 기준으로 절대경로 생성
     base_dir = os.path.dirname(os.path.abspath(__file__))
     persist_path = os.path.join(base_dir, chroma_root, str(book_id))
+    print("Chroma persist path:", os.path.abspath(persist_path))
 
     if not os.path.exists(persist_path):
         raise FileNotFoundError(f"ChromaDB not found at {persist_path}")

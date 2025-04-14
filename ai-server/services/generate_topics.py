@@ -11,6 +11,7 @@ from langchain.chat_models import ChatOpenAI
 #from langchain.chains import RetrievalQA
 from langchain.embeddings.base import Embeddings
 from sentence_transformers import SentenceTransformer
+from core.load_chroma import load_chroma
 
 # .env 파일 로드
 load_dotenv()
@@ -28,17 +29,13 @@ class HuggingFaceEmbeddings(Embeddings):
         return self.model.encode(text).tolist()
     
 class RAGBookEngine:
-    def __init__(self, book_id: int, api_key: str, chroma_root: str = "ai-server/core/chroma_store"):
+    def __init__(self, book_id: int, api_key: str):
         self.book_id = str(book_id)
-        self.api_key = API_KEY
-        self.chroma_path = os.path.join(chroma_root, str(book_id))
-
-        if not os.path.exists(self.chroma_path):
-            raise FileNotFoundError(f"No ChromaDB found for book_id: {book_id}")
+        self.api_key = api_key
         
         # 벡터 DB, LLM 초기화
         embedding = HuggingFaceEmbeddings()
-        self.db = Chroma(persist_directory=self.chroma_path, embedding_function=embedding)
+        self.db = load_chroma(self.book_id)
         self.retriever = self.db.as_retriever()
         self.llm = ChatOpenAI(model_name="gpt-4", api_key=self.api_key)
 
