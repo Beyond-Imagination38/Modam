@@ -1,62 +1,52 @@
-/*
-
-//추후에 MemoRepository와 함께 추가
-
 package com.modam.backend.service;
 
 import com.modam.backend.dto.MemoDto;
-import com.modam.backend.model.BookClub;
 import com.modam.backend.model.Memo;
-import com.modam.backend.repository.BookClubRepository;
 import com.modam.backend.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MemoService {
 
-    private final MemoRepository memo_repository;
-    private final BookClubRepository book_club_repository;
+    private final MemoRepository memoRepository;
 
-    public List<MemoDto> getMemosByClubId(int club_id) {
-        return memo_repository.findByBookClub_ClubId(club_id).stream()
-                .map(memo -> new MemoDto(
-                        memo.getMemo_id(),
-                        memo.getBookClub().getClub_id(),
-                        memo.getUser_id(),
-                        memo.getContent(),
-                        memo.getCreated_time(),
-                        memo.getUpdated_time()
-                )).collect(Collectors.toList());
+    public MemoDto getMemo(Integer clubId, Integer userId) {
+        Memo memo = memoRepository.findByClubIdAndUserId(clubId, userId)
+                .orElse(new Memo(null, userId, clubId, "", null, null, false));
+        return convertToDto(memo);
     }
 
-    public MemoDto saveMemo(MemoDto dto) {
-        BookClub book_club = book_club_repository.findById(dto.getClub_id())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid club_id"));
+    public MemoDto saveOrUpdateMemo(Integer clubId, Integer userId, String content) {
+        Memo memo = memoRepository.findByClubIdAndUserId(clubId, userId)
+                .orElse(new Memo(null, userId, clubId, "", null, null, false));
 
-        Memo memo = new Memo();
-        memo.setBookClub(book_club);
-        memo.setUser_id(dto.getUser_id());
-        memo.setContent(dto.getContent());
-        memo.setCreated_time(LocalDateTime.now());
-        memo.setUpdated_time(LocalDateTime.now());
+        if (Boolean.TRUE.equals(memo.getIsFinalized())) {
+            throw new IllegalStateException("이미 확정된 메모는 수정할 수 없습니다.");
+        }
 
-        Memo saved = memo_repository.save(memo);
+        memo.setContent(content);
+        Memo saved = memoRepository.save(memo);
+        return convertToDto(saved);
+    }
 
+    public void finalizeMemo(Integer clubId, Integer userId) {
+        Memo memo = memoRepository.findByClubIdAndUserId(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("메모가 존재하지 않습니다."));
+        memo.setIsFinalized(true);
+        memoRepository.save(memo);
+    }
+
+    private MemoDto convertToDto(Memo memo) {
         return new MemoDto(
-                saved.getMemo_id(),
-                saved.getBookClub().getClub_id(),
-                saved.getUser_id(),
-                saved.getContent(),
-                saved.getCreated_time(),
-                saved.getUpdated_time()
+                memo.getMemoId(),
+                memo.getClubId(),
+                memo.getUserId(),
+                memo.getContent(),
+                memo.getCreated_time(),
+                memo.getUpdated_time(),
+                memo.getIsFinalized()
         );
     }
 }
-
- */
