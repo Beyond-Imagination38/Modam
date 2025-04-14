@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
+import java.sql.Timestamp;
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/chat")
@@ -25,44 +24,48 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
     private final BookClubService bookClubService;
 
-    private final RestTemplate restTemplate = new RestTemplate(); //soo: AI 서버 호출용
-
-
     public ChatController(ChatService chatService, SimpMessagingTemplate messagingTemplate, BookClubService bookClubService) {
         this.chatService = chatService;
         this.messagingTemplate = messagingTemplate;
         this.bookClubService = bookClubService;
     }
 
-
-
     @MessageMapping("/chat/{clubId}")
     public void sendMessage(@DestinationVariable int clubId, ChatMessageDto message) {
-
-        System.out.println("수신된 clubId: " + clubId); // debugging
-        System.out.println("받은 메시지 DTO: " + message); // debugging
-
         ChatMessageDto saved = chatService.saveChatMessage(clubId, message);
 
-        System.out.println("DB 저장 후 브로드캐스트 직전 DTO: " + saved); // debugging
-
-        // 클럽 ID 기반 브로드캐스트
         messagingTemplate.convertAndSend("/topic/chat/" + clubId, saved);
 
-        System.out.println("브로드캐스트 완료: /topic/chat/" + clubId); // debugging
-
-        // 추가: ENTER 메시지일 경우 AI 발제문 호출
-        if (message.getMessageType() == MessageType.ENTER) {
+        if (saved.isShouldTriggerAiIntro()) {
             BookClub bookClub = bookClubService.getBookClub(clubId);
             int bookId = bookClub.getBook().getBookId();
 
-            List<String> userResponses = List.of(
-                    "나는 주인공 윈스턴의 외로움에 공감했어요.",
-                    "전체주의 사회의 공포가 정말 생생하게 느껴졌습니다.",
-                    "빅브라더의 감시는 현대 사회와도 닮은 것 같아요."
-            );
+            // AI 토픽 생성
+            chatService.sendAiMainTopic(clubId, bookId);
 
-            chatService.sendAiMainTopic(clubId, bookId, userResponses); // AI 진행자 메시지 추가 전송
+            // AI 인삿말 및 대주제
+            messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                    new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자",
+                            "안녕하세요 이번 모임은 책 1984에 대한 내용입니다. 첫번째 주제는 다음과 같습니다.",
+                            new Timestamp(System.currentTimeMillis())));
+
+            chatService.getFirstDiscussionTopic(clubId).ifPresent(topic -> {
+                messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                        new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자",
+                                "대주제 1: " + topic, new Timestamp(System.currentTimeMillis())));
+            });
+        }
+
+        if (saved.isShouldTriggerFirstDiscussion()) {
+            messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                    new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자",
+                            "그럼 사용자 1의 의견에 대해 이야기해봅시다.", new Timestamp(System.currentTimeMillis())));
+
+            chatService.getFirstUserSubtopic(clubId).ifPresent(content -> {
+                messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                        new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자",
+                                "안건: " + content, new Timestamp(System.currentTimeMillis())));
+            });
         }
     }
 
@@ -70,6 +73,4 @@ public class ChatController {
     public List<ChatMessageDto> getChatHistory(@PathVariable("club_id") int club_id) {
         return chatService.getChatHistory(club_id);
     }
-
-
 }
