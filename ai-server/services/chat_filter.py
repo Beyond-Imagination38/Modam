@@ -8,7 +8,7 @@ import torch
 # 키워드 기반 욕설 리스트
 BADWORDS = [
     "씨발", "ㅅㅂ", "ㅂㅅ", "개새끼", "좆", "병신", "ㅗ", "ㅉ", "닥쳐", "꺼져",
-    "fuck", "shit", "fxxk", "fuckin", "fuckyou", "asshole", "damn", "ㅆㅂ"
+    "fuck", "shit", "fxxk", "fuckin", "fuckyou", "asshole", "damn", "ㅆㅂ", "욕설"
 ]
 
 def contains_badword(text):
