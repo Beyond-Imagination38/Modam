@@ -33,10 +33,53 @@ public class ChatService {
 
     private static final String GREETING_MESSAGE = "안녕하세요 이번 모임은 책 1984에 대한 내용입니다. 첫번째 주제는 다음과 같습니다.";
 
+    @SuppressWarnings("unchecked")
     @Transactional
     public ChatMessageDto saveChatMessage(int clubId, ChatMessageDto dto) {
         BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
         User user = userRepository.findById(dto.getUserId()).orElseThrow();
+
+        // 채팅 필터링 - 욕설 감지 (Flask 서버 호출 방식)
+        boolean isBlocked = false;
+        try {
+            Map<String, String> filterRequest = new HashMap<>();
+            filterRequest.put("text", dto.getContent());
+
+            HttpHeaders filterHeaders = new HttpHeaders();
+            filterHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<Map<String, String>> filterEntity = new HttpEntity<>(filterRequest, filterHeaders);
+
+            ResponseEntity<Map> filterResponse = new RestTemplate()
+                    .postForEntity("http://localhost:5000/ai/filter-chat", filterEntity, Map.class);
+
+            if (filterResponse.getStatusCode().is2xxSuccessful()) {
+                Map<String, Object> body = filterResponse.getBody();
+                isBlocked = Boolean.TRUE.equals(body.get("is_blocked"));
+            }
+        } catch (Exception e) {
+            System.err.println("채팅 필터링 실패: " + e.getMessage());
+        }
+
+        // 차단된 메시지는 저장/브로드캐스트 하지 않음
+        if (isBlocked) {
+
+            System.out.println("🚫 차단된 메시지 감지됨: \"" + dto.getContent() + "\"");  //debug
+
+            return new ChatMessageDto(
+                    dto.getMessageType(),
+                    clubId,
+                    user.getUserId(),
+                    user.getUserName(),
+                    "[차단된 메시지입니다]", // FE 연결 전 테스트용
+                    //dto.getContent(),         // FE 연결 후 실사용
+                    new Timestamp(System.currentTimeMillis()),
+                    null, // order
+                    false, // shouldTriggerAiIntro
+                    false, // shouldTriggerFirstDiscussion
+                    true   // isBlocked!
+            );
+        }
 
         long userMsgCount = chatMessageRepository.findByBookClubOrderByCreatedTimeAsc(bookClub).stream()
                 .filter(m -> m.getUser().equals(user) && m.getMessageType() != MessageType.ENTER)
@@ -79,7 +122,7 @@ public class ChatService {
 
         return new ChatMessageDto(messageType, clubId, user.getUserId(), user.getUserName(),
                 dto.getContent(), chatMessage.getCreatedTime(), order,
-                shouldTriggerAiIntro, shouldTriggerFirstDiscussion);
+                shouldTriggerAiIntro, shouldTriggerFirstDiscussion, isBlocked);
     }
 
     @Transactional
