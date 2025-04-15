@@ -77,22 +77,57 @@ export const ChatBox = styled.div`
 `;
 
 export const Message = styled.div`
-  margin-bottom: 12px;
-  border: 1px solid #ddd;
-  padding: 8px;
-  border-radius: 6px;
-  background: ${(props) => (props.$isMine ? "#e6e6ff" : "#f9f9f9")}; //soo: 내가 보낸 메시지면 연보라색 배경
-  align-self: ${(props) => (props.$isMine ? "flex-end" : "flex-start")}; //soo: 내가 보낸 메시지는 오른쪽 정렬
-  max-width: 80%;
-`; //soo: isMine → $isMine으로 변경 & 스타일 분기 적용
+  display: flex;
+  align-items: flex-start;
+  margin: 5px 0;
+  gap: 3px;
 
-// export const Message = styled.div`
-//   margin-bottom: 12px;
-//   border: 1px solid #ddd;
-//   padding: 8px;
-//   border-radius: 6px;
-//   background: #f9f9f9;
-// `;
+  &.my-message {
+
+  text-align: left;
+
+    strong {
+      color: #333;
+    }
+
+    div {
+      background-color: #e6e6ff;
+    }
+  }
+
+  &.user-message {
+    strong {
+      color: #333;
+    }
+
+    div {
+      background-color: #f1f0f0;
+    }
+  }
+
+  &.bot-message {
+    strong {
+      color: #0c5460;
+    }
+
+    div {
+      background-color: #d1ecf1;
+    }
+  }
+
+  div {
+    padding: 8px 12px;
+    border-radius: 12px;
+    max-width: 100%;
+  }
+`;
+
+export const Avatar = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
 
 export const MemoSection = styled.div`
   width: 300px;

@@ -80,7 +80,7 @@ export const ImageContainer = styled.div`
 
 export const ProductImage = styled.img`
   width: 100%;
-  height: 160px;
+  height: 200px;
   background-color: #d1d5db;
   border-radius: 8px;
 `;

@@ -95,23 +95,37 @@ export function Chat() {
           </S.Header>
 
           <S.ChatBox>
-            {messages.map((msg, index) => (
-                <S.Message key={index} $isMine={msg.userName === username}> 
-                  <strong>{msg.userName}:</strong> {msg.content}
-                </S.Message>
-            ))}
-          </S.ChatBox>
+          {messages.map((msg, index) => {
+  const isMine = msg.userName === username;
+  const isAI = msg.userId === 0;
 
+  const userName = isAI ? "AI 진행자" : msg.userName;
+  const avatar = "/assets/chatbot.png";
+  const messageStyle = isAI ? "bot-message" : isMine ? "my-message" : "user-message";
+
+  return (
+    <S.Message key={index} className={messageStyle}>
+      {isAI && <S.Avatar src={avatar} alt="AI avatar" />}
+      <div>
+        <strong>{userName}</strong>
+        <div>{msg.content}</div>
+      </div>
+    </S.Message>
+  );
+})}
+
+          </S.ChatBox>
           <S.InputContainer>
-            <S.Input
-                type="text"
-                placeholder="여기에 내용을 입력해 주세요."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-            />
-            <S.SendButton onClick={sendMessage}>보내기</S.SendButton>
-          </S.InputContainer>
+  <S.Input
+    type="text"
+    placeholder="여기에 내용을 입력해 주세요."
+    value={message}
+    onChange={(e) => setMessage(e.target.value)}
+    onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+  />
+  <S.SendButton onClick={sendMessage}>보내기</S.SendButton>
+</S.InputContainer>
+
         </S.ChatSection>
 
         {isMemoVisible && (

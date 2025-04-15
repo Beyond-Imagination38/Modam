@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import * as S from "./Home.style";
+import logo from "./logo.png";
 
 export function Home() {
   return (
     <S.HomeContainer>
-      <S.Title>Modam</S.Title>
+      <S.Title><img src={logo} alt="Logo"/></S.Title>
       <S.Nav>
         <Link to="/signup">
           <S.SignupButton>회원가입</S.SignupButton>
