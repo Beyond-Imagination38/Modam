@@ -23,7 +23,7 @@ model = AutoModelForSequenceClassification.from_pretrained(model_path).to(device
 model.eval()
 
 # 모델 예측
-def predict_model(text, threshold=0.7):
+def predict_model(text, threshold=0.5):
     inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=128)
     inputs = {k: v.to(device) for k, v in inputs.items()}
 
