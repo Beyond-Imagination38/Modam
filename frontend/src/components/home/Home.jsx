@@ -4,7 +4,9 @@ import * as S from "./Home.style";
 export function Home() {
   return (
     <S.HomeContainer>
-      <S.Title>Modam</S.Title>
+      <S.Title>
+        <img src="/assets/logo.png" alt="Logo" />
+      </S.Title>
       <S.Nav>
         <Link to="/signup">
           <S.SignupButton>회원가입</S.SignupButton>
@@ -12,7 +14,6 @@ export function Home() {
         <Link to="/login">
           <S.LoginButton>로그인</S.LoginButton>
         </Link>
-
         <Link to="/main">
           <S.GoButton>일단 둘러보기</S.GoButton>
         </Link>

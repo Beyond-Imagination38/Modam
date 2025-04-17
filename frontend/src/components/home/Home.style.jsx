@@ -9,11 +9,14 @@ export const HomeContainer = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-size: 50px;
-  font-weight: bold;
-  text-align: center;
+ display: flex;
+  justify-content: center;
   margin-bottom: 20px;
-  color: #65558f;
+
+  img {
+    width: 300x;  
+    height: 100px;
+  }
 `;
 
 export const Nav = styled.div`

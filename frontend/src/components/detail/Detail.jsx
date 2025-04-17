@@ -3,6 +3,7 @@ import Header from "../common/Header";
 import * as S from "./Detail.style";
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import img1984 from "./1984.jpg";
 
 export function Detail() {
   //const [data, setData] = useState(null);
@@ -57,7 +58,8 @@ export function Detail() {
       <Header />
       <S.Container>
         <S.BookCover
-
+          src={img1984}
+          alt="bookTitle" 
         //src={`/images/book-cover-${data.clubId}.jpg`}
         //alt={data.bookTitle}
         />
