@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 @Data
-//@AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChatMessageDto {
@@ -35,8 +34,14 @@ public class ChatMessageDto {
     @Schema(description = "SUBTOPIC 순서", example = "1")
     private Integer subtopicOrder;
 
-    // 생성자 1: 전체용
-    public ChatMessageDto(MessageType messageType, int clubId, int userId, String userName, String content, Timestamp createdTime, Integer subtopicOrder) {
+
+    // AI 관련 플래그
+    private boolean shouldTriggerAiIntro;
+    private boolean shouldTriggerFirstDiscussion;
+
+    // 생성자 1: 전체 필드
+    public ChatMessageDto(MessageType messageType, int clubId, int userId, String userName,
+                          String content, Timestamp createdTime, Integer subtopicOrder) {
         this.messageType = messageType;
         this.clubId = clubId;
         this.userId = userId;
@@ -47,14 +52,23 @@ public class ChatMessageDto {
     }
 
     // 생성자 2: subtopicOrder 없이
-    public ChatMessageDto(MessageType messageType, int clubId, int userId, String userName, String content, Timestamp createdTime) {
+    public ChatMessageDto(MessageType messageType, int clubId, int userId, String userName,
+                          String content, Timestamp createdTime) {
+        this(messageType, clubId, userId, userName, content, createdTime, null);
+    }
+    // 생성자 3: 모든 필드 포함 (AI 플래그 포함)
+    public ChatMessageDto(MessageType messageType, int clubId, int userId, String userName,
+                          String content, Timestamp createdTime, Integer subtopicOrder,
+                          boolean shouldTriggerAiIntro, boolean shouldTriggerFirstDiscussion) {
         this.messageType = messageType;
         this.clubId = clubId;
         this.userId = userId;
         this.userName = userName;
         this.content = content;
         this.createdTime = createdTime;
-        this.subtopicOrder = null;
+        this.subtopicOrder = subtopicOrder;
+        this.shouldTriggerAiIntro = shouldTriggerAiIntro;
+        this.shouldTriggerFirstDiscussion = shouldTriggerFirstDiscussion;
     }
 
 }
