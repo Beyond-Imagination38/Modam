@@ -1,6 +1,6 @@
 import Header from "../common/Header";
 import * as S from "./Main.style";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { API_URLS } from "../../consts";
 import { fetchApi } from "../../utils";
@@ -14,6 +14,15 @@ export function Main() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [items, setItems] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("진행 중");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [user, setUser] = useState(null); 
+
+  const navigate = useNavigate();
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
 
   const data = [
     {
@@ -79,6 +88,11 @@ export function Main() {
     const storedData = data;
     const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
     setItems([...storedPosts, ...storedData]);
+    
+    const storedUser = localStorage.getItem("user"); 
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); 
+    }
   }, []);
 
   /*const fetchItems = async () => {
@@ -119,70 +133,130 @@ export function Main() {
   return (
     <S.Container>
       <Header />
-      <S.SearchContainer>
-        <S.SearchInput
-          type="text"
-          placeholder="모임명 검색"
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setCurrentPage(1);
-          }}
-        />
-        <S.SearchButton>🔍</S.SearchButton>
-        <Link to="/Register">
-          <S.RegisterButton>모임 등록하기</S.RegisterButton>
-        </Link>
-      </S.SearchContainer>
-
-      <S.ProductGrid>
-        {currentItems.length > 0 ? (
-          currentItems.map(({ representativeImage, title, time, postId }) => (
-            <Link
-              to={`/post/${postId}`}
-              key={postId}
-              style={{ textDecoration: "none", color: "inherit" }}
+      <S.HamburgerButton onClick={toggleSidebar}>☰</S.HamburgerButton>
+      <S.Layout>
+        {isSidebarOpen && (
+          <S.SideMenu>
+            <S.MenuItem
+              $active={activeCategory === "진행 중"}
+              onClick={() => {
+                setActiveCategory("진행 중");
+                setCurrentPage(1);
+              }}
             >
-              <S.ProductCard key={postId}>
-                <S.ImageContainer>
-                  <S.ProductImage src={representativeImage} alt="도서 이미지" />
-                </S.ImageContainer>
-                <S.ProductTitle>{title}</S.ProductTitle>
-                <S.ProductTime>{time}</S.ProductTime>
-              </S.ProductCard>
-            </Link>
-          ))
-        ) : (
-          <S.NoResults>검색 결과가 없습니다.</S.NoResults>
-        )}
-      </S.ProductGrid>
+              진행 중인 독서 모임
+            </S.MenuItem>
+            <S.MenuItem
+              $active={activeCategory === "완료"}
+              onClick={() => {
+                setActiveCategory("완료");
+                setCurrentPage(1);
+              }}
+            >
+              완료된 독서모임
+            </S.MenuItem>
+            <S.MenuItem
+              $active={activeCategory === "좋아요"}
+              onClick={() => {
+                setActiveCategory("좋아요");
+                setCurrentPage(1);
+              }}
+            >
+              좋아요한 독서모임
+            </S.MenuItem>
+              <S.SideMenuFooter>
+                <S.Button
+                  style={{ display: user ? "block" : "none" }} 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
+                    if (confirmLogout) {
+                      localStorage.removeItem("user");
+                      navigate("/");
+                    }
+                  }}
+                >
+                로그아웃
+              </S.Button>
+            </S.SideMenuFooter>
 
-      {/* 페이지네이션 */}
-      <S.Pagination>
-        <S.PageButton
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          이전
-        </S.PageButton>{" "}
-        {Array.from({ length: totalPages }, (_, i) => (
-          <S.PageButton
-            key={i}
-            onClick={() => setCurrentPage(i + 1)}
-            $active={currentPage === i + 1}
-          >
-            {i + 1}
-          </S.PageButton>
-        ))}
-        <S.PageButton
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-        >
-          다음
-        </S.PageButton>
-      </S.Pagination>
+          </S.SideMenu>
+        )}
+
+        <S.ContentArea>
+          <S.SearchContainer>
+            <S.SearchInput
+              type="text"
+              placeholder="모임명 검색"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+            <S.SearchButton>🔍</S.SearchButton>
+            <Link to="/Register">
+              <S.RegisterButton>모임 등록하기</S.RegisterButton>
+            </Link>
+            <Link to="/completed">
+              <S.RegisterButton>모임 정보</S.RegisterButton>
+            </Link>
+          </S.SearchContainer>
+
+          <S.ProductGrid>
+            {currentItems.length > 0 ? (
+              currentItems.map(
+                ({ representativeImage, title, time, postId }, index) => (
+                  <Link
+                    to={`/post/${postId || index}`}
+                    key={postId || index}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <S.ProductCard>
+                      <S.ImageContainer>
+                        <S.ProductImage
+                          src={representativeImage}
+                          alt="도서 이미지"
+                        />
+                      </S.ImageContainer>
+                      <S.ProductTitle>{title}</S.ProductTitle>
+                      <S.ProductTime>{time}</S.ProductTime>
+                    </S.ProductCard>
+                  </Link>
+                )
+              )
+            ) : (
+              <S.NoResults>검색 결과가 없습니다.</S.NoResults>
+            )}
+          </S.ProductGrid>
+
+          <S.Pagination>
+            <S.PageButton
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              이전
+            </S.PageButton>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <S.PageButton
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                $active={currentPage === i + 1}
+              >
+                {i + 1}
+              </S.PageButton>
+            ))}
+            <S.PageButton
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+            >
+              다음
+            </S.PageButton>
+          </S.Pagination>
+        </S.ContentArea>
+      </S.Layout>
     </S.Container>
   );
 }

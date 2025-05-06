@@ -83,36 +83,20 @@ export const Message = styled.div`
   gap: 3px;
 
   &.my-message {
-
   text-align: left;
 
-    strong {
-      color: #333;
-    }
-
-    div {
-      background-color: #e6e6ff;
-    }
+    strong {color: #333;}
+    div {background-color: #e6e6ff;}
   }
 
   &.user-message {
-    strong {
-      color: #333;
-    }
-
-    div {
-      background-color: #f1f0f0;
-    }
+    strong {color: #333;}
+    div {background-color: #f1f0f0;}
   }
 
   &.bot-message {
-    strong {
-      color: #0c5460;
-    }
-
-    div {
-      background-color: #d1ecf1;
-    }
+    strong {color: #0c5460;}
+    div {background-color: #d1ecf1;}
   }
 
   div {

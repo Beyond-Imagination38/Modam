@@ -16,16 +16,16 @@ export function Login() {
   const navigate = useNavigate();
 
   // 페이지 로드 시 localStorage에서 token과 userId를 확인하여 이미 로그인 상태라면 바로 main 페이지로 이동
- /* useEffect(() => {
+ useEffect(() => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
 
     if (token && userId) {
       navigate("/main"); // 이미 로그인된 상태면 메인 페이지로 리다이렉트
     }
-  }, [navigate]);*/
+  }, [navigate]);
 
-  const onClickConfirmButton = () => {
+  /*const onClickConfirmButton = () => {
     if (email === User.email && pw === User.pw) {
       localStorage.setItem("token", "true");
       localStorage.setItem("userId", "123");
@@ -34,9 +34,9 @@ export function Login() {
       navigate("/main");
     } else {
       alert("이메일 또는 비밀번호를 확인해 주세요. ");
-    }
+    }*/
 
-    /*const onClickConfirmButton = async () => {
+    const onClickConfirmButton = async () => {
     try {
       const response = await fetchApi(API_URLS.login, {
         method: "POST",
@@ -74,7 +74,7 @@ export function Login() {
         error.response?.data?.error ||
           "네트워크 오류가 발생했습니다. 다시 시도해 주세요."
       );
-    }*/
+    }
   };
 
   return (
