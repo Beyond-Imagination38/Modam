@@ -10,6 +10,7 @@ import {
   Bookreport,
   Detail,
   MyGroups,
+  Completed,
 } from "./components";
 import { createGlobalStyle } from "styled-components";
 
@@ -40,6 +41,7 @@ function App() {
         <Route path="/chat/:clubId" element={<Chat />} />        {/* soo: /추가: clubId 있는 채팅 */}
         <Route path="/bookreport" element={<Bookreport />} />
         <Route path="/post/:postId" element={<Detail />} />
+        <Route path="/completed" element={<Completed />} />
       </Routes>
     </BrowserRouter>
   );
