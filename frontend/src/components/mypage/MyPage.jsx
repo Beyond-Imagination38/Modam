@@ -1,27 +1,84 @@
-import React from "react";
-import * as S from "./MyPage.style";
+import React, { useState } from "react";
 import Header from "../common/Header";
-import { Link } from "react-router-dom";
+import * as S from "./MyPage.style";
 
 export function MyPage() {
+  const [images, setImages] = useState([]);
+
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const imageUrls = files.map((file) => URL.createObjectURL(file));
+    setImages((prevImages) => [...prevImages, ...imageUrls]);
+  };
+
+  const handleImageDelete = (indexToDelete) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== indexToDelete));
+  };
+
+  const handleWithdraw = () => {
+    const confirm = window.confirm("계정을 탈퇴하시겠습니까?");
+    if (confirm) {
+      window.location.href = "/";
+    }
+  };
+  
+  const handleSave = () => {
+    const confirm = window.confirm("수정하시겠습니까?");
+    if (confirm) {
+      window.location.href = "/main";
+    }
+  };
+
   return (
-    <div>
+    <>
       <Header />
-      <S.SelectMenu>
-        <Link to="/mypage/myinfo" style={{ textDecorationLine: "none" }}>
-          <S.Button>내 정보 관리</S.Button>
-        </Link>
-        <Link to="/mygroups" style={{ textDecorationLine: "none" }}>
-          <S.Button>독서 모임 관리</S.Button>
-        </Link>
-        <Link to="/mypage/like" style={{ textDecorationLine: "none" }}>
-          <S.Button>좋아요한 독서모임</S.Button>
-        </Link>
-        <Link to="/" style={{ textDecorationLine: "none" }}>
-          <S.Button>로그아웃</S.Button>
-        </Link>
-        <S.Text style={{ cursor: "pointer" }}>탈퇴하기</S.Text>
-      </S.SelectMenu>
-    </div>
+        <S.Container>
+            <S.ProfileSection>
+              <S.ProfileImage>
+                <span role="img" aria-label="profile">👤</span>
+              </S.ProfileImage>
+            <div>
+              <S.Label htmlFor="fileUpload">파일선택</S.Label>
+              <S.Input
+                id="fileUpload"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageUpload}
+                style={{ display: 'block' }}
+              />
+            <S.ImagePreviewContainer>
+              {images.map((src, index) => (
+                <S.ImageWrapper key={index}>
+                  <S.ImagePreview src={src} alt={`미리보기 ${index + 1}`} />
+                  <S.DeleteButton onClick={() => handleImageDelete(index)}>×</S.DeleteButton>
+                </S.ImageWrapper>
+              ))}
+              </S.ImagePreviewContainer>
+            </div>
+    </S.ProfileSection>
+
+      <div>
+        <S.Label>아이디</S.Label>
+        <S.Input type="text" disabled />
+      </div>
+
+      <S.NameWrapper>
+        <S.Label>이름(닉네임)</S.Label>
+        <S.Input type="text" />
+      </S.NameWrapper>
+
+      <div>
+        <S.Label>비밀번호 변경</S.Label>
+        <S.Input type="password" placeholder="현재 비밀번호를 입력해주세요." />
+        <S.Input type="password" placeholder="변경할 비밀번호를 입력해주세요." />
+      </div>
+
+      <S.RightAlignBox>
+        <S.WithdrawButton onClick={handleWithdraw}>계정 탈퇴</S.WithdrawButton>
+      </S.RightAlignBox>
+      <S.SaveButton onClick={handleSave}>수정</S.SaveButton>
+    </S.Container>
+    </>
   );
 }

@@ -49,7 +49,13 @@ export function Signup() {
       const signupResponse = await fetchApi(API_URLS.signup, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, userName, pw }),
+        body: JSON.stringify({
+          user_name: userName,
+          email,
+          pw,
+          profile_image: "NULL", 
+          coin: 0,
+        }),
       });
 
       if (!signupResponse.ok) {
@@ -59,6 +65,7 @@ export function Signup() {
       const data = await signupResponse.json();
       console.log("회원가입 성공:", data);
 
+      localStorage.setItem("token", data.token);
       localStorage.setItem("userEmail", email);
       localStorage.setItem("userName", userName);
 

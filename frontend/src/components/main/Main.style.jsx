@@ -3,13 +3,14 @@ import styled from "styled-components";
 export const Container = styled.div`
   min-height: 100vh;
   background-color: #f3f4f6;
+    position: relative;
 `;
 
 export const Button = styled.button`
   background-color: white;
   color: #65558f;
   padding: 8px 16px;
-  border-radius: 8px;
+  border: 2px solid white;
   cursor: pointer;
 `;
 
@@ -69,6 +70,58 @@ export const ProductCard = styled.div`
     }
   }
 `;
+
+export const HamburgerButton = styled.button`
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000;
+`;
+
+export const Layout = styled.div`
+  display: flex;
+  min-height: 90vh;
+`;
+
+export const SideMenu = styled.div`
+  width: 200px;
+  background-color: #fff;
+  padding: 24px;s
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 85vh;
+`;
+
+export const SideMenuFooter = styled.div`
+  margin-top: auto;
+`;
+export const MenuItem = styled.div`
+  padding: 12px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  color: ${({ $active }) => ($active ? "#65558f" : "#333")};
+  font-weight: ${({ $active }) => ($active ? "bold" : "normal")};
+  background-color: ${({ $active }) =>
+    $active ? "#f0f0f0" : "transparent"};
+  border-radius: 4px;
+  margin-bottom: 8px;
+
+  &:hover {
+    background-color: #eee;
+  }
+`;
+
+export const ContentArea = styled.div`
+  flex: 1;
+  padding: 24px;
+`;
+
 
 export const ImageContainer = styled.div`
   overflow: hidden;
