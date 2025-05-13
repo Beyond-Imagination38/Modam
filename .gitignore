@@ -9,8 +9,10 @@ out/
 backend.tar.gz
 0001-edit-WebSocketConfig.patch
 
-
-
+core/chroma_store/**/*.bin
+header.bin
+length.bin
+data_level0.bin
 .vscode/
 __pycache__/
 *.html
