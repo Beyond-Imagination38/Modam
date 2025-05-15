@@ -8,7 +8,7 @@ import { fetchApi } from "../../utils";
 
 export function Chat() {
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");cd 
+  const [message, setMessage] = useState(""); 
   const [userId, setUserId] = useState(() => Number(localStorage.getItem("userId") || 0)); 
   const [username, setUserName] = useState(() => localStorage.getItem("userName") || "사용자"); 
   const [stompClient, setStompClient] = useState(null);
