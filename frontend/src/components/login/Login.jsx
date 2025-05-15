@@ -25,7 +25,7 @@ export function Login() {
     }
   }, [navigate]);
 
-  /*const onClickConfirmButton = () => {
+  const onClickConfirmButton = () => {
     if (email === User.email && pw === User.pw) {
       localStorage.setItem("token", "true");
       localStorage.setItem("userId", "123");
@@ -34,9 +34,9 @@ export function Login() {
       navigate("/main");
     } else {
       alert("이메일 또는 비밀번호를 확인해 주세요. ");
-    }*/
+    }
 
-    const onClickConfirmButton = async () => {
+    /*const onClickConfirmButton = async () => {
     try {
       const response = await fetchApi(API_URLS.login, {
         method: "POST",
@@ -74,7 +74,7 @@ export function Login() {
         error.response?.data?.error ||
           "네트워크 오류가 발생했습니다. 다시 시도해 주세요."
       );
-    }
+    }*/
   };
 
   return (
