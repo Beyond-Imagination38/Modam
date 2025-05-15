@@ -8,4 +8,7 @@ export const API_URLS = {
   ws: `${COMMON_API_URL}/users/ws`,
   review: `${COMMON_API_URL}/review`,
   mypage: `${COMMON_API_URL}/mypage`,
+  bookreport: `${COMMON_API_URL}/bookreport`,
+  saveMemo: (clubId) => `/api/memo/${clubId}`,
+  getMemo: (clubId) => `/api/memo/${clubId}`,
 };
