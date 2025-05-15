@@ -24,6 +24,8 @@ export const Card = styled.div`
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   overflow: hidden;
+  overflow: visible; 
+  position: relative;
 `;
 
 export const TabHeader = styled.div`
@@ -49,8 +51,43 @@ export const TabButton = styled.button`
 `;
 
 export const TabContent = styled.div`
-  padding: 24px;
+  padding: 16px;
   color: #374151;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.7;
+`;
+
+export const DropdownContainer = styled.div`
+  position: relative;
+  margin-bottom: 1rem;
+`;
+
+export const DropdownHeader = styled.div`
+  background-color: #f0f0f0;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+export const DropdownList = styled.ul`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  min-width: 160px;
+  background-color: white;
+  border: 1px solid #ccc;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+export const DropdownItem = styled.li`
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  &:hover {
+    background-color: #eaeaea;
+  }
 `;

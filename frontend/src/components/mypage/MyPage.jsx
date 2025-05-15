@@ -4,6 +4,7 @@ import * as S from "./MyPage.style";
 
 export function MyPage() {
   const [images, setImages] = useState([]);
+  const [name, setName] = useState("이화인");
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -25,6 +26,8 @@ export function MyPage() {
   const handleSave = () => {
     const confirm = window.confirm("수정하시겠습니까?");
     if (confirm) {
+      localStorage.setItem("nickname", name);
+      alert("저장되었습니다!");
       window.location.href = "/main";
     }
   };
@@ -56,23 +59,28 @@ export function MyPage() {
               ))}
               </S.ImagePreviewContainer>
             </div>
-    </S.ProfileSection>
+          </S.ProfileSection>
 
-      <div>
-        <S.Label>아이디</S.Label>
-        <S.Input type="text" disabled />
-      </div>
+            <div>
+              <S.Label>아이디</S.Label>
+              <S.Input type="text" value="ewha1886" disabled />
+            </div>
 
-      <S.NameWrapper>
-        <S.Label>이름(닉네임)</S.Label>
-        <S.Input type="text" />
-      </S.NameWrapper>
+            <S.NameWrapper>
+              <S.Label>이름(닉네임)</S.Label>
+              <S.Input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </S.NameWrapper>
 
-      <div>
-        <S.Label>비밀번호 변경</S.Label>
-        <S.Input type="password" placeholder="현재 비밀번호를 입력해주세요." />
-        <S.Input type="password" placeholder="변경할 비밀번호를 입력해주세요." />
-      </div>
+
+            <div>
+              <S.Label>비밀번호 변경</S.Label>
+              <S.Input type="password" placeholder="현재 비밀번호를 입력해주세요." />
+              <S.Input type="password" placeholder="변경할 비밀번호를 입력해주세요." />
+            </div>
 
       <S.RightAlignBox>
         <S.WithdrawButton onClick={handleWithdraw}>계정 탈퇴</S.WithdrawButton>

@@ -176,3 +176,18 @@ export const SendButton = styled.button`
     background-color: #eaeaea;
   }
 `;
+
+export const SaveMemoButton = styled.button`
+  margin-top: 8px;
+  padding: 8px 16px;
+  background-color: #65558f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    background-color: #4e4373;
+  }
+`;

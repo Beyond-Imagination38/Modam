@@ -24,74 +24,95 @@ export function Main() {
     setIsSidebarOpen((prev) => !prev);
   };
 
-  const data = [
-    {
-      postId: 1,
-      userId: 10,
-      title: "1984",
-      time: "2025-04-10 20:00",
-      representativeImage: img1984,
-    },
-    {
-      postId: 2,
-      userId: 20,
-      title: "앵무새 죽이기",
-      time: "2025-04-15 21:00",
-      representativeImage: 앵무새죽이기,
-    },
-    {
-      postId: 5,
-      userId: 20,
-      title: "자아폭발",
-      time: "2025-04-13 16:00",
-      representativeImage: 자아폭발,
-    },
-    {
-      title: "참을 수 없는 존재의 가벼움",
-      time: "2.11 8시",
-      representativeImage: "https://picsum.photos/600/300?random=3",
-    },
-
-    {
-      title: "왜 나는 너를 사랑하는가",
-      time: "2.11 10시",
-      representativeImage: "https://picsum.photos/600/300?random=4",
-    },
-    {
-      title: "데미안",
-      time: "2.16 8시",
-      representativeImage: "https://picsum.photos/600/300?random=5",
-    },
-    {
-      title: "죽음의 수용소에서",
-      time: "2.15 8시",
-      representativeImage: "https://picsum.photos/600/300?random=6",
-    },
-    {
-      title: "싯다르타",
-      time: "2.15 4시",
-      representativeImage: "https://picsum.photos/600/300?random=7",
-    },
-    {
-      title: "소크라테스 익스프레스",
-      time: "2.11 6시",
-      representativeImage: "https://picsum.photos/600/300?random=8",
-    },
-    {
-      title: "소공녀",
-      time: "2.11 8시",
-      representativeImage: "https://picsum.photos/600/300?random=9",
-    },
-  ];
+const data = [
+  {
+    postId: 1,
+    userId: 10,
+    title: "1984",
+    time: "4.10 20시",
+    representativeImage: img1984,
+    category: "진행 중",
+  },
+  {
+    postId: 2,
+    userId: 20,
+    title: "1984",
+    time: "4.10 20시",
+    representativeImage: img1984,
+    category: "완료",
+  },
+  {
+    postId: 5,
+    userId: 20,
+    title: "자아폭발",
+    time: "4.13 16시",
+    representativeImage: 자아폭발,
+    category: "좋아요",
+  },
+  {
+    postId: 6,
+    title: "참을 수 없는 존재의 가벼움",
+    time: "2.11 8시",
+    representativeImage: "https://picsum.photos/600/300?random=3",
+    category: "진행 중",
+  },
+  {
+    postId: 7,
+    title: "왜 나는 너를 사랑하는가",
+    time: "2.11 10시",
+    representativeImage: "https://picsum.photos/600/300?random=4",
+    category: "좋아요",
+  },
+  {
+    postId: 8,
+    title: "데미안",
+    time: "2.16 8시",
+    representativeImage: "https://picsum.photos/600/300?random=5",
+    category: "완료",
+  },
+  {
+    postId: 9,
+    title: "죽음의 수용소에서",
+    time: "2.15 8시",
+    representativeImage: "https://picsum.photos/600/300?random=6",
+    category: "진행 중",
+  },
+  {
+    postId: 10,
+    title: "싯다르타",
+    time: "2.15 4시",
+    representativeImage: "https://picsum.photos/600/300?random=7",
+    category: "완료",
+  },
+  {
+    postId: 11,
+    title: "소크라테스 익스프레스",
+    time: "2.11 6시",
+    representativeImage: "https://picsum.photos/600/300?random=8",
+    category: "좋아요",
+  },
+  {
+    postId: 12,
+    title: "소공녀",
+    time: "2.11 8시",
+    representativeImage: "https://picsum.photos/600/300?random=9",
+    category: "완료",
+  },
+];
 
   useEffect(() => {
-    const storedData = data;
     const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
-    setItems([...storedPosts, ...storedData]);
     
-    const storedUser = localStorage.getItem("user"); 
+    const combined = [...storedPosts, ...data];
+    const unique = Array.from(
+      new Map(combined.map((item) => [item.postId || item.title, item])).values()
+    );
+    
+    setItems(unique);
+
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); 
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
@@ -119,8 +140,10 @@ export function Main() {
     fetchItems();
   }, []);*/
 
-  const filteredItems = items.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredItems = items.filter(
+  (item) =>
+    item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    item.category === activeCategory
   );
 
   const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
@@ -198,36 +221,39 @@ export function Main() {
             <Link to="/Register">
               <S.RegisterButton>모임 등록하기</S.RegisterButton>
             </Link>
-            <Link to="/completed">
-              <S.RegisterButton>모임 정보</S.RegisterButton>
-            </Link>
           </S.SearchContainer>
 
           <S.ProductGrid>
             {currentItems.length > 0 ? (
               currentItems.map(
-                ({ representativeImage, title, time, postId }, index) => (
-                  <Link
-                    to={`/post/${postId || index}`}
-                    key={postId || index}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <S.ProductCard>
-                      <S.ImageContainer>
-                        <S.ProductImage
-                          src={representativeImage}
-                          alt="도서 이미지"
-                        />
-                      </S.ImageContainer>
-                      <S.ProductTitle>{title}</S.ProductTitle>
-                      <S.ProductTime>{time}</S.ProductTime>
-                    </S.ProductCard>
-                  </Link>
-                )
+                ({ representativeImage, title, time, postId, category }, index) => {
+                  const isCompleted1984 = category === "완료" && title === "1984";
+                  const linkTarget = isCompleted1984 ? "/completed" : `/post/${postId}`;
+                  
+                  return (
+                    <Link
+                      to={linkTarget}
+                      key={postId}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <S.ProductCard>
+                        <S.ImageContainer>
+                          <S.ProductImage
+                            src={representativeImage}
+                            alt="도서 이미지"
+                          />
+                        </S.ImageContainer>
+                        <S.ProductTitle>{title}</S.ProductTitle>
+                        <S.ProductTime>{time}</S.ProductTime>
+                      </S.ProductCard>
+                    </Link>
+                  );
+                }
               )
             ) : (
               <S.NoResults>검색 결과가 없습니다.</S.NoResults>
             )}
+
           </S.ProductGrid>
 
           <S.Pagination>
