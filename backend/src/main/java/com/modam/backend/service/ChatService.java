@@ -171,17 +171,43 @@ public class ChatService {
         }
     }
 
+    //첫번째 유저 말 -> topic
     public Optional<String> getFirstDiscussionTopic(int clubId) {
         BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
         return discussionTopicRepository.findFirstByClubOrderByVersionAsc(bookClub)
                 .map(DiscussionTopic::getContent);
     }
 
+    //n번째 유저 -> topic demo02
+    public Optional<String> getDiscussionTopicByVersion(int clubId, int version) {
+        BookClub club = bookClubRepository.findById(clubId).orElseThrow();
+        return discussionTopicRepository.findByClubOrderByVersionAsc(club).stream()
+                .filter(topic -> topic.getVersion() == version)
+                .map(DiscussionTopic::getContent)
+                .findFirst();
+    }
+
+
+
+    // 첫번째 유저의 말 -> subtopic
     public Optional<String> getFirstUserSubtopic(int clubId) {
         BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
         return chatMessageRepository.findByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC)
                 .stream().findFirst().map(ChatMessage::getContent);
     }
+
+    // n번째 user의 채팅 -> subtopic //demo02
+    public Optional<String> getNthUserSubtopic(int clubId, int order) {
+        BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
+
+        return chatMessageRepository
+                .findByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC)
+                .stream()
+                .filter(msg -> msg.getSubtopicOrder() != null && msg.getSubtopicOrder() == order)
+                .map(ChatMessage::getContent)
+                .findFirst();
+    }
+
 
     @Transactional(readOnly = true)
     public List<ChatMessageDto> getChatHistory(int clubId) {
@@ -196,4 +222,68 @@ public class ChatService {
                         m.getCreatedTime()
                 )).collect(Collectors.toList());
     }
+
+    //demo02
+    @Transactional(readOnly = true)
+    public String summarizeDiscussion(int clubId) {
+        BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
+
+        // 1. 대주제 목록 조회
+        List<DiscussionTopic> topics = discussionTopicRepository.findByClubOrderByVersionAsc(bookClub);
+        List<String> topicContents = topics.stream()
+                .map(DiscussionTopic::getContent)
+                .collect(Collectors.toList());
+
+        // 2. 각 대주제별 참가자 응답 수집
+        List<List<String>> allResponses = topics.stream()
+                .map(topic -> {
+                    int version = topic.getVersion();
+                    // version에 대응하는 subtopic 찾기
+                    return chatMessageRepository.findByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC).stream()
+                            .filter(msg -> msg.getSubtopicOrder() != null)
+                            .skip((long) (version - 1) * 4)  // version 1 → 0~3, version 2 → 4~7...
+                            .limit(4)
+                            .map(ChatMessage::getContent)
+                            .toList();
+                })
+                .toList();
+
+        // 3. Flask 서버 호출 (요약 요청)
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("topics", topicContents);
+            requestBody.put("all_responses", allResponses);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+            ResponseEntity<Map> response = restTemplate.postForEntity(
+                    "http://localhost:5000/ai/summarize",  // Flask API endpoint
+                    entity,
+                    Map.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                List<Map<String, String>> summaries = (List<Map<String, String>>) response.getBody().get("summaries");
+
+                StringBuilder result = new StringBuilder();
+                for (int i = 0; i < summaries.size(); i++) {
+                    Map<String, String> s = summaries.get(i);
+                    result.append("대주제 ").append(i + 1).append(": ").append(s.get("topic")).append("\n");
+                    result.append("요약: ").append(s.get("summary")).append("\n\n");
+                }
+
+                return result.toString();
+            } else {
+                return "[AI 요약 실패] 서버 응답 오류";
+            }
+
+        } catch (Exception e) {
+            return "[AI 요약 실패] " + e.getMessage();
+        }
+    }
+
 }
