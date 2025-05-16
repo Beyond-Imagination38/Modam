@@ -28,8 +28,7 @@ export function Signup() {
 
   const handlepw = (e) => {
     setpw(e.target.value);
-    const regex =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+    const regex = /^[A-Za-z\d]{8,20}$/; 
     if (regex.test(e.target.value)) {
       setPwValid(true);
     } else {
@@ -45,11 +44,17 @@ export function Signup() {
     alert("회원가입이 완료되었습니다!"); //연결 후 삭제
     navigate("/login"); //연결 후 삭제
 
+    /*
     try {
       const signupResponse = await fetchApi(API_URLS.signup, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, userName, pw }),
+        body: JSON.stringify({
+          user_name: userName,
+          email,
+          pw,
+          profile_image: "NULL", 
+        }),
       });
 
       if (!signupResponse.ok) {
@@ -59,6 +64,7 @@ export function Signup() {
       const data = await signupResponse.json();
       console.log("회원가입 성공:", data);
 
+      localStorage.setItem("token", data.token);
       localStorage.setItem("userEmail", email);
       localStorage.setItem("userName", userName);
 
@@ -67,7 +73,7 @@ export function Signup() {
     } catch (error) {
       console.error("회원가입 오류:", error);
       alert("회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
-    }
+    }*/
   };
 
   return (
@@ -91,7 +97,7 @@ export function Signup() {
         <S.ErrorMessageWrap>
           {!pwValid && pw.length > 0 && (
             <div>
-              비밀번호는 8~20자이며, 영문, 숫자, 특수문자를 포함해야 합니다.
+              비밀번호는 8~20자이며, 영문과 숫자를 포함해야 합니다.
             </div>
           )}
         </S.ErrorMessageWrap>

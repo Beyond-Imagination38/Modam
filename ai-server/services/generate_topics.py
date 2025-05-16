@@ -2,6 +2,7 @@
 # 발제문 생성
 
 import os
+import re
 import numpy as np
 from dotenv import load_dotenv
 from flask import request, jsonify
@@ -42,19 +43,35 @@ class RAGBookEngine:
     def generate_topics(self, user_responses):
         # 프롬프트 구성
         system_message = (
-            "당신은 독서 모임의 사회자입니다. 아래 감상문과 책 내용을 바탕으로 "
-            "편향되지 않고 정치적이지 않은 개방형 토론 주제 3가지를 한국어로 제시하세요. "
-            "각 주제는 완결된 문장 형식이어야 합니다."
+        "당신은 독서 모임의 사회자입니다. 아래 책 내용과 참가자들의 감상문을 참고하여 "
+        "참가자들이 쉽게 이해하고 활발하게 토론할 수 있는 **개방형 토론 주제** 3가지를 작성해주세요.\n\n"
+        "- 각 주제는 **책의 인물, 사건, 주제, 배경 등 구체적인 요소**를 포함해야 합니다.\n"
+        "- **일상적인 언어로 작성**하고, **질문의 의도가 명확하게 드러나야** 합니다.\n"
+        "- 주제는 편향적이거나 정치적인 내용이 아니어야 하며, 너무 추상적이거나 모호하지 않아야 합니다.\n"
+        "- 사회적 약자(어린이, 노인, 여성, 장애인, 성소수자 등)를 혐오하는 표현이 들어가서는 안됩니다.\n"
+        "- 각 주제는 하나의 완결된 문장으로 써 주세요.\n"
+        "- 단순한 정보 확인 질문보다는 **느낌, 생각, 경험, 비교** 등을 유도하는 사고형 질문이 좋습니다.\n\n"
+        "예시:\n"
+        "✔ '주인공이 겪은 갈등 중 어떤 장면이 가장 인상 깊었고, 그 이유는 무엇일까?'\n"
+        "✔ '이 책에서 등장인물 간의 관계는 현실에서도 공감할 수 있는가?'\n"
+        "✔ '이야기의 배경이 주제를 어떻게 강화하거나 반영하고 있는가?'\n"
+        "✘ '주인공 이름은 무엇인가요?'\n"
+        "✘ '이 책은 무슨 내용인가요?'\n"
         )
 
         user_message = "\n".join(user_responses)
+        user_query = " ".join(user_responses)  # 쿼리로 감상문 전체 사용
         
-        # 관련 문서 검색
-        context_docs = self.retriever.get_relevant_documents("발제문 생성에 필요한 주요 내용")
+        # 감상문 기반으로 책 내용 검색
+        context_docs = self.retriever.get_relevant_documents(user_query)
         context_text = "\n".join(doc.page_content for doc in context_docs)
 
-        prompt = f"{system_message}\n\n[책 내용]\n{context_text}\n\n[참가자 감상문]\n{user_message}"
-
+        prompt = (
+        f"{system_message}\n"
+        f"[책 내용]\n{context_text}\n\n"
+        f"[참가자 감상문]\n{user_message}"
+        )
+        
         # GPT 호출
         response = self.llm.invoke(prompt).content  # content만 추출
 
@@ -62,7 +79,14 @@ class RAGBookEngine:
         print(response)
         
         # 응답 후처리
-        topics = [t.strip("0123456789. /\"").strip() for t in response.split("\n") if t.strip()]
+        topics = []
+        for line in response.split("\n"):
+            if line.strip():
+                # "1. ", "2) ", "3." 등 리스트 번호만 제거
+                clean = re.sub(r"^\s*\d+[\.\)]\s*", "", line).strip()
+                topics.append(clean)
+
+        # 결과 개수 확인
         if len(topics) < 3:
             print("GPT 응답이 예상보다 짧습니다. 응답 내용:")
             print(response)

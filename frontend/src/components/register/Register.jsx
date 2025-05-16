@@ -28,6 +28,7 @@ export function Register() {
       postId: Date.now(), // 임시 ID
       title,
       time: `${meetingDate} ${time}`,
+      category: "진행 중",
       representativeImage:
         images.length > 0 ? images[0] : "https://via.placeholder.com/150",
     };
@@ -76,7 +77,7 @@ export function Register() {
     };
     alert("모임이 등록되었습니다.");
     navigate("/main");
-    console.log("📌 서버로 보낼 데이터:", JSON.stringify(postData, null, 2));
+    console.log("서버로 보낼 데이터:", JSON.stringify(postData, null, 2));
     
     try {
       const token = localStorage.getItem("token");
@@ -94,17 +95,17 @@ export function Register() {
         body: JSON.stringify(postData),
       });
 
-      console.log("📌 모임 등록 API 응답:", response);
+      console.log("모임 등록 API 응답:", response);
 
       if (response && (response.status === 200 || response.status === 201)) {
         alert("모임이 등록되었습니다.");
         navigate("/main");
       } else {
-        console.error("🚨 오류 응답:", response);
+        console.error("오류 응답:", response);
         alert(response?.message || "요청 중 오류가 발생했습니다.");
       }
     } catch (error) {
-      console.error("🚨 요청 실패:", error);
+      console.error("요청 실패:", error);
       alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };*/

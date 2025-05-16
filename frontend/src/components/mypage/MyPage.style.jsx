@@ -1,35 +1,138 @@
 import styled from "styled-components";
 
-export const SelectMenu = styled.div`
+export const Container = styled.div`
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  margin-top:50px;
+  gap: 24px;
+`;
+
+export const ProfileSection = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+`;
+
+export const ProfileImage = styled.div`
+  width: 80px;
+  height: 80px;
+  background: #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+`;
+
+export const FileButton = styled.button`
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+`;
+
+export const FileLabel = styled.span`
+  margin-left: 8px;
+  color: #888;
+`;
+
+export const Label = styled.label`
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #ECE6F0;
+`;
+
+export const NameWrapper = styled.div`
+  position: relative;
+`;
+
+export const WithdrawButton = styled.button`
+  color: black;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  align-self: flex-end;
+`;
+
+export const SaveButton = styled.button`
+  margin-top: 8px;
+  padding: 10px 16px;
+  background-color: #65558F;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+`;
+
+export const RightAlignBox = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+export const ImagePreviewContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+`;
+
+export const ImageWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 20px 0;
-  padding: 90px;
 `;
 
-export const Button = styled.div`
-  display: block;
-  height: 60px;
-  width: 500px;
-  border: 3px solid;
-  border-radius: 15px;
-  background-color: #65558f;
+export const ImagePreview = styled.img`
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+`;
+
+export const DeleteButton = styled.button`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: white: 
   color: white;
-  font-size: 32px;
-  text-align: center;
-  line-height: 60px;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 
   &:hover {
-    background-color: rgb(102, 76, 167);
-    color: white;
+    background-color:rgb(68, 68, 68);
   }
 `;
 
-export const Text = styled.div`
-  color: gray;
-  font-size: 20px;
-  text-decoration: underline;
+export const EditIcon = styled.span`
+  position: absolute;
+  right: 8px;
+  top: 36px;
   cursor: pointer;
+  font-size: 20px;
 `;

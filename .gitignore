@@ -11,8 +11,10 @@ backend.tar.gz
 ../ai-server/core/chroma_store/1/9b8c6ba8-2d48-4b96-a905-2beffb79173d/length.bin
 ../ai-server/core/chroma_store/1/chroma.sqlite3
 
-
-
+core/chroma_store/**/*.bin
+header.bin
+length.bin
+data_level0.bin
 .vscode/
 __pycache__/
 *.html
