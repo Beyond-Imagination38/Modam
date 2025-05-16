@@ -1,7 +1,7 @@
 package com.modam.backend.controller;
 
 import com.modam.backend.dto.ChatMessageDto;
-import com.modam.backend.handler.FreeDiscussionManager; //test02
+import com.modam.backend.handler.FreeDiscussionManager;
 import com.modam.backend.handler.SubtopicDiscussionManager;
 import com.modam.backend.model.BookClub;
 import com.modam.backend.model.MessageType;
@@ -47,6 +47,11 @@ public class ChatController {
 
         messagingTemplate.convertAndSend("/topic/chat/" + clubId, saved);
 
+        if (saved.getMessageType() == MessageType.FREE_DISCUSSION) {
+            int currentTopicVersion = chatService.getCurrentTopicVersion(clubId);
+            freeDiscussionManager.resetTimer(clubId, currentTopicVersion);
+        }
+
         if (saved.isShouldTriggerAiIntro()) {
             BookClub bookClub = bookClubService.getBookClub(clubId);
             int bookId = bookClub.getBook().getBookId();
@@ -56,13 +61,13 @@ public class ChatController {
 
             // AI 인삿말 및 대주제
             messagingTemplate.convertAndSend("/topic/chat/" + clubId,
-                    new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자",
+                    new ChatMessageDto(MessageType.DISCUSSION_NOTICE, clubId, 0, "AI 진행자",
                             "안녕하세요 이번 모임은 책 1984에 대한 내용입니다. 첫번째 주제는 다음과 같습니다.",
                             new Timestamp(System.currentTimeMillis())));
 
             chatService.getFirstDiscussionTopic(clubId).ifPresent(topic -> {
                 messagingTemplate.convertAndSend("/topic/chat/" + clubId,
-                        new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자",
+                        new ChatMessageDto(MessageType.MAINTOPIC, clubId, 0, "AI 진행자",
                                 "대주제 1: " + topic, new Timestamp(System.currentTimeMillis())));
             });
         }
@@ -90,12 +95,6 @@ public class ChatController {
     @GetMapping("/history/{club_id}")
     public List<ChatMessageDto> getChatHistory(@PathVariable("club_id") int club_id) {
         return chatService.getChatHistory(club_id);
-    }
-
-    //test용 demo02
-    @GetMapping("/test/free-discussion/{clubId}/{version}")
-    public void testFreeDiscussion(@PathVariable int clubId, @PathVariable int version) {
-        freeDiscussionManager.monitorInactivityAndSwitchTopic(clubId, version);
     }
 
 }

@@ -1,8 +1,6 @@
 package com.modam.backend.handler;
 
 import com.modam.backend.dto.ChatMessageDto;
-import com.modam.backend.model.BookClub;
-import com.modam.backend.model.DiscussionTopic;
 import com.modam.backend.model.MessageType;
 import com.modam.backend.repository.BookClubRepository;
 import com.modam.backend.repository.DiscussionTopicRepository;
@@ -36,28 +34,40 @@ public class SubtopicDiscussionManager {
                 // 의견 출력
                 messagingTemplate.convertAndSend("/topic/chat/" + clubId,
                         new ChatMessageDto(
-                                MessageType.TOPIC_START,
+                                MessageType.SUBTOPIC,
                                 clubId,
                                 0,
                                 "AI 진행자",
-                                "안건 " + order + ": " + content,
+                                order + "번째 안건에 대하여 이야기 해봅시다.\n" + "안건" + order + ": "+ content,
                                 new Timestamp(System.currentTimeMillis())
                         )
                 );
 
                 // 4분 기다림
                 try {
-                    TimeUnit.MINUTES.sleep(4);
+                    TimeUnit.MINUTES.sleep(1);  //임시로 1분으로 지정
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
+
+                // 4분 후 안내 메시지 출력
+                messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                        new ChatMessageDto(
+                                MessageType.DISCUSSION_NOTICE,
+                                clubId,
+                                0,
+                                "AI 진행자",
+                                "4분이 지났습니다. 다음 안건으로 넘어가겠습니다.",
+                                new Timestamp(System.currentTimeMillis())
+                        )
+                );
             });
         }
 
         // 4개 의견 끝나면 자유 토론 유도
         messagingTemplate.convertAndSend("/topic/chat/" + clubId,
                 new ChatMessageDto(
-                        MessageType.TOPIC_START,
+                        MessageType.FREE_DISCUSSION_NOTICE,
                         clubId,
                         0,
                         "AI 진행자",
@@ -66,13 +76,24 @@ public class SubtopicDiscussionManager {
                 )
         );
 
-        // version 확인 후 자유토론 타이머 시작
-        BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
-        int currentTopicVersion = discussionTopicRepository.findFirstByClubOrderByVersionDesc(bookClub)
-                .map(DiscussionTopic::getVersion)
-                .orElse(1);
+        freeDiscussionManager.setFreeDiscussionMode(clubId, true);
 
-        freeDiscussionManager.monitorInactivityAndSwitchTopic(clubId, currentTopicVersion);
+
+        int currentTopicVersion = chatService.getCurrentTopicVersion(clubId);
+        freeDiscussionManager.resetTimer(clubId, currentTopicVersion);
+
+        // 안내 메시지 전송 직후 시간 기록
+        //Instant discussionStart = Instant.now();
+
+        // version 확인
+        //BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
+        //int currentTopicVersion = discussionTopicRepository.findFirstByClubOrderByVersionDesc(bookClub)
+        //        .map(DiscussionTopic::getVersion)
+        //        .orElse(1);
+
+        // 정확한 시간 전달
+        //freeDiscussionManager.monitorInactivityAndSwitchTopic(clubId, currentTopicVersion, discussionStart);
+
 
 
     }

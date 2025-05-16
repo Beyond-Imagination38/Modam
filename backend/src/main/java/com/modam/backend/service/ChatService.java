@@ -93,7 +93,10 @@ public class ChatService {
         } else if (isFirstMessage) {
             messageType = MessageType.SUBTOPIC;
             order = chatMessageRepository.countByBookClubAndMessageType(bookClub, MessageType.SUBTOPIC) + 1;
-        } else {
+        } else if (dto.getMessageType() == MessageType.FREE_DISCUSSION) {
+            messageType = MessageType.FREE_DISCUSSION;
+        }
+        else {
             messageType = MessageType.DISCUSSION;
         }
 
@@ -285,5 +288,14 @@ public class ChatService {
             return "[AI 요약 실패] " + e.getMessage();
         }
     }
+
+    @Transactional(readOnly = true)
+    public int getCurrentTopicVersion(int clubId) {
+        BookClub club = bookClubRepository.findById(clubId).orElseThrow();
+        return discussionTopicRepository.findFirstByClubOrderByVersionDesc(club)
+                .map(DiscussionTopic::getVersion)
+                .orElse(1);
+    }
+
 
 }
