@@ -11,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -30,6 +31,8 @@ public class ChatService {
     private final BookClubRepository bookClubRepository;
     private final UserRepository userRepository;
     private final DiscussionTopicRepository discussionTopicRepository;
+
+    private final SimpMessagingTemplate messagingTemplate; // 추가
 
     private static final String GREETING_MESSAGE = "안녕하세요 이번 모임은 책 1984에 대한 내용입니다. 첫번째 주제는 다음과 같습니다.";
 
@@ -174,6 +177,29 @@ public class ChatService {
         }
     }
 
+    //demo02: 요약
+    public void sendMeetingSummary(int clubId) {
+        String summary = summarizeDiscussion(clubId);
+
+        ChatMessageDto summaryMessage = new ChatMessageDto(
+                MessageType.SUMMARY,
+                clubId,
+                0,
+                "AI 진행자",
+                summary,
+                new Timestamp(System.currentTimeMillis())
+        );
+
+        messagingTemplate.convertAndSend("/topic/chat/" + clubId, summaryMessage);
+
+
+/*        messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                new ChatMessageDto(MessageType.SUMMARY, clubId, 0, "AI 진행자",
+                        greeting + summary,
+                        new Timestamp(System.currentTimeMillis())));*/
+    }
+
+
     //첫번째 유저 말 -> topic
     public Optional<String> getFirstDiscussionTopic(int clubId) {
         BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
@@ -226,7 +252,7 @@ public class ChatService {
                 )).collect(Collectors.toList());
     }
 
-    //demo02
+    //demo02 :요약하기
     @Transactional(readOnly = true)
     public String summarizeDiscussion(int clubId) {
         BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
@@ -241,11 +267,83 @@ public class ChatService {
         List<List<String>> allResponses = topics.stream()
                 .map(topic -> {
                     int version = topic.getVersion();
-                    // version에 대응하는 subtopic 찾기
                     return chatMessageRepository.findByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC).stream()
                             .filter(msg -> msg.getSubtopicOrder() != null)
-                            .skip((long) (version - 1) * 4)  // version 1 → 0~3, version 2 → 4~7...
+                            .skip((long) (version - 1) * 4)
                             .limit(4)
+                            .map(ChatMessage::getContent)
+                            .toList();
+                })
+                .toList();
+
+        // 3. Flask 서버 호출
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("topics", topicContents);
+            requestBody.put("all_responses", allResponses);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+            ResponseEntity<Map> response = restTemplate.postForEntity(
+                    "http://localhost:5000/ai/summarize",
+                    entity,
+                    Map.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                List<Map<String, String>> summaries = (List<Map<String, String>>) response.getBody().get("summaries");
+
+                StringBuilder result = new StringBuilder();
+                result.append("오늘 『1984』 독서 모임 어떠셨나요?\n")
+                        .append("오늘 토의 내용을 요약해드릴게요.\n\n");
+
+                for (int i = 0; i < summaries.size(); i++) {
+                    Map<String, String> s = summaries.get(i);
+                    String topicTitle = s.get("topic");
+                    String summaryText = s.get("summary");
+
+                    result.append("주제 ").append(i + 1).append(": ").append("\"").append(topicTitle).append("\"\n\n");
+                    result.append(summaryText).append("\n\n");
+                }
+
+                return result.toString();
+            } else {
+
+
+                return "[AI 요약 실패] 서버 응답 오류";
+            }
+
+        } catch (Exception e) {
+
+            //log.error("AI 요약 실패", e);
+            return "[AI 요약 실패] " + e.getMessage();
+        }
+    }
+    /*public String summarizeDiscussion(int clubId) {
+        BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
+
+        // 1. 대주제 목록 조회
+        List<DiscussionTopic> topics = discussionTopicRepository.findByClubOrderByVersionAsc(bookClub);
+        List<String> topicContents = topics.stream()
+                .map(DiscussionTopic::getContent)
+                .collect(Collectors.toList());
+
+        // 2. 각 대주제별 참가자 응답 수집
+        List<List<String>> allResponses = topics.stream()
+                .map(topic -> {
+                    int version = topic.getVersion();
+                    return chatMessageRepository.findByBookClubOrderByCreatedTimeAsc(bookClub).stream()
+                            .filter(msg ->
+                                    (msg.getMessageType() == MessageType.SUBTOPIC ||
+                                            msg.getMessageType() == MessageType.DISCUSSION ||
+                                            msg.getMessageType() == MessageType.FREE_DISCUSSION)
+                            )
+                            .skip((long) (version - 1) * 4)  // version 1 → 0~3, version 2 → 4~7...
+                            .limit(100)  // 최대 100개까지 수집 (자유 토론 포함 고려) //demo02:채팅요약전달추가
                             .map(ChatMessage::getContent)
                             .toList();
                 })
@@ -287,7 +385,7 @@ public class ChatService {
         } catch (Exception e) {
             return "[AI 요약 실패] " + e.getMessage();
         }
-    }
+    }*/
 
     @Transactional(readOnly = true)
     public int getCurrentTopicVersion(int clubId) {
@@ -296,6 +394,5 @@ public class ChatService {
                 .map(DiscussionTopic::getVersion)
                 .orElse(1);
     }
-
 
 }

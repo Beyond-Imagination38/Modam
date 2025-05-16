@@ -41,6 +41,12 @@ public class ChatController {
         this.freeDiscussionManager = freeDiscussionManager;//test02용 demo02
     }
 
+    //test
+    @GetMapping("/test/summary/{clubId}")
+    public void testSummary(@PathVariable int clubId) {
+        chatService.sendMeetingSummary(clubId);
+    }
+
     @MessageMapping("/chat/{clubId}")
     public void sendMessage(@DestinationVariable int clubId, ChatMessageDto message) {
         ChatMessageDto saved = chatService.saveChatMessage(clubId, message);
@@ -96,5 +102,8 @@ public class ChatController {
     public List<ChatMessageDto> getChatHistory(@PathVariable("club_id") int club_id) {
         return chatService.getChatHistory(club_id);
     }
+
+
+
 
 }

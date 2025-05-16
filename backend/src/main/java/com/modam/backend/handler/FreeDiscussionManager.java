@@ -105,10 +105,13 @@ public class FreeDiscussionManager {
                     new ChatMessageDto(MessageType.END_NOTICE, clubId, 0, "AI 진행자",
                             "시간이 완료되었습니다. 모임을 종료합니다.", Timestamp.from(Instant.now())));
 
-            String summary = chatService.summarizeDiscussion(clubId);
-            messagingTemplate.convertAndSend("/topic/chat/" + clubId,
-                    new ChatMessageDto(MessageType.SUMMARY, clubId, 0, "AI 진행자",
-                            "[모임 요약]\n" + summary, Timestamp.from(Instant.now())));
+            // 요약 전송을 ChatService로 위임
+            chatService.sendMeetingSummary(clubId);
+
+            //String summary = chatService.summarizeDiscussion(clubId);
+            //messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                    //new ChatMessageDto(MessageType.SUMMARY, clubId, 0, "AI 진행자",
+                            //"오늘 1984 독서모임 어떠셨나요?[모임 요약]\n" + summary, Timestamp.from(Instant.now())));
         }
 
         timers.remove(clubId); // 타이머 제거
