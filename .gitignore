@@ -8,6 +8,8 @@ out/
 /.idea/
 backend.tar.gz
 0001-edit-WebSocketConfig.patch
+../ai-server/core/chroma_store/1/9b8c6ba8-2d48-4b96-a905-2beffb79173d/length.bin
+../ai-server/core/chroma_store/1/chroma.sqlite3
 
 
 
