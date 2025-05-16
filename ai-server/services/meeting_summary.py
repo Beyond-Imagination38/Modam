@@ -6,7 +6,8 @@ import os
 from flask import jsonify, request
 from langchain_community.chat_models import ChatOpenAI
 
-def summarize_meeting_api(request):
+#soo: Flask는 request 객체를 인자로 넘기지 않음, request 직접 접근하도록 수정
+def summarize_meeting_api():
     # 요청 JSON 데이터 가져오기
     data = request.get_json()
     topics = data.get("topics")  # 발제문 목록 (리스트 형태)
@@ -39,7 +40,7 @@ def summarize_meeting_api(request):
 
             try:
                 # GPT-4 모델에 프롬프트 전달하여 요약 생성
-                result = llm.invoke(prompt).strip()
+                result = llm.invoke(prompt).content.strip() #soo: content. 추가
 
                 # 정상 응답 시 요약 결과를 저장
                 summaries.append({
