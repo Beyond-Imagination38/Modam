@@ -4,9 +4,6 @@ import { Link,useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { API_URLS } from "../../consts";
 import { fetchApi } from "../../utils";
-import img1984 from "./1984.jpg";
-import 앵무새죽이기 from "./앵무새죽이기.jpg";
-import 자아폭발 from "./자아폭발.jpg";
 
 const ITEMS_PER_PAGE = 3;
 
@@ -24,97 +21,86 @@ export function Main() {
     setIsSidebarOpen((prev) => !prev);
   };
 
-const data = [
-  {
-    postId: 1,
-    userId: 10,
-    title: "1984",
-    time: "4.10 20시",
-    representativeImage: img1984,
-    category: "진행 중",
-  },
-  {
-    postId: 2,
-    userId: 20,
-    title: "1984",
-    time: "4.10 20시",
-    representativeImage: img1984,
-    category: "완료",
-  },
-  {
-    postId: 5,
-    userId: 20,
-    title: "자아폭발",
-    time: "4.13 16시",
-    representativeImage: 자아폭발,
-    category: "좋아요",
-  },
-  {
-    postId: 6,
-    title: "참을 수 없는 존재의 가벼움",
-    time: "2.11 8시",
-    representativeImage: "https://picsum.photos/600/300?random=3",
-    category: "진행 중",
-  },
-  {
-    postId: 7,
-    title: "왜 나는 너를 사랑하는가",
-    time: "2.11 10시",
-    representativeImage: "https://picsum.photos/600/300?random=4",
-    category: "좋아요",
-  },
-  {
-    postId: 8,
-    title: "데미안",
-    time: "2.16 8시",
-    representativeImage: "https://picsum.photos/600/300?random=5",
-    category: "완료",
-  },
-  {
-    postId: 9,
-    title: "죽음의 수용소에서",
-    time: "2.15 8시",
-    representativeImage: "https://picsum.photos/600/300?random=6",
-    category: "진행 중",
-  },
-  {
-    postId: 10,
-    title: "싯다르타",
-    time: "2.15 4시",
-    representativeImage: "https://picsum.photos/600/300?random=7",
-    category: "완료",
-  },
-  {
-    postId: 11,
-    title: "소크라테스 익스프레스",
-    time: "2.11 6시",
-    representativeImage: "https://picsum.photos/600/300?random=8",
-    category: "좋아요",
-  },
-  {
-    postId: 12,
-    title: "소공녀",
-    time: "2.11 8시",
-    representativeImage: "https://picsum.photos/600/300?random=9",
-    category: "완료",
-  },
-];
+  const data = [
+    {
+      postId: 1,
+      userId: 20,
+      title: "1984",
+      time: "2025-04-10 20:00",
+      representativeImage: "/assets/images/1984.jpg",
+      category: "완료",
+    },
+    {
+      postId: 2,
+      userId: 20,
+      title: "자아폭발",
+      time: "2025-04-13 16:00",
+      representativeImage: "/assets/images/TheFall.jpg",
+      category: "좋아요",
+    },
+    {
+      postId: 3,
+      title: "참을 수 없는 존재의 가벼움",
+      time: "2025-04-11 08:00",
+      representativeImage: "/assets/images/Unbearable.jpg",
+      category: "진행 중",
+    },
+    {
+      postId: 4,
+      title: "앵무새 죽이기",
+      time: "2025-04-11 10:00",
+      representativeImage: "/assets/images/mockingbird.jpg",
+      category: "좋아요",
+    },
+    {
+      postId: 5,
+      title: "데미안",
+      time: "2025-04-16 08:00",
+      representativeImage: "/assets/images/demian.jpg",
+      category: "완료",
+    },
+    {
+      postId: 6,
+      title: "죽음의 수용소에서",
+      time: "2025-04-15 08:00",
+      representativeImage: "/assets/images/searchfor.jpg",
+      category: "진행 중",
+    },
+    {
+      postId: 7,
+      title: "싯다르타",
+      time: "2025-04-15 04:00",
+      representativeImage: "/assets/images/Sidd.jpg",
+      category: "완료",
+    },
+    {
+      postId: 8,
+      title: "소크라테스 익스프레스",
+      time: "2025-04-11 06:00",
+      representativeImage: "/assets/images/socra.jpg",
+      category: "좋아요",
+    },
+    {
+      postId: 9,
+      title: "구의 증명",
+      time: "2025-04-11 08:00",
+      representativeImage: "/assets/images/goo.jpg",
+      category: "진행 중",
+    },
+  ];
+
 
   useEffect(() => {
     const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
-    
+
     const combined = [...storedPosts, ...data];
     const unique = Array.from(
       new Map(combined.map((item) => [item.postId || item.title, item])).values()
     );
-    
-    setItems(unique);
 
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+    setItems(unique);
+  }, [activeCategory, searchTerm, currentPage]);
+
 
   /*const fetchItems = async () => {
     try {
@@ -189,7 +175,6 @@ const data = [
             </S.MenuItem>
               <S.SideMenuFooter>
                 <S.Button
-                  style={{ display: user ? "block" : "none" }} 
                   onClick={(e) => {
                     e.preventDefault();
                     const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
