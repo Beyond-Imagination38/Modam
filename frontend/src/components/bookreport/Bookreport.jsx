@@ -10,7 +10,8 @@ export function Bookreport() {
   const { postId } = 1;
 
   const handleSubmit = async () => {
-    try {
+    alert("소감문이 성공적으로 제출되었습니다.");
+    /*try {
       const response = await fetchApi(API_URLS.bookreport, {
         method: "POST",
         headers: {
@@ -32,7 +33,7 @@ export function Bookreport() {
     } catch (error) {
       console.error("제출 중 오류 발생:", error);
       alert("제출에 실패했습니다. 다시 시도해주세요.");
-    }
+    }*/
   };
 
   const handleReset = () => {

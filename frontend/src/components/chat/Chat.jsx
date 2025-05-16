@@ -119,7 +119,6 @@ const saveMemo = async () => {
   }
 };
 
-
   return (
       <S.Container>
         <S.ChatSection>

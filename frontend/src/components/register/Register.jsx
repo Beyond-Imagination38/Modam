@@ -28,6 +28,7 @@ export function Register() {
       postId: Date.now(), // 임시 ID
       title,
       time: `${meetingDate} ${time}`,
+      category: "진행 중",
       representativeImage:
         images.length > 0 ? images[0] : "https://via.placeholder.com/150",
     };
