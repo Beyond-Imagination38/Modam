@@ -52,23 +52,6 @@ export function Chat() {
           const receivedMessage = JSON.parse(message.body);
 
           console.log("📥 [DEBUG] 받은 메시지:", receivedMessage);//debug soo:demo02
-
-
-          if (receivedMessage.messageType === "SUMMARY") {
-            const introMessage = {
-              userId: 0,
-              userName: "AI 진행자",
-              content: "오늘 독서 모임 어떠셨나요?\n토의 내용을 요약해드릴게요",
-            };
-
-            setMessages((prevMessages) => [
-              ...prevMessages,
-              introMessage,
-              receivedMessage,
-            ]);
-          } else {
-            setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-          }
         });
 
       },
