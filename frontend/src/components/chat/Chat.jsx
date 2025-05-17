@@ -6,6 +6,27 @@ import { Link, useParams } from "react-router-dom";
 import { API_URLS } from "../../consts";
 import { fetchApi } from "../../utils";
 
+const formatSummary = (text) => {
+  if (!text) return [];
+
+  // '주제' 키워드가 포함된 위치를 기준으로 우선 문단 나누기
+  const topicBlocks = text.split(/(?=주제\s*\d*:)/g); // '주제 1:', '주제2:' 등을 기준으로 나눔
+  const formattedParagraphs = [];
+
+  topicBlocks.forEach((block) => {
+    const sentences = block.trim().split(/(?<=[.!?])\s+/);
+    const paragraphSize = 2;
+
+    for (let i = 0; i < sentences.length; i += paragraphSize) {
+      const para = sentences.slice(i, i + paragraphSize).join(" ");
+      formattedParagraphs.push(para);
+    }
+  });
+
+  return formattedParagraphs;
+};
+
+
 export function Chat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState(""); 
@@ -31,23 +52,6 @@ export function Chat() {
           const receivedMessage = JSON.parse(message.body);
 
           console.log("📥 [DEBUG] 받은 메시지:", receivedMessage);//debug soo:demo02
-
-
-          if (receivedMessage.messageType === "SUMMARY") {
-            const introMessage = {
-              userId: 0,
-              userName: "AI 진행자",
-              content: "오늘 독서 모임 어떠셨나요?\n토의 내용을 요약해드릴게요",
-            };
-
-            setMessages((prevMessages) => [
-              ...prevMessages,
-              introMessage,
-              receivedMessage,
-            ]);
-          } else {
-            setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-          }
         });
 
       },
@@ -154,9 +158,13 @@ const saveMemo = async () => {
             return (
               <S.Message key={index} className={messageStyle}>
                 {isAI && <S.Avatar src={avatar} alt="AI avatar" />}
-                <div>
-                  <strong>{userName}</strong>
-                  <div>{msg.content}</div>
+                  <div>
+                    <strong>{userName}</strong>
+                    {msg.userId === 0 && msg.messageType === "SUMMARY" ? (
+                      formatSummary(msg.content).map((para, i) => <p key={i}>{para}</p>)
+                    ) : (
+                      <div>{msg.content}</div>
+                    )}
                 </div>
               </S.Message>
             );
