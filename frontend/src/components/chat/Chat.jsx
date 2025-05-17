@@ -41,19 +41,6 @@ export function Chat() {
   const accessToken = localStorage.getItem("accessToken") || "";
 
   useEffect(() => {
-    // 임시 요약 메시지 테스트
-    const testMessage = {
-      messageType: "SUMMARY",
-      clubId: 123,
-      userId: 0,
-      userName: "AI 진행자",
-      content: "오늘 1984 독서 모임은 어떠셨나요? 오늘 토의 내용을 요약해드릴게요. 주제 1: 감시 사회와 개인의 자유. 참가자들은 소설 속 '빅 브라더' 개념이 현대 사회의 CCTV, 스마트폰, 개인정보 추적 기술과 유사하다고 언급했습니다. 특히 프라이버시와 효율성 사이의 균형 문제에 대해 활발한 토론이 있었습니다. 주제 2: 진실 조작과 언론의 역할. 뉴스피크와 진리부에 대한 해석이 다양하게 나왔으며, 현실 사회의 언론 신뢰도 문제와 연결하는 의견이 많았습니다. 마지막으로, 이러한 요소들이 현재 우리 사회에 던지는 경고를 어떻게 받아들일지에 대한 성찰로 토론이 마무리되었습니다."
-    };
-
-    setMessages((prev) => [...prev, testMessage]);
-  }, []);
-
-  useEffect(() => {
     const socket = new SockJS("http://localhost:8080/chat"); 
     const client = new Client({
       webSocketFactory: () => socket,
