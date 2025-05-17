@@ -15,7 +15,7 @@ export function Chat() {
   const [memoContent, setMemoContent] = useState("");
   const [isMemoVisible, setIsMemoVisible] = useState(false);
 
-  const { clubId } = useParams(); 
+  const { clubId } = useParams();
 
   const accessToken = localStorage.getItem("accessToken") || "";
 
@@ -29,6 +29,9 @@ export function Chat() {
         window.stompClient = client; 
         client.subscribe(`/topic/chat/${clubId}`, (message) => {
           const receivedMessage = JSON.parse(message.body);
+
+          console.log("📥 [DEBUG] 받은 메시지:", receivedMessage);//debug soo:demo02
+
 
           if (receivedMessage.messageType === "SUMMARY") {
             const introMessage = {
@@ -68,6 +71,11 @@ export function Chat() {
     }
 
     if (message.trim()) {
+
+      //soo:demo02
+      const parsedClubId = parseInt(clubId);
+      console.log("📤 보낼 clubId:", parsedClubId);
+
       const chatMessage = {
         messageType: "DISCUSSION", 
         clubId: parseInt(clubId), 
