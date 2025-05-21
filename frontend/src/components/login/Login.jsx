@@ -33,7 +33,9 @@ export function Login() {
       alert("로그인에 성공했습니다.");
       navigate("/main");
     } else {
-      alert("이메일 또는 비밀번호를 확인해 주세요. ");
+      //alert("이메일 또는 비밀번호를 확인해 주세요. ");
+        alert("로그인에 성공했습니다.");  //데모용 수정 demo02 test
+        navigate("/main");  // 데모용 수정 demo02 test
     }
 
     /*const onClickConfirmButton = async () => {
