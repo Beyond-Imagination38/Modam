@@ -22,6 +22,17 @@ repositories {
 
 // 의존성 설정
 dependencies {
+
+	//jwt 토큰 관련
+	implementation 'io.jsonwebtoken:jjwt-api:0.10.8'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.10.8'        // runtimeOnly → implementation 으로 변경
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.10.8'     // runtimeOnly → implementation 으로 변경
+
+
+	//security 관련
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'//actuator 추가
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -48,7 +59,18 @@ dependencies {
 	implementation 'io.swagger.core.v3:swagger-annotations:2.2.20'
 
 
+
+
 }
+
+configurations.all {
+	resolutionStrategy {
+		force 'io.jsonwebtoken:jjwt-api:0.12.6'
+		force 'io.jsonwebtoken:jjwt-impl:0.12.6'
+		force 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+	}
+}
+
 
 tasks.named('test') {
 	useJUnitPlatform()
