@@ -52,6 +52,8 @@ export function Chat() {
           const receivedMessage = JSON.parse(message.body);
 
           console.log("📥 [DEBUG] 받은 메시지:", receivedMessage);//debug soo:demo02
+
+          setMessages((prevMessages) => [...prevMessages, receivedMessage]);
         });
 
       },
