@@ -10,7 +10,7 @@ const formatSummary = (text) => {
   if (!text) return [];
 
   // '주제' 키워드가 포함된 위치를 기준으로 우선 문단 나누기
-  const topicBlocks = text.split(/(?=주제\s*\d*:)/g); // '주제 1:', '주제2:' 등을 기준으로 나눔
+  const topicBlocks = text.split(/(?=주제\s*\d*:)/g);
   const formattedParagraphs = [];
 
   topicBlocks.forEach((block) => {
@@ -35,8 +35,6 @@ export function Chat() {
   const [stompClient, setStompClient] = useState(null);
   const [memoContent, setMemoContent] = useState("");
   const [isMemoVisible, setIsMemoVisible] = useState(false);
-  const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);//soo:demo02-2
-
 
   const { clubId } = useParams();
 
@@ -54,26 +52,6 @@ export function Chat() {
           const receivedMessage = JSON.parse(message.body);
 
           console.log("📥 [DEBUG] 받은 메시지:", receivedMessage);//debug soo:demo02
-
-<<<<<<< HEAD
-          setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-=======
-          //soo:demo02-2
-          // 자유토론 시작 메시지 감지
-          if (receivedMessage.messageType === "FREE_DISCUSSION_NOTICE") {
-            setIsFreeDiscussion(true);
-          }
-          //soo:demo02-2
-          // 자유토론 종료 (주제 전환 또는 종료)
-          if (
-              receivedMessage.messageType === "MAINTOPIC" ||
-              receivedMessage.messageType === "END_NOTICE"
-          ) {
-            setIsFreeDiscussion(false);
-          }
-
-          setMessages((prevMessages) => [...prevMessages, receivedMessage]);  //soo:demo02-2
->>>>>>> ec0f62d6d2d09ce7d3c212c92d12db2c1a291196
         });
 
       },
