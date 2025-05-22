@@ -42,7 +42,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(userId, null, Collections.singletonList(new SimpleGrantedAuthority("USER")));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                System.out.println("JWT 인증 성공, userId: " + userId);
             }
+            else{
+                System.out.println("JWT 토큰 검증 실패");
+            }
+        }
+        else {
+            System.out.println("Authorization 헤더 없음 또는 Bearer 토큰 아님");
         }
         filterChain.doFilter(request, response);
     }
