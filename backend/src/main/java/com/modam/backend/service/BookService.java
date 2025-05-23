@@ -15,7 +15,7 @@ public class BookService {
         this.book_repository = book_repository;
     }
 
-    public Optional<Book> getBookById(String book_id) {
+    public Optional<Book> getBookById(Integer book_id) {
         return book_repository.findById(book_id);
     }
 }

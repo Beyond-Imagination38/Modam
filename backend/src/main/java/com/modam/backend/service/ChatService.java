@@ -36,7 +36,21 @@ public class ChatService {
 
     private static final String GREETING_MESSAGE = "안녕하세요 이번 모임은 책 1984에 대한 내용입니다. 첫번째 주제는 다음과 같습니다.";
 
-    @SuppressWarnings("unchecked")
+    // soo:요약문+상태 - 요약문 저장 및 모임 상태 변경 메서드 추가
+    @Transactional
+    public void saveSummaryAndCompleteClub(int clubId, String summary) {
+        BookClub bookClub = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
+
+        bookClub.setMeetingSummary(summary); // meeting_summary 컬럼에 요약문 저장
+        bookClub.setStatus("COMPLETED");    // 상태를 완료로 변경
+
+        bookClubRepository.save(bookClub);
+    }
+
+
+
+
     @Transactional
     public ChatMessageDto saveChatMessage(int clubId, ChatMessageDto dto) {
         BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();

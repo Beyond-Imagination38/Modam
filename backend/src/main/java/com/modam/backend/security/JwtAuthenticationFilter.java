@@ -27,6 +27,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        System.out.println("JwtAuthenticationFilter doFilterInternal called for URL: " + request.getRequestURI());//디버그
+
+
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
@@ -39,7 +42,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(userId, null, Collections.singletonList(new SimpleGrantedAuthority("USER")));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                System.out.println("JWT 인증 성공, userId: " + userId);
             }
+            else{
+                System.out.println("JWT 토큰 검증 실패");
+            }
+        }
+        else {
+            System.out.println("Authorization 헤더 없음 또는 Bearer 토큰 아님");
         }
         filterChain.doFilter(request, response);
     }

@@ -18,13 +18,13 @@ public class BookClubDto {
     private int club_id;
 
     @Schema(description = "호스트 유저의 ID", example = "1")
-    private String host_id;
+    private Integer host_id;
 
     @Schema(description = "호스트 유저 이름", example = "사용자01")
     private String host_user_name;
 
     @Schema(description = "책 ID", example = "1")
-    private String book_id;
+    private Integer book_id;
 
     @Schema(description = "북클럽 모임 날짜 및 시간", example = "2025-04-01T00:00:00")
     private LocalDateTime meeting_date;
@@ -36,14 +36,14 @@ public class BookClubDto {
     private int likes;
 
     @Schema(description = "북클럽 소개 요약", example = "1984 모임")
-    private String summary;
+    private String clubDescription;
 
     @Schema(description = "검색 인덱스 키워드", example = "")
-    private String search_index;
+    private String searchIndex;
 
     @Schema(description = "생성일시", example = "2025-04-10T16:30:36")
-    private LocalDateTime created_time;
+    private LocalDateTime createdTime;
 
     @Schema(description = "수정일시", example = "2025-04-10T16:30:36")
-    private LocalDateTime updated_time;
+    private LocalDateTime updatedTime;
 }

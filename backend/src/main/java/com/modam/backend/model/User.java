@@ -13,7 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,9 +34,6 @@ public class User {
 
     @Column(name = "profile_image", columnDefinition = "TEXT")
     private String profileImage;
-
-    @Column(name = "coins", nullable = false, columnDefinition = "INT DEFAULT 0")
-    private int coins;
 
     @CreationTimestamp
     @Column(name = "created_time", nullable = false, updatable = false)

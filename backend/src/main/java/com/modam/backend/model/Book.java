@@ -24,8 +24,8 @@ public class Book {
     @Column(name = "book_title", nullable = false)
     private String book_title;
 
-    @Column(name = "writer", nullable = false)
-    private String writer;
+    @Column(name = "author", nullable = false)
+    private String author;
 
     @Column(name = "genre", nullable = false)
     private String genre;
@@ -33,6 +33,14 @@ public class Book {
     @Column(name = "published_date")
     private LocalDate published_date;
 
-    @Column(name = "summary")
-    private String summary;
+    @Column(name = "cover_image")
+    private String coverImage;
+
+    // getTitle
+    public String getTitle() { return this.book_title; }  // getter 삽입
+    // coverImage
+    public String getCoverImage(){
+        return coverImage;
+    }
+
 }

@@ -7,16 +7,15 @@ import com.modam.backend.model.BookClub;
 import com.modam.backend.model.MessageType;
 import com.modam.backend.service.BookClubService;
 import com.modam.backend.service.ChatService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/chat")
@@ -39,6 +38,17 @@ public class ChatController {
         this.subtopicDiscussionManager = subtopicDiscussionManager;
 
         this.freeDiscussionManager = freeDiscussionManager;//test02용 demo02
+    }
+
+    // soo:요약문+상태 - 요약문 저장 및 상태 변경 API 엔드포인트 추가
+    @PostMapping("/{clubId}/summary")
+    public ResponseEntity<String> saveSummary(@PathVariable int clubId, @RequestBody Map<String, String> request) {
+        String summary = request.get("summary");
+        if (summary == null || summary.isBlank()) {
+            return ResponseEntity.badRequest().body("요약문이 필요합니다.");
+        }
+        chatService.saveSummaryAndCompleteClub(clubId, summary);
+        return ResponseEntity.ok("요약문 저장 및 상태 변경 완료");
     }
 
     //test
