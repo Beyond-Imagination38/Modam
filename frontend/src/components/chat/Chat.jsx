@@ -35,7 +35,7 @@ export function Chat() {
   const [stompClient, setStompClient] = useState(null);
   const [memoContent, setMemoContent] = useState("");
   const [isMemoVisible, setIsMemoVisible] = useState(false);
-
+  const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);//soo:demo02-2
   const { clubId } = useParams();
 
   const accessToken = localStorage.getItem("accessToken") || "";
@@ -52,8 +52,24 @@ export function Chat() {
           const receivedMessage = JSON.parse(message.body);
 
           console.log("📥 [DEBUG] 받은 메시지:", receivedMessage);//debug soo:demo02
-        });
+          
+          //soo:demo02-2
+          // 자유토론 시작 메시지 감지
+          if (receivedMessage.messageType === "FREE_DISCUSSION_NOTICE") {
+            setIsFreeDiscussion(true);
+          }
+          //soo:demo02-2
+          // 자유토론 종료 (주제 전환 또는 종료)
+          if (
+              receivedMessage.messageType === "MAINTOPIC" ||
+              receivedMessage.messageType === "END_NOTICE"
+          ) {
+            setIsFreeDiscussion(false);
+          }
 
+          setMessages((prevMessages) => [...prevMessages, receivedMessage]);  //soo:demo02-2
+        });
+        
       },
       onStompError: (error) => {
         console.error("STOMP 오류:", error);
