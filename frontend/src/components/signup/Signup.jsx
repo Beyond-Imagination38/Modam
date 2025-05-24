@@ -41,10 +41,11 @@ export function Signup() {
       alert("입력한 정보를 다시 확인해주세요.");
       return;
     }
+    /*
     alert("회원가입이 완료되었습니다!"); //연결 후 삭제
     navigate("/login"); //연결 후 삭제
-
-    /*
+    */
+    
     try {
       const signupResponse = await fetchApi(API_URLS.signup, {
         method: "POST",
@@ -73,7 +74,7 @@ export function Signup() {
     } catch (error) {
       console.error("회원가입 오류:", error);
       alert("회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
-    }*/
+    }
   };
 
   return (
