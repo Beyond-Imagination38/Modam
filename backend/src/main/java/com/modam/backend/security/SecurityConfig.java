@@ -29,11 +29,15 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())  // REST API는 보통 CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/user/login",
-                                "/user/signup",
                                 "/swagger-ui/**",              // soo: swagger 예외처리
                                 "/v3/api-docs/**",             // soo: swagger 예외처리
-                                "/swagger-ui.html"             // soo: swagger 예외처리
+                                "/swagger-ui.html",             // soo: swagger 예외처리
+                                "/user/login",
+                                "/user/signup"
+                                //독서 모임 메인 페이지
+                                //완료된 독서모임 페이지
+                                //
+
                         ).permitAll() // 로그인, 회원가입은 허용
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
