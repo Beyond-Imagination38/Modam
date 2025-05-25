@@ -18,6 +18,7 @@ export const InputTitle = styled.div`
   font-size: 12px;
   font-weight: 600;
   color: #262626;
+  margintop: "26px"
 `;
 
 export const Title = styled.h1`
@@ -74,7 +75,7 @@ export const ErrorMessageWrap = styled.div`
   font-size: 12px;
 `;
 
-export const SignupLink = styled.a`
+export const SignupLink = styled.span`
   display: block;
   margin-top: 16px;
   font-size: 14px;
