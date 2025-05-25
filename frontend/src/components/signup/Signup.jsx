@@ -43,7 +43,7 @@ export function Signup() {
   }
     
       try {
-        const signupResponse = await fetch("http://3.15.72.236:8080/user/signup", {
+        const signupResponse = await fetch("http://localhost:8080/user/signup", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -29,7 +29,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         System.out.println("JwtAuthenticationFilter doFilterInternal called for URL: " + request.getRequestURI());//디버그
 
+        String path = request.getRequestURI();
 
+        // 로그인, 회원가입 요청은 토큰 검사 없이 바로 통과
+        if (path.equals("/user/login") || path.equals("/user/signup")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+
+        //JWT 처리 로직
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);

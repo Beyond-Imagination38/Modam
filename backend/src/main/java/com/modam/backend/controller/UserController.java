@@ -35,9 +35,9 @@ public class UserController {
     // 회원가입 - 유효성 검사 적용 //add250521
     @Operation(summary = "회원가입", description = "유저 정보를 받아 회원가입을 처리합니다.")
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody UserDto user_dto) {
+    public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody UserDto user_dto) {
         user_service.register(user_dto);
-        return ResponseEntity.ok("회원가입이 완료되었습니다.");
+        return ResponseEntity.ok(Map.of("message","회원가입이 완료되었습니다."));
     }
 
 
