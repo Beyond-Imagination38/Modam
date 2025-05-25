@@ -4,15 +4,9 @@ import * as S from "./Login.style";
 import { API_URLS } from "../../consts";
 import { fetchApi } from "../../utils";
 
-const User = {
-  email: "ewha1886@naver.com",
-  pw: "ewha1886",
-};
-
 export function Login() {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
-
   const navigate = useNavigate();
 
   // 페이지 로드 시 localStorage에서 token과 userId를 확인하여 이미 로그인 상태라면 바로 main 페이지로 이동
@@ -25,7 +19,7 @@ export function Login() {
     }
   }, [navigate]);
 
-  const onClickConfirmButton = () => {
+  /*const onClickConfirmButton = () => {
     if (email === User.email && pw === User.pw) {
       localStorage.setItem("token", "true");
       localStorage.setItem("userId", "123");
@@ -36,11 +30,12 @@ export function Login() {
       //alert("이메일 또는 비밀번호를 확인해 주세요. ");
         alert("로그인에 성공했습니다.");  //데모용 수정 demo02 test
         navigate("/main");  // 데모용 수정 demo02 test
-    }
-
-    /*const onClickConfirmButton = async () => {
+    }*/
+    
+    
+    const onClickConfirmButton = async () => {
     try {
-      const response = await fetchApi(API_URLS.login, {
+      const response = await fetch("http://3.15.72.236:8080/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, pw }),
@@ -48,37 +43,29 @@ export function Login() {
 
       console.log("로그인 API 응답:", response);
 
-      if (response.status === 200 && response.data) {
-        if (response.data.token && response.data.userId) {
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("userId", response.data.userId);
+      const data = await response.json();
 
-          alert("로그인 성공!");
-          navigate("/main");
-        } else {
-          alert("서버 응답이 올바르지 않습니다.");
-        }
+      if (response.status === 200 && data?.token && data?.userId) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.userId);
+
+        alert("로그인 성공!");
+        navigate("/main");
       } else if (response.status === 400) {
-        console.log("400 응답 데이터:", response);
-        alert(response.data?.error || "요청이 올바르지 않습니다.");
+        alert(data?.error || "잘못된 요청입니다.");
       } else if (response.status === 401) {
-        console.log("401 응답 데이터:", response);
-        alert(
-          response?.data?.error || "이메일 또는 비밀번호가 올바르지 않습니다."
-        );
+        alert(data?.error || "이메일 또는 비밀번호가 올바르지 않습니다.");
       } else {
-        console.log("예외 처리되지 않은 응답:", response);
         alert("알 수 없는 오류가 발생했습니다.");
+        console.error("예외 처리되지 않은 응답:", data);
       }
     } catch (error) {
       console.error("로그인 요청 오류:", error);
-      alert(
-        error.response?.data?.error ||
-          "네트워크 오류가 발생했습니다. 다시 시도해 주세요."
-      );
-    }*/
+      alert("네트워크 오류가 발생했습니다. 다시 시도해 주세요.");
+    }
   };
 
+  
   return (
     <S.Page>
       <S.ContentWrap>
