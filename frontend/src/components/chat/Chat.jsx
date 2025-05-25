@@ -10,7 +10,7 @@ const formatSummary = (text) => {
   if (!text) return [];
 
   // '주제' 키워드가 포함된 위치를 기준으로 우선 문단 나누기
-  const topicBlocks = text.split(/(?=주제\s*\d*:)/g); // '주제 1:', '주제2:' 등을 기준으로 나눔
+  const topicBlocks = text.split(/(?=주제\s*\d*:)/g);
   const formattedParagraphs = [];
 
   topicBlocks.forEach((block) => {
@@ -36,8 +36,6 @@ export function Chat() {
   const [memoContent, setMemoContent] = useState("");
   const [isMemoVisible, setIsMemoVisible] = useState(false);
   const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);//soo:demo02-2
-
-
   const { clubId } = useParams();
 
   const accessToken = localStorage.getItem("accessToken") || "";
@@ -54,7 +52,7 @@ export function Chat() {
           const receivedMessage = JSON.parse(message.body);
 
           console.log("📥 [DEBUG] 받은 메시지:", receivedMessage);//debug soo:demo02
-
+          
           //soo:demo02-2
           // 자유토론 시작 메시지 감지
           if (receivedMessage.messageType === "FREE_DISCUSSION_NOTICE") {
@@ -71,7 +69,7 @@ export function Chat() {
 
           setMessages((prevMessages) => [...prevMessages, receivedMessage]);  //soo:demo02-2
         });
-
+        
       },
       onStompError: (error) => {
         console.error("STOMP 오류:", error);
