@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())  // REST API: 보통 CSRF 비활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // cors 설정 추가
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // <-- 이거 추가!!
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() //permitAll 추가
                         .requestMatchers(
                                 "/swagger-ui/**",              // soo: swagger 예외처리
                                 "/v3/api-docs/**",             // soo: swagger 예외처리
