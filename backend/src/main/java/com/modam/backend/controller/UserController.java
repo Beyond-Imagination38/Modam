@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +38,20 @@ public class UserController {
     @Operation(summary = "회원가입", description = "유저 정보를 받아 회원가입을 처리합니다.")
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody UserDto user_dto) {
-        user_service.register(user_dto);
-        return ResponseEntity.ok(Map.of("message","회원가입이 완료되었습니다."));
+
+        //409 conflict 예외 처리 추가
+        try{
+            user_service.register(user_dto);
+            return ResponseEntity.ok(Map.of("message","회원가입이 완료되었습니다."));
+        }
+        catch (DataIntegrityViolationException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "이미 존재하는 이메일입니다."));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "회원가입 중 서버 오류가 발생했습니다."));
+        }
     }
 
 
@@ -48,7 +62,7 @@ public class UserController {
         String email = loginRequest.get("email");
         String pw = loginRequest.get("pw");
 
-        if (email == null || pw == null) {  // 간단한 입력 검증 //add250521
+        if (email == null || pw == null) {  // 간단한 입력 검증
             return ResponseEntity.badRequest().body(Map.of("error", "이메일과 비밀번호를 모두 입력해주세요."));
         }
 
