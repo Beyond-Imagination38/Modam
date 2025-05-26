@@ -53,6 +53,30 @@ public class BookClubService {
         }).collect(Collectors.toList());
     }
 
+    //단건 조회 로직
+    public ClubListDto getClubSummaryById(int clubId) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        BookClub club = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
+
+        Book book = bookRepository.findById(club.getBookId())
+                .orElseThrow(() -> new RuntimeException("Book not found with id: " + club.getBookId()));
+
+        return new ClubListDto(
+                club.getClubId(),
+                club.getHostId(),
+                book.getTitle(),
+                club.getMeetingDate().format(formatter),
+                book.getCoverImage(),
+                convertStatusToCategory(club.getStatus())
+        );
+    }
+
+
+
+
+
     // 예: status: "ONGOING" → category: "진행 중"
     private String convertStatusToCategory(String status) {
         return switch (status) {

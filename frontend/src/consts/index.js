@@ -1,4 +1,4 @@
-export const COMMON_API_URL = "http://3.15.72.236:8080";
+export const COMMON_API_URL = "http://localhost:8080";
 
 export const API_URLS = {
   user: `${COMMON_API_URL}/user`,
