@@ -30,6 +30,7 @@ export const InputTitle = styled.div`
   font-size: 12px;
   font-weight: 600;
   color: #262626;
+  margintop:"100px"
 `;
 
 export const InputWrap = styled.div`

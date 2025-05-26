@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as S from "./Signup.style.jsx";
-import { API_URLS } from "../../consts";
-import { fetchApi } from "../../utils";
 
 export function Signup() {
   const [email, setEmail] = useState("");
@@ -43,7 +41,7 @@ export function Signup() {
   }
     
       try {
-        const signupResponse = await fetch("http://3.15.72.236:8080/user/signup", {
+        const signupResponse = await fetch("http://localhost:8080/user/signup", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
