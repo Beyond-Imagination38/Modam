@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import * as S from "./Login.style";
-import { API_URLS } from "../../consts";
-import { fetchApi } from "../../utils";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -79,7 +77,7 @@ export function Login() {
           />
         </S.InputWrap>
 
-        <S.InputTitle style={{ marginTop: "26px" }}>비밀번호</S.InputTitle>
+        <S.InputTitle>비밀번호</S.InputTitle>
         <S.InputWrap>
           <S.Input
             type="password"

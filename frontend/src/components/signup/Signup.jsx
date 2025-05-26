@@ -79,7 +79,7 @@ export function Signup() {
     <S.Page>
       <S.Title onClick={() => navigate("/")}>Modam</S.Title>
       <S.ContentWrap>
-        <S.InputTitle marginTop="100px">이메일</S.InputTitle>
+        <S.InputTitle>이메일</S.InputTitle>
         <S.InputWrap>
           <S.Input type="text" value={email} onChange={handleEmail} />
         </S.InputWrap>
@@ -89,7 +89,7 @@ export function Signup() {
           )}
         </S.ErrorMessageWrap>
 
-        <S.InputTitle marginTop="26px">비밀번호</S.InputTitle>
+        <S.InputTitle>비밀번호</S.InputTitle>
         <S.InputWrap>
           <S.Input type="password" value={pw} onChange={handlepw} />
         </S.InputWrap>
