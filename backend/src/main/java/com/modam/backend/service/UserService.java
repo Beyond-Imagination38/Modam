@@ -28,10 +28,10 @@ public class UserService {
     // 회원가입: 비밀번호 평문화, user_id는 DB 자동 생성
     public void register(UserDto user_dto) {
         User user = new User();
-        user.setUserName(user_dto.getUser_name());
+        user.setUserName(user_dto.getUserName());
         user.setEmail(user_dto.getEmail());
         user.setPw(user_dto.getPw());  // 평문 그대로 저장
-        user.setProfileImage(user_dto.getProfile_image());
+        user.setProfileImage(user_dto.getProfileImage());
         user_repository.save(user);
     }
 

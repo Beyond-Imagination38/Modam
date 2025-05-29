@@ -43,7 +43,9 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",             // soo: swagger 예외처리
                                 "/swagger-ui.html",             // soo: swagger 예외처리
                                 "/user/login",
-                                "/user/signup"
+                                "/user/signup",
+                                "/api/bookclubs",                //독서 모임 메인 페이지
+                                "/api/bookclubs/**"
                                 //독서 모임 메인 페이지
                                 //완료된 독서모임 페이지
                                 //

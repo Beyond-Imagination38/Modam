@@ -1,14 +1,12 @@
 package com.modam.backend.controller;
 
+import com.modam.backend.dto.BookClubCreateDto;
 import com.modam.backend.dto.ClubListDto;
+import com.modam.backend.model.BookClub;
 import com.modam.backend.service.BookClubService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +25,11 @@ public class BookClubController {
     @GetMapping("/{clubId}")
     public ResponseEntity<ClubListDto> getBookClubById(@PathVariable int clubId){
         return ResponseEntity.ok(bookClubService.getClubSummaryById(clubId));
+    }
+
+    @PostMapping
+    public ResponseEntity<BookClub> createBookClub(@RequestBody BookClubCreateDto dto) {
+        BookClub createdClub = bookClubService.createBookClub(dto);
+        return ResponseEntity.ok(createdClub);
     }
 }

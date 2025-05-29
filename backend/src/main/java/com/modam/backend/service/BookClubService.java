@@ -1,12 +1,16 @@
 package com.modam.backend.service;
 
+import com.modam.backend.dto.BookClubCreateDto;
 import com.modam.backend.dto.ClubListDto;
 import com.modam.backend.model.Book;
 import com.modam.backend.model.BookClub;
+import com.modam.backend.model.User;
 import com.modam.backend.repository.BookClubRepository;
 import com.modam.backend.repository.BookRepository;
+import com.modam.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,13 +20,46 @@ public class BookClubService {
 
     private final BookClubRepository bookClubRepository;
     private final BookRepository bookRepository;
+    private final UserRepository userRepository;
 
 
-    public BookClubService(BookClubRepository bookClubRepository, BookRepository bookRepository) {
+
+    public BookClubService(BookClubRepository bookClubRepository, BookRepository bookRepository, UserRepository userRepository) {
         this.bookClubRepository = bookClubRepository;
         this.bookRepository = bookRepository;
+        this.userRepository = userRepository;
 
     }
+
+    // 모임 개설
+    public BookClub createBookClub(BookClubCreateDto dto) {
+        // 책 확인
+        Book book = bookRepository.findByBookTitle(dto.getBookTitle())
+                .orElseThrow(() -> new RuntimeException("해당 제목의 책이 존재하지 않습니다: " + dto.getBookTitle()));
+
+        // 사용자 확인 (host 존재 확인용)
+        User host = userRepository.findById(dto.getHostId())
+                .orElseThrow(() -> new RuntimeException("해당 사용자 ID가 존재하지 않습니다: " + dto.getHostId()));
+
+        LocalDateTime meetingDateTime = LocalDateTime.of(dto.getDate(), dto.getTime());
+
+        BookClub club = new BookClub();
+        club.setHostId(dto.getHostId());
+        club.setBookId(book.getBookId());
+        club.setMeetingDate(meetingDateTime);
+        club.setClubDescription(dto.getClubDescription());
+        club.setStatus("PENDING");
+
+        return bookClubRepository.save(club);
+    }
+
+
+
+
+
+
+
+    // 조회
 
     public BookClub getBookClub(int clubId) {
         return bookClubRepository.findById(clubId)
@@ -98,9 +135,6 @@ public class BookClubService {
 
         bookClubRepository.save(club);            // 한 번에 저장
     }
-
-
-
 
 }
 

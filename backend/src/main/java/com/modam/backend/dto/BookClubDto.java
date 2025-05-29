@@ -32,11 +32,12 @@ public class BookClubDto {
     @Schema(description = "북클럽 상태 (예: PENDING, ACTIVE, CLOSED 등)", example = "PENDING")
     private String status;
 
-    @Schema(description = "좋아요 수", example = "0")
-    private int likes;
+    //@Schema(description = "좋아요 수", example = "0")
+    //private int likes;
 
     @Schema(description = "북클럽 소개 요약", example = "1984 모임")
     private String clubDescription;
+
 
     @Schema(description = "검색 인덱스 키워드", example = "")
     private String searchIndex;
