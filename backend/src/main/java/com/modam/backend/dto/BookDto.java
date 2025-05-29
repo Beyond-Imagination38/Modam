@@ -15,10 +15,10 @@ import java.time.LocalDate;
 public class BookDto {
 
     @Schema(description = "책 고유 ID", example = "1")
-    private Integer book_id;
+    private Integer bookId;
 
     @Schema(description = "책 제목", example = "1984")
-    private String book_title;
+    private String bookTitle;
 
     @Schema(description = "작가", example = "조지 오웰")
     private String author;
@@ -27,7 +27,7 @@ public class BookDto {
     private String genre;
 
     @Schema(description = "출판일", example = "1949-06-08")
-    private LocalDate published_date;
+    private LocalDate publishedDate;
 
     @Schema(description = "책 표지 이미지 URL", example = "/assets/images/1984.jpg")
     private String cover_image;
