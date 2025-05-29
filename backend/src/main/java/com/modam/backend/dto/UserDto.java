@@ -16,11 +16,11 @@ import lombok.Setter;
 public class UserDto {
 
     @Schema(description = "유저 고유 ID", example = "1")
-    private int user_id;
+    private int userId;
 
     @Schema(description = "유저 이름", example = "사용자01")
     @NotBlank(message = "닉네임은 필수입니다.")
-    private String user_name;
+    private String userName;
 
     @Schema(description = "유저 이메일", example = "user01@example.com")
     @NotBlank(message = "이메일은 필수입니다.")
@@ -32,6 +32,6 @@ public class UserDto {
     private String pw;
 
     @Schema(description = "프로필 이미지 URL (없을 경우 NULL)", example = "NULL")
-    private String profile_image;
+    private String profileImage;
 
 }

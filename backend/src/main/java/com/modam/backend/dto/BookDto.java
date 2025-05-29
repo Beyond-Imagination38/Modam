@@ -30,5 +30,5 @@ public class BookDto {
     private LocalDate publishedDate;
 
     @Schema(description = "책 표지 이미지 URL", example = "/assets/images/1984.jpg")
-    private String cover_image;
+    private String coverImage;
 }
