@@ -52,6 +52,16 @@ public class BookClubController {
         return ResponseEntity.ok(bookClubService.getOngoingClubsByUserId(userId));
     }
 
+    // 메인 3. 완료된 내 독서모임 조회 기능
+    @GetMapping("/my/completed")
+    @Operation(
+            summary = "완료된 내 독서모임 조회",
+            description = "userId가 참여한 독서모임 중 완료(COMPLETED)된 모임 리스트를 반환합니다."
+    )
+    public ResponseEntity<List<BookClubCommonDto>> getMyCompletedClubs(@RequestParam int userId) {
+        return ResponseEntity.ok(bookClubService.getCompletedClubsByUserId(userId));
+    }
+
 
 
 

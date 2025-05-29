@@ -108,6 +108,17 @@ public class BookClubService {
         return bookClubRepository.findByBookId(book_id);
     }
 
+    //메인 3.완료된 모임 조회: BookClub 상태가 COMPLETED이고 해당 userId가 참여한 경우
+    public List<BookClubCommonDto> getCompletedClubsByUserId(int userId) {
+        List<Participant> participations = participantRepository.findByUserUserId(userId);
+
+        return participations.stream()
+                .map(Participant::getBookClub)
+                .filter(club -> "COMPLETED".equals(club.getStatus()))
+                .map(this::toCommonDto)
+                .collect(Collectors.toList());
+    }
+
     //메인&상세 공통 모임 조회 dto
     private BookClubCommonDto toCommonDto(BookClub club) {
         int confirmedCount = participantRepository.countByBookClubClubIdAndStatus(club.getClubId(), "CONFIRMED");
