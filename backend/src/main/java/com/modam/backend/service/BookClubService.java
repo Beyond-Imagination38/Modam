@@ -90,7 +90,8 @@ public class BookClubService {
 
     // 메인 2. 진행 중인 내 모임 조회: status=ongoing
     public List<BookClubCommonDto> getOngoingClubsByUserId(int userId) {
-        List<Participant> participations = participantRepository.findByUserUserId(userId);
+        List<Participant> participations = participantRepository.findWithBookClubByUserUserId(userId);
+
         return participations.stream()
                 .map(Participant::getBookClub)
                 .filter(club -> "ONGOING".equals(club.getStatus()))
