@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class OngoingBookClubDto {
+public class MyOngoingBookClubDto {
     private Integer clubId;
     private String bookTitle;
     private String meetingDate;

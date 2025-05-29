@@ -16,11 +16,16 @@ public class BookClubService {
     private final BookClubRepository bookClubRepository;
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
+    private final ParticipantRepository participantRepository;
 
-    public BookClubService(BookClubRepository bookClubRepository, BookRepository bookRepository, UserRepository userRepository) {
+
+    public BookClubService
+            (BookClubRepository bookClubRepository, BookRepository bookRepository,
+             UserRepository userRepository, ParticipantRepository participantRepository) {
         this.bookClubRepository = bookClubRepository;
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
+        this.participantRepository = participantRepository;
 
     }
 
@@ -46,8 +51,8 @@ public class BookClubService {
         return bookClubRepository.save(club);
     }
 
-    //모임 전체 조회(검색/정렬/필터)
-    public List<BookClubSelectDto> searchBookClubs(BookClubSearchCondition condition) {
+    //메인 1. 모임 전체 조회(검색/정렬/필터)
+    public List<BookClubCommonDto> searchBookClubs(BookClubSearchCondition condition) {
         List<BookClub> clubs = bookClubRepository.findAll();
 
         return clubs.stream()
@@ -70,18 +75,22 @@ public class BookClubService {
                     }
                     return 0;
                 })
-                .map(club -> new BookClubSelectDto(
-                        club.getClubId(),
-                        club.getBook().getBookTitle(),
-                        club.getMeetingDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
-                        club.getBook().getCoverImage(),
-                        club.getStatus()
-                ))
+                .map(this::toCommonDto)  // 핵심: BookClub → BookClubCommonDto로 매핑
                 .collect(Collectors.toList());
     }
 
-    // 조회
 
+    // 메인 2. 진행 중인 내 모임 조회: status=ongoing
+    public List<BookClubCommonDto> getOngoingClubsByUserId(int userId) {
+        List<Participant> participations = participantRepository.findByUserUserId(userId);
+        return participations.stream()
+                .map(Participant::getBookClub)
+                .filter(club -> "ONGOING".equals(club.getStatus()))
+                .map(this::toCommonDto)
+                .collect(Collectors.toList());
+    }
+
+/*
     public BookClub getBookClub(int clubId) {
         return bookClubRepository.findById(clubId)
                 .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
@@ -90,11 +99,35 @@ public class BookClubService {
     public List<BookClub> getBookclubsbybookid(int book_id) {
         return bookClubRepository.findByBookId(book_id);
     }
+*/
+
+    //메인&상세 공통 모임 조회 dto
+    private BookClubCommonDto toCommonDto(BookClub club) {
+        int confirmedCount = participantRepository.countByBookClubClubIdAndStatus(club.getClubId(), "CONFIRMED");
+        String participantDisplay = confirmedCount + "/4";
+        return new BookClubCommonDto(
+                club.getBook().getCoverImage(),
+                club.getBook().getBookTitle(),
+                club.getMeetingDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
+                club.getClubDescription(),
+                participantDisplay
+        );
+    }
 
 
 
 
 
+
+/*    // 모임 종료 시 요약 저장 및 상태 변경
+    public void updateSummaryAndComplete(int clubId, String meetingSummary) {
+        BookClub club = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("BookClub not found: " + clubId));
+        club.setMeetingSummary(meetingSummary);
+        club.setStatus("COMPLETED");
+        bookClubRepository.save(club);
+    }*/
+    //아래를 삭제하고 위를 사용하는 것 나중에 테스트 해보기!!
 
     //요약 전달
     // 예: status: "ONGOING" → category: "진행 중"
