@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import * as S from "./Login.style";
-import { API_URLS } from "../../consts";
-import { fetchApi } from "../../utils";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -10,30 +8,16 @@ export function Login() {
   const navigate = useNavigate();
 
   // 페이지 로드 시 localStorage에서 token과 userId를 확인하여 이미 로그인 상태라면 바로 main 페이지로 이동
- useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+  useEffect(() => {
+      const token = localStorage.getItem("accessToken");
+      const userId = localStorage.getItem("userId");
 
-    if (token && userId) {
-      navigate("/main"); // 이미 로그인된 상태면 메인 페이지로 리다이렉트
-    }
-  }, [navigate]);
+      if (token && userId) {
+        navigate("/main"); // 이미 로그인된 상태면 메인 페이지로 리다이렉트
+      }
+    }, [navigate]);
 
-  /*const onClickConfirmButton = () => {
-    if (email === User.email && pw === User.pw) {
-      localStorage.setItem("token", "true");
-      localStorage.setItem("userId", "123");
-
-      alert("로그인에 성공했습니다.");
-      navigate("/main");
-    } else {
-      //alert("이메일 또는 비밀번호를 확인해 주세요. ");
-        alert("로그인에 성공했습니다.");  //데모용 수정 demo02 test
-        navigate("/main");  // 데모용 수정 demo02 test
-    }*/
-    
-    
-    const onClickConfirmButton = async () => {
+  const onClickConfirmButton = async () => {
     try {
       const response = await fetch("http://localhost:8080/user/login", {
         method: "POST",
@@ -46,7 +30,7 @@ export function Login() {
       const data = await response.json();
 
       if (response.status === 200 && data?.token && data?.userId) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("accessToken", data.token);
         localStorage.setItem("userId", data.userId);
 
         alert("로그인 성공!");
@@ -79,7 +63,7 @@ export function Login() {
           />
         </S.InputWrap>
 
-        <S.InputTitle style={{ marginTop: "26px" }}>비밀번호</S.InputTitle>
+        <S.InputTitle>비밀번호</S.InputTitle>
         <S.InputWrap>
           <S.Input
             type="password"

@@ -39,7 +39,7 @@ export function Chat() {
   const { clubId } = useParams();
 
   const accessToken = localStorage.getItem("accessToken") || "";
-
+  
   useEffect(() => {
     const socket = new SockJS("http://localhost:8080/chat"); 
     const client = new Client({
@@ -48,7 +48,7 @@ export function Chat() {
       onConnect: () => {
         console.log("WebSocket 연결 성공"); 
         window.stompClient = client; 
-        client.subscribe(`/topic/chat/${clubId}`, (message) => {
+        client.subscribe(`/topic/chat/${clubId}`, async (message) => {
           const receivedMessage = JSON.parse(message.body);
 
           console.log("📥 [DEBUG] 받은 메시지:", receivedMessage);//debug soo:demo02
@@ -67,6 +67,11 @@ export function Chat() {
             setIsFreeDiscussion(false);
           }
 
+          //모임 종료 시 메모 확정
+          if (receivedMessage.messageType === "END_NOTICE") {
+            await finalizeMemo(); 
+          }
+
           setMessages((prevMessages) => [...prevMessages, receivedMessage]);  //soo:demo02-2
         });
         
@@ -78,6 +83,7 @@ export function Chat() {
 
     client.activate(); // 연결 시작
     setStompClient(client);
+    loadMemo(); 
 
     return () => {
       client.deactivate(); // 컴포넌트 언마운트 시 연결 해제
@@ -125,27 +131,65 @@ export function Chat() {
     setIsMemoVisible(!isMemoVisible);
   };
 
-const saveMemo = async () => {
-  try {
-    const response = await fetchApi(API_URLS.saveMemo(clubId), {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        content: memoContent,
-      }),
-    });
+  //  메모 저장
+  const saveMemo = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: memoContent,
+        }),
+      });
 
-    if (!response.ok) throw new Error("서버 응답 실패");
+      if (!response.ok) throw new Error("서버 응답 실패");
 
-    alert("메모가 저장되었습니다!");
-  } catch (error) {
-    console.error("메모 저장 실패:", error);
-    alert("메모 저장 중 오류가 발생했습니다.");
-  }
-};
+      alert("메모가 저장되었습니다!");
+    } catch (error) {
+      console.error("메모 저장 실패:", error);
+      alert("메모 저장 중 오류가 발생했습니다.");
+    }
+  };
+
+  //  메모 조회
+  const loadMemo = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) throw new Error("메모 조회 실패");
+
+      const data = await response.json();
+      setMemoContent(data.content || "");
+    } catch (error) {
+      console.error("메모 조회 중 오류:", error);
+    }
+  };
+
+
+  // 메모 확정
+  const finalizeMemo = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}/finalize`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) throw new Error("메모 확정 실패");
+      console.log(" 메모 확정 완료");
+    } catch (error) {
+      console.error("메모 확정 오류:", error);
+    }
+  };
 
   return (
       <S.Container>
