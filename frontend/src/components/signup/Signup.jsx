@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as S from "./Signup.style.jsx";
-import { API_URLS } from "../../consts";
-import { fetchApi } from "../../utils";
 
 export function Signup() {
   const [email, setEmail] = useState("");
