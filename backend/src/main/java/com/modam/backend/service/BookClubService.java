@@ -104,13 +104,13 @@ public class BookClubService {
                 .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
     }
 
-    public List<BookClub> getBookclubsbybookid(int book_id) {
+/*    public List<BookClub> getBookclubsbybookid(int book_id) {
         return bookClubRepository.findByBookId(book_id);
-    }
+    }*/
 
     //메인 3.완료된 모임 조회: BookClub 상태가 COMPLETED이고 해당 userId가 참여한 경우
     public List<BookClubCommonDto> getCompletedClubsByUserId(int userId) {
-        List<Participant> participations = participantRepository.findByUserUserId(userId);
+        List<Participant> participations = participantRepository.findWithBookClubByUserUserId(userId);
 
         return participations.stream()
                 .map(Participant::getBookClub)
