@@ -31,4 +31,9 @@ public class Participant {
 
     @Column(name = "status")
     private String status; // PENDING, CONFIRMED, CANCELLED
+
+    @PrePersist
+    public void prePersist() {
+        this.joinedAt = this.joinedAt == null ? LocalDateTime.now() : this.joinedAt;
+    }
 }

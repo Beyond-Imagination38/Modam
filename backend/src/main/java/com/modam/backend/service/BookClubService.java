@@ -29,13 +29,11 @@ public class BookClubService {
 
     }
 
-    // 모임 개설
+    // 모임 개설: participants 테이블 반영하도록 수정
     public BookClub createBookClub(BookClubCreateDto dto) {
-        // 책 확인
         Book book = bookRepository.findByBookTitle(dto.getBookTitle())
                 .orElseThrow(() -> new RuntimeException("해당 제목의 책이 존재하지 않습니다: " + dto.getBookTitle()));
 
-        // 사용자 확인 (host 존재 확인용)
         User host = userRepository.findById(dto.getHostId())
                 .orElseThrow(() -> new RuntimeException("해당 사용자 ID가 존재하지 않습니다: " + dto.getHostId()));
 
@@ -48,7 +46,17 @@ public class BookClubService {
         club.setClubDescription(dto.getClubDescription());
         club.setStatus("PENDING");
 
-        return bookClubRepository.save(club);
+        // 먼저 BookClub 저장
+        BookClub savedClub = bookClubRepository.save(club);
+
+        // host를 CONFIRMED 상태로 참가자 등록
+        Participant participant = new Participant();
+        participant.setBookClub(savedClub);
+        participant.setUser(host);
+        participant.setStatus("CONFIRMED");
+        participantRepository.save(participant);
+
+        return savedClub;
     }
 
     //메인 1. 모임 전체 조회(검색/정렬/필터)
@@ -90,7 +98,7 @@ public class BookClubService {
                 .collect(Collectors.toList());
     }
 
-/*
+
     public BookClub getBookClub(int clubId) {
         return bookClubRepository.findById(clubId)
                 .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
@@ -99,7 +107,6 @@ public class BookClubService {
     public List<BookClub> getBookclubsbybookid(int book_id) {
         return bookClubRepository.findByBookId(book_id);
     }
-*/
 
     //메인&상세 공통 모임 조회 dto
     private BookClubCommonDto toCommonDto(BookClub club) {
