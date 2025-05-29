@@ -3,13 +3,12 @@ package com.modam.backend.controller;
 import com.modam.backend.dto.UserDto;
 import com.modam.backend.repository.UserRepository;
 import com.modam.backend.service.UserService;
-
+import com.modam.backend.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-
-
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 
 @RestController
@@ -26,12 +26,16 @@ public class UserController {
 
     private final UserService user_service;
     private final UserRepository user_repository;
+    private final JwtUtil jwtUtil;
+    private final RedisTemplate<String, String> redisTemplate;
 
 
-    public UserController(UserService user_service, UserRepository user_repository) {
+    public UserController(UserService user_service, UserRepository user_repository, JwtUtil jwtUtil, RedisTemplate<String, String> redisTemplate) {
 
         this.user_service = user_service;
         this.user_repository = user_repository;
+        this.jwtUtil = jwtUtil;
+        this.redisTemplate = redisTemplate;
     }
 
     // 회원가입 - 유효성 검사 적용 //add250521
@@ -85,11 +89,24 @@ public class UserController {
 
 
     // 로그아웃
-    // 로그아웃 (JWT stateless 특성상 클라이언트 토큰 삭제 권장) //add250521
-    @Operation(summary = "로그아웃", description = "서버에서는 별도 처리 없이 클라이언트에서 토큰 삭제로 로그아웃 처리합니다.") //add250521
+    @Operation(summary = "로그아웃", description = "Authorization 헤더에서 JWT를 추출하고 로그아웃 처리") //edit250527
     @PostMapping("/logout")
-    public ResponseEntity<String> logoutUser() {
+    public ResponseEntity<String> logoutUser(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("JWT 토큰이 없음");
+        }
+
+        String token = authHeader.substring(7); // "Bearer " 제거
+
+        // 토큰 만료까지 남은 시간만큼 Redis에 저장
+        long expiration = jwtUtil.getRemainingTime(token);
+        redisTemplate.opsForValue().set(token, "logout", expiration, TimeUnit.MILLISECONDS);
+
+
+
         return ResponseEntity.ok("로그아웃 완료");
+
     }
 
     // 회원 정보 조회( pw 제외 )

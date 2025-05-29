@@ -52,4 +52,17 @@ public class JwtUtil {
             return false;
         }
     }
+
+    // 토큰의 남은 만료 시간(ms 단위) 계산
+    public long getRemainingTime(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(getSigningKey())
+                .parseClaimsJws(token)
+                .getBody();
+
+        Date expiration = claims.getExpiration();
+        return expiration.getTime() - System.currentTimeMillis();
+    }
+
+
 }
