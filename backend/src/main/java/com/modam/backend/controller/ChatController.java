@@ -1,12 +1,14 @@
 package com.modam.backend.controller;
 
 import com.modam.backend.dto.ChatMessageDto;
+import com.modam.backend.dto.SummaryCreateDto;
 import com.modam.backend.handler.FreeDiscussionManager;
 import com.modam.backend.handler.SubtopicDiscussionManager;
 import com.modam.backend.model.BookClub;
 import com.modam.backend.model.MessageType;
 import com.modam.backend.service.BookClubService;
 import com.modam.backend.service.ChatService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/chat")
@@ -41,7 +42,7 @@ public class ChatController {
     }
 
     // soo:요약문+상태 - 요약문 저장 및 상태 변경 API 엔드포인트 추가
-    @PostMapping("/{clubId}/summary")
+/*    @PostMapping("/{clubId}/summary")
     public ResponseEntity<String> saveSummary(@PathVariable int clubId, @RequestBody Map<String, String> request) {
         String summary = request.get("summary");
         if (summary == null || summary.isBlank()) {
@@ -49,7 +50,22 @@ public class ChatController {
         }
         chatService.saveSummaryAndCompleteClub(clubId, summary);
         return ResponseEntity.ok("요약문 저장 및 상태 변경 완료");
+    }*/
+    //요약문: 수정
+    @PostMapping("/{clubId}/summary")
+    @Operation(summary = "요약 저장", description = "주제별 요약을 저장하고, 모임 상태를 COMPLETED로 변경합니다.")
+    public ResponseEntity<String> saveSummary(
+            @PathVariable int clubId,
+            @RequestBody List<SummaryCreateDto> summaryList) {
+
+        if (summaryList == null || summaryList.isEmpty()) {
+            return ResponseEntity.badRequest().body("요약 데이터가 필요합니다.");
+        }
+
+        chatService.saveSummaryAndCompleteClub(clubId, summaryList);
+        return ResponseEntity.ok("요약 저장 및 모임 상태 변경 완료");
     }
+
 
     //test
     @GetMapping("/test/summary/{clubId}")

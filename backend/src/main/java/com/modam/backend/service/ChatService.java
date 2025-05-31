@@ -1,11 +1,9 @@
 package com.modam.backend.service;
 
 import com.modam.backend.dto.ChatMessageDto;
+import com.modam.backend.dto.SummaryCreateDto;
 import com.modam.backend.model.*;
-import com.modam.backend.repository.BookClubRepository;
-import com.modam.backend.repository.ChatMessageRepository;
-import com.modam.backend.repository.DiscussionTopicRepository;
-import com.modam.backend.repository.UserRepository;
+import com.modam.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,13 +29,14 @@ public class ChatService {
     private final BookClubRepository bookClubRepository;
     private final UserRepository userRepository;
     private final DiscussionTopicRepository discussionTopicRepository;
+    private final SummaryRepository summaryRepository;  //요약문
 
     private final SimpMessagingTemplate messagingTemplate; // 추가
 
     private static final String GREETING_MESSAGE = "안녕하세요 이번 모임은 책 1984에 대한 내용입니다. 첫번째 주제는 다음과 같습니다.";
 
     // soo:요약문+상태 - 요약문 저장 및 모임 상태 변경 메서드 추가
-    @Transactional
+/*    @Transactional
     public void saveSummaryAndCompleteClub(int clubId, String summary) {
         BookClub bookClub = bookClubRepository.findById(clubId)
                 .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
@@ -45,6 +44,28 @@ public class ChatService {
         bookClub.setMeetingSummary(summary); // meeting_summary 컬럼에 요약문 저장
         bookClub.setStatus("COMPLETED");    // 상태를 완료로 변경
 
+        bookClubRepository.save(bookClub);
+    }*/
+    //요약문+상태:수정버전
+    @Transactional
+    public void saveSummaryAndCompleteClub(int clubId, List<SummaryCreateDto> summaryList) {
+        BookClub bookClub = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
+
+        // 기존 summary 삭제 (덮어쓰기 방지)
+        summaryRepository.deleteByBookClubClubId(clubId);
+
+        for (SummaryCreateDto dto : summaryList) {
+            Summary summary = new Summary();
+            summary.setBookClub(bookClub);
+            summary.setTopicNumber(dto.getTopicNumber());
+            summary.setTopic(dto.getTopic());
+            summary.setContent(dto.getContent());
+
+            summaryRepository.save(summary);
+        }
+
+        bookClub.setStatus("COMPLETED");
         bookClubRepository.save(bookClub);
     }
 
@@ -337,6 +358,7 @@ public class ChatService {
             return "[AI 요약 실패] " + e.getMessage();
         }
     }
+
     /*public String summarizeDiscussion(int clubId) {
         BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
 
