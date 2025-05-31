@@ -133,6 +133,55 @@ public class BookClubService {
         );
     }
 
+    // 상세 1. 상태 판단 로직
+    public BookClubStatusDto getBookClubStatus(int clubId, int userId) {
+        BookClub club = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("BookClub not found: " + clubId));
+
+        int confirmedCount = participantRepository.countByBookClubClubIdAndStatus(clubId, "CONFIRMED");
+        boolean isParticipant = participantRepository.existsByUserUserIdAndBookClubClubId(userId, clubId);
+
+        String resultStatus;
+
+        if (isParticipant && "COMPLETED".equals(club.getStatus())) {
+            resultStatus = "COMPLETED";
+        } else if (isParticipant && "ONGOING".equals(club.getStatus())) {
+            resultStatus = "ONGOING";
+        } else if (!isParticipant && confirmedCount >= 4) {
+            resultStatus = "CLOSED";
+        } else {
+            resultStatus = "OPEN";
+        }
+
+        return new BookClubStatusDto(clubId, userId, resultStatus);
+    }
+
+    //상세 2. 모임 신청 API (/join)
+    public void joinBookClub(int clubId, int userId) {
+        // 1. 모임 상태 확인
+        BookClubStatusDto statusDto = getBookClubStatus(clubId, userId);
+        if (!"OPEN".equals(statusDto.getStatus())) {
+            throw new RuntimeException("신청 가능한 상태가 아닙니다.");
+        }
+
+        // 2. 중복 신청 여부 확인
+        if (participantRepository.existsByUserUserIdAndBookClubClubId(userId, clubId)) {
+            throw new RuntimeException("이미 신청한 사용자입니다.");
+        }
+
+        // 3. 모임 및 사용자 조회
+        BookClub club = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("해당 모임이 존재하지 않습니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당 유저가 존재하지 않습니다."));
+
+        // 4. 참가자 추가
+        Participant participant = new Participant();
+        participant.setBookClub(club);
+        participant.setUser(user);
+        participant.setStatus("CONFIRMED");
+        participantRepository.save(participant);
+    }
 
 
 

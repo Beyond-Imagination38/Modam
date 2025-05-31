@@ -50,7 +50,7 @@ public class SecurityConfig {
                                 //완료된 독서모임 페이지
                                 //
 
-                        ).permitAll() // 로그인, 회원가입은 허용
+                        ).permitAll() // 허용
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
                 // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 앞에 넣기
