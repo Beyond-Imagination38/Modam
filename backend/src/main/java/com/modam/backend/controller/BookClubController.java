@@ -1,14 +1,12 @@
 package com.modam.backend.controller;
 
-import com.modam.backend.dto.ClubListDto;
+import com.modam.backend.dto.*;
+import com.modam.backend.model.BookClub;
 import com.modam.backend.service.BookClubService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,13 +17,62 @@ public class BookClubController {
 
     private final BookClubService bookClubService;
 
-    @GetMapping
-    public ResponseEntity<List<ClubListDto>> getAllClubs() {
-        return ResponseEntity.ok(bookClubService.getAllClubSummaries());
+    @PostMapping
+    public ResponseEntity<BookClub> createBookClub(@RequestBody BookClubCreateDto dto) {
+        return ResponseEntity.ok(bookClubService.createBookClub(dto));
     }
 
-    @GetMapping("/{clubId}")
+
+    //메인 1. 전체 독서모임 검색/정렬/필터
+    @GetMapping("/search")
+    @Operation(
+            summary = "전체 독서모임 검색/정렬/필터",
+            description = "keyword(책 제목/설명), status(PENDING/ONGOING/COMPLETED), sortBy(latest/likes/meetingDate) 파라미터로 필터링된 독서모임 리스트 반환"
+    )
+    public ResponseEntity<List<BookClubCommonDto>> searchBookClubs(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String sortBy
+    ) {
+        BookClubSearchCondition condition = new BookClubSearchCondition();
+        condition.setKeyword(keyword);
+        condition.setStatus(status);
+        condition.setSortBy(sortBy);
+        return ResponseEntity.ok(bookClubService.searchBookClubs(condition));
+    }
+
+
+    //메인 2. 진행 중인 내 모임 조회 기능
+    @GetMapping("/my/ongoing")
+    @Operation(
+            summary = "진행 중인 내 독서모임 조회",
+            description = "userId가 참여한 독서모임 중 진행 중(ONGOING)인 모임 리스트 반환"
+    )
+    public ResponseEntity<List<BookClubCommonDto>> getMyOngoingClubs(@RequestParam int userId) {
+        return ResponseEntity.ok(bookClubService.getOngoingClubsByUserId(userId));
+    }
+
+    // 메인 3. 완료된 내 독서모임 조회 기능
+    @GetMapping("/my/completed")
+    @Operation(
+            summary = "완료된 내 독서모임 조회",
+            description = "userId가 참여한 독서모임 중 완료(COMPLETED)된 모임 리스트를 반환합니다."
+    )
+    public ResponseEntity<List<BookClubCommonDto>> getMyCompletedClubs(@RequestParam int userId) {
+        return ResponseEntity.ok(bookClubService.getCompletedClubsByUserId(userId));
+    }
+
+
+
+
+
+
+    //단건 조회용으로 추가?
+    /*    @GetMapping("/{clubId}")
     public ResponseEntity<ClubListDto> getBookClubById(@PathVariable int clubId){
         return ResponseEntity.ok(bookClubService.getClubSummaryById(clubId));
-    }
+    }*/
+
+
+
 }

@@ -15,28 +15,29 @@ import java.time.LocalDateTime;
 public class BookClubDto {
 
     @Schema(description = "북클럽 고유 ID", example = "9")
-    private int club_id;
+    private int clubId;
 
     @Schema(description = "호스트 유저의 ID", example = "1")
-    private Integer host_id;
+    private Integer hostId;
 
     @Schema(description = "호스트 유저 이름", example = "사용자01")
-    private String host_user_name;
+    private String hostUserName;
 
     @Schema(description = "책 ID", example = "1")
-    private Integer book_id;
+    private Integer bookId;
 
     @Schema(description = "북클럽 모임 날짜 및 시간", example = "2025-04-01T00:00:00")
-    private LocalDateTime meeting_date;
+    private LocalDateTime meetingDate;
 
     @Schema(description = "북클럽 상태 (예: PENDING, ACTIVE, CLOSED 등)", example = "PENDING")
     private String status;
 
-    @Schema(description = "좋아요 수", example = "0")
-    private int likes;
+    //@Schema(description = "좋아요 수", example = "0")
+    //private int likes;
 
     @Schema(description = "북클럽 소개 요약", example = "1984 모임")
     private String clubDescription;
+
 
     @Schema(description = "검색 인덱스 키워드", example = "")
     private String searchIndex;

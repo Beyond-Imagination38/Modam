@@ -46,8 +46,8 @@ public class BookClub {
     @Column(name = "status", nullable = false, columnDefinition = "ENUM('PENDING', 'ONGOING', 'COMPLETED') DEFAULT 'PENDING'")
     private String status;
 
-    @Column(name = "likes", nullable = false, columnDefinition = "INT DEFAULT 0")
-    private int likes;
+    //@Column(name = "likes", nullable = false, columnDefinition = "INT DEFAULT 0")
+    //private int likes;
 
     //모임 설명
     @Column(name = "club_description", columnDefinition = "TEXT")

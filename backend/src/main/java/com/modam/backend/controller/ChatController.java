@@ -94,18 +94,7 @@ public class ChatController {
             subtopicDiscussionManager.startDiscussionFlow(clubId);
         }
 
-/*        if (saved.isShouldTriggerFirstDiscussion())
-        {
-            messagingTemplate.convertAndSend("/topic/chat/" + clubId,
-                    new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자",
-                            "그럼 사용자 1의 의견에 대해 이야기해봅시다.", new Timestamp(System.currentTimeMillis())));
 
-            chatService.getFirstUserSubtopic(clubId).ifPresent(content -> {
-                messagingTemplate.convertAndSend("/topic/chat/" + clubId,
-                        new ChatMessageDto(MessageType.TOPIC_START, clubId, 0, "AI 진행자",
-                                "안건: " + content, new Timestamp(System.currentTimeMillis())));
-            });
-        }*/
     }
 
     @GetMapping("/history/{club_id}")

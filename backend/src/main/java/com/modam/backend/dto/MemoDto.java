@@ -24,10 +24,10 @@ public class MemoDto {
     private String content;
 
     @Schema(description = "메모 작성 시간", example = "2025-04-10T16:20:00")
-    private LocalDateTime created_time;
+    private LocalDateTime createdTime;
 
     @Schema(description = "메모 수정 시간", example = "2025-04-10T16:25:00")
-    private LocalDateTime updated_time;
+    private LocalDateTime updatedTime;
 
     private Boolean isFinalized = false;
 }
