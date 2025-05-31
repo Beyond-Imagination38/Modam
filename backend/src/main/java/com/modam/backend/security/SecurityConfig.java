@@ -45,7 +45,8 @@ public class SecurityConfig {
                                 "/user/login",
                                 "/user/signup",
                                 "/api/bookclubs",                //독서 모임 메인 페이지
-                                "/api/bookclubs/**"
+                                "/api/bookclubs/**",
+                                "/chat/**"
                                 //독서 모임 메인 페이지
                                 //완료된 독서모임 페이지
                                 //
