@@ -1,9 +1,9 @@
 package com.modam.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserDto {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Schema(description = "유저 고유 ID", example = "1")
     private int userId;
 
