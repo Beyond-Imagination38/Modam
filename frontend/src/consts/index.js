@@ -2,7 +2,7 @@ export const COMMON_API_URL = "http://localhost:8080";
 
 export const API_URLS = {
   user: `${COMMON_API_URL}/user`,
-  bookclub: `${COMMON_API_URL}/bookclub`,
+  bookclub: `${COMMON_API_URL}/api/bookclubs`,
   chat: `${COMMON_API_URL}/chat`,
   message: `${COMMON_API_URL}/users/message`,
   ws: `${COMMON_API_URL}/users/ws`,

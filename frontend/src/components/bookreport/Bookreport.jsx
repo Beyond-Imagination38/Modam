@@ -57,7 +57,7 @@ export function Bookreport() {
           key={postId}
           style={{ textDecoration: "none", color: "inherit" }}
         >
-          <S.Button onClick={handleSubmit} bg="#674ea7" color="white">
+          <S.Button onClick={handleSubmit} $bg="#674ea7" color="white">
             제출
           </S.Button>
         </Link>

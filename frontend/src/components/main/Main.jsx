@@ -147,31 +147,31 @@ export function Main() {
         {isSidebarOpen && (
           <S.SideMenu>
             <S.MenuItem
-              $active={activeCategory === "진행 중"}
+              $active={activeCategory === "PENDING"}
               onClick={() => {
-                setActiveCategory("진행 중");
+                setActiveCategory("PENDING");
                 setCurrentPage(1);
               }}
             >
-              진행 중인 독서 모임
+              전체 독서 모임
             </S.MenuItem>
             <S.MenuItem
-              $active={activeCategory === "완료"}
+              $active={activeCategory === "COMPLETED)"}
               onClick={() => {
-                setActiveCategory("완료");
+                setActiveCategory("COMPLETED)");
                 setCurrentPage(1);
               }}
             >
               완료된 독서모임
             </S.MenuItem>
             <S.MenuItem
-              $active={activeCategory === "좋아요"}
+              $active={activeCategory === "ONGOING"}
               onClick={() => {
-                setActiveCategory("좋아요");
+                setActiveCategory("ONGOING");
                 setCurrentPage(1);
               }}
             >
-              좋아요한 독서모임
+              진행 중인 독서모임
             </S.MenuItem>
               <S.SideMenuFooter>
                 <S.Button
