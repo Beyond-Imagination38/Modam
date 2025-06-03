@@ -9,16 +9,6 @@ export function Login() {
   const [pw, setPw] = useState("");
   const navigate = useNavigate();
 
-  // 페이지 로드 시 localStorage에서 token과 userId를 확인하여 이미 로그인 상태라면 바로 main 페이지로 이동
-  useEffect(() => {
-      const token = localStorage.getItem("accessToken");
-      const userId = localStorage.getItem("userId");
-
-      if (token && userId) {
-        navigate("/main"); // 이미 로그인된 상태면 메인 페이지로 리다이렉트
-      }
-    }, [navigate]);
-
   const onClickConfirmButton = async () => {
     try {
       const response = await fetchApi(`${API_URLS.user}/login`, {
@@ -31,8 +21,9 @@ export function Login() {
       const { status, data } = response;
 
       if (response.status === 200 && data?.token && data?.userId) {
-        localStorage.setItem("accessToken", data.token);
-        localStorage.setItem("userId", data.userId);
+        /*localStorage.setItem("accessToken", data.token);
+        localStorage.setItem("userId", data.userId);*/
+        localStorage.setItem("user", JSON.stringify({ id: data.userId }));
 
         alert("로그인 성공!");
         navigate("/main");

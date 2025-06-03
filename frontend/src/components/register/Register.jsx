@@ -40,14 +40,18 @@ export function Register() {
     };
 
     console.log("서버로 보낼 데이터:", JSON.stringify(postData, null, 2));
-
+    console.log("userId", userId);
+    console.log("postData", postData);
+    
     try {
-      const response = await fetchApi(`${API_URLS.bookclubs}`, {
-        method: "POST",
+      const response = await fetchApi(`${API_URLS.api}/bookclubs`, {
+        method: "POST",   
         body: JSON.stringify(postData),
       });
 
       const { status, data } = response;
+
+      console.log("응답 상태코드:", status);
 
       if (status >= 200 && status < 300) {
         alert("모임이 등록되었습니다.");

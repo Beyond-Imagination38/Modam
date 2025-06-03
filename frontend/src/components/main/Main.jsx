@@ -20,7 +20,7 @@ export function Main() {
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
   };
-
+  /*
   const data = [
     {
       postId: 1,
@@ -88,7 +88,7 @@ export function Main() {
       category: "진행 중",
     },
   ];
-
+  
 
   useEffect(() => {
     const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
@@ -100,32 +100,49 @@ export function Main() {
 
     setItems(unique);
   }, [activeCategory, searchTerm, currentPage]);
-
-
-  /*const fetchItems = async () => {
-    try {
-      const response = await fetchApi(API_URLS.posts, {
-        method: "GET",
-      });
-  
-      console.log("게시글 API 응답:", response); 
-  
-      if (response.status === 200 && response.data?.content) {
-        setItems(response.data.content); 
-      } else {
-        console.error("게시글 데이터가 비어 있습니다:", response);
-        setItems([]);
-      }
-    } catch (err) {
-      console.error("게시글 불러오기 실패:", err);
-    }
-  };
-  
+  */
 
   useEffect(() => {
-    fetchItems();
-  }, []);*/
+    const fetchOngoingClubs = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userId = user?.id;
 
+        if (!userId) {
+          console.error("로그인된 사용자 정보를 찾을 수 없습니다.");
+          return;
+        }
+
+        const response = await fetch(`http://localhost:8080/api/bookclubs/my/ongoing?userId=${userId}`, {
+          method: "GET",
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP 오류! 상태 코드: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const mapped = data.map((item, index) => ({
+          postId: index + 1, // 고유 ID 없으니 임시
+          userId: userId,
+          title: item.bookTitle,
+          time: item.meetingDateTime,
+          representativeImage: item.coverImage,
+          category: "진행 중",
+        }));
+
+        setItems(mapped);
+      } catch (error) {
+        console.error("독서 모임 데이터를 불러오지 못했습니다:", error);
+        setItems([]);
+      }
+    };
+
+    fetchOngoingClubs();
+  }, []);
+
+  
   const filteredItems = items.filter(
   (item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -212,12 +229,9 @@ export function Main() {
             {currentItems.length > 0 ? (
               currentItems.map(
                 ({ representativeImage, title, time, postId, category }, index) => {
-                  const isCompleted1984 = category === "완료" && title === "1984";
-                  const linkTarget = isCompleted1984 ? "/completed" : `/post/${postId}`;
-                  
                   return (
                     <Link
-                      to={linkTarget}
+                      to={`/detail/${postId}`}
                       key={postId}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
