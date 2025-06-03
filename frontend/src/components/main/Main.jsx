@@ -9,7 +9,6 @@ const ITEMS_PER_PAGE = 3;
 
 export function Main() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [items, setItems] = useState([]);
   const [activeCategory, setActiveCategory] = useState("진행 중");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -124,17 +123,19 @@ export function Main() {
         const data = await response.json();
 
         const mapped = data.map((item, index) => ({
-          postId: index + 1, // 고유 ID 없으니 임시
-          userId: userId,
+          postId: item.clubId, // 임시
           title: item.bookTitle,
-          time: item.meetingDateTime,
+          time: item.meetingDatTime,
           representativeImage: item.coverImage,
-          category: "진행 중",
+          category: item.status,
         }));
+
+        console.log("서버 응답 데이터:", data);
 
         setItems(mapped);
       } catch (error) {
         console.error("독서 모임 데이터를 불러오지 못했습니다:", error);
+        alert("서버에서 독서 모임 정보를 불러오지 못했습니다. 나중에 다시 시도해주세요.");
         setItems([]);
       }
     };
@@ -144,18 +145,14 @@ export function Main() {
 
   
   const filteredItems = items.filter(
-  (item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    item.category === activeCategory
+    (item) =>
+      (item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.keyword?.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      item.category === activeCategory
   );
-
-  const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentItems = filteredItems.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE
-  );
-
+ 
+  const currentItems = filteredItems;
+  
   return (
     <S.Container>
       <Header />
@@ -167,16 +164,14 @@ export function Main() {
               $active={activeCategory === "PENDING"}
               onClick={() => {
                 setActiveCategory("PENDING");
-                setCurrentPage(1);
               }}
             >
               전체 독서 모임
             </S.MenuItem>
             <S.MenuItem
-              $active={activeCategory === "COMPLETED)"}
+              $active={activeCategory === "COMPLETED"}
               onClick={() => {
-                setActiveCategory("COMPLETED)");
-                setCurrentPage(1);
+                setActiveCategory("COMPLETED");
               }}
             >
               완료된 독서모임
@@ -185,7 +180,6 @@ export function Main() {
               $active={activeCategory === "ONGOING"}
               onClick={() => {
                 setActiveCategory("ONGOING");
-                setCurrentPage(1);
               }}
             >
               진행 중인 독서모임
@@ -216,7 +210,6 @@ export function Main() {
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                setCurrentPage(1);
               }}
             />
             <S.SearchButton>🔍</S.SearchButton>
@@ -254,32 +247,6 @@ export function Main() {
             )}
 
           </S.ProductGrid>
-
-          <S.Pagination>
-            <S.PageButton
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              이전
-            </S.PageButton>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <S.PageButton
-                key={i}
-                onClick={() => setCurrentPage(i + 1)}
-                $active={currentPage === i + 1}
-              >
-                {i + 1}
-              </S.PageButton>
-            ))}
-            <S.PageButton
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-            >
-              다음
-            </S.PageButton>
-          </S.Pagination>
         </S.ContentArea>
       </S.Layout>
     </S.Container>
