@@ -8,7 +8,7 @@ import { fetchApi } from "../../utils";
 export function Main() {
   const [searchTerm, setSearchTerm] = useState("");
   const [items, setItems] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("진행 중");
+  const [activeCategory, setActiveCategory] = useState("PENDING");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const navigate = useNavigate();
@@ -18,36 +18,38 @@ export function Main() {
   };
 
   useEffect(() => {
-    const fetchOngoingClubs = async () => {
+    const fetchClubs = async () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
         const userId = user?.id;
 
-        if (!userId) {
-          console.error("로그인된 사용자 정보를 찾을 수 없습니다.");
-          return;
+        let url = "";
+        if (activeCategory === "PENDING") {
+          url = API_URLS.allBookclubs;
+        } else if (activeCategory === "COMPLETED") {
+          if (!userId) throw new Error("로그인된 사용자 정보를 찾을 수 없습니다.");
+          url = API_URLS.myCompleted(userId);
+        } else if (activeCategory === "ONGOING") {
+          if (!userId) throw new Error("로그인된 사용자 정보를 찾을 수 없습니다.");
+          url = API_URLS.myOngoing(userId);
         }
 
-        const response = await fetch(`http://localhost:8080/api/bookclubs`, {
-          method: "GET",
-        });
+        const { status, data } = await fetchApi(url, { method: "GET" });
 
-        if (!response.ok) {
-          throw new Error(`서버 응답 실패: ${response.status}`);
+        if (status !== 200) {
+          throw new Error(`서버 응답 실패: ${status}`);
         }
-
-        const data = await response.json();
 
         const mapped = data.map((item, index) => ({
-          postId: item.clubId, 
+          postId: index,
           title: item.bookTitle,
-          time: item.meetingDatTime,
+          time: item.meetingDateTime,
           representativeImage: item.coverImage,
-          category: item.status,
+          participants: item.participants,
+          description: item.clubDescription,
         }));
 
         console.log("서버 응답 데이터:", data);
-
         setItems(mapped);
       } catch (error) {
         console.error("독서 모임 데이터를 불러오지 못했습니다:", error);
@@ -56,17 +58,16 @@ export function Main() {
       }
     };
 
-    fetchOngoingClubs();
-  }, []);
+    fetchClubs();
+  }, [activeCategory]);
 
   
   const filteredItems = items.filter(
     (item) =>
-      (item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.keyword?.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      item.category === activeCategory
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
- 
+  
   const currentItems = filteredItems;
   
   return (

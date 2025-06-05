@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as S from "./Signup.style.jsx";
+import { API_URLS } from "../../consts";
+import { fetchApi } from "../../utils";
 
 export function Signup() {
   const [email, setEmail] = useState("");
@@ -41,24 +43,24 @@ export function Signup() {
   }
     
       try {
-        const signupResponse = await fetch("http://localhost:8080/user/signup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_name: userName,
-            email,
-            pw,
-            profile_image: null,
-          }),
+      const { status, data } = await fetchApi(API_URLS.signup, {
+        method: "POST",
+        body: JSON.stringify({
+          user_name: userName,
+          email,
+          pw,
+          profile_image: null,
+        }),
       });
 
-      if (!signupResponse.ok) {
-        throw new Error("회원가입에 실패했습니다. 다시 시도해주세요.");
+      if (status === 409) {
+        alert(data?.message || "이미 존재하는 계정입니다.");
+        return;
       }
 
-      const data = await signupResponse.json();
+      if (status !== 200) {
+        throw new Error("회원가입에 실패했습니다. 다시 시도해주세요.");
+      }
       console.log("회원가입 성공:", data);
 
       localStorage.setItem("token", data.token);
