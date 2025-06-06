@@ -3,8 +3,6 @@ import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import * as S from "./Chat.style";
 import { Link, useParams } from "react-router-dom"; 
-import { API_URLS } from "../../consts";
-import { fetchApi } from "../../utils";
 
 const formatSummary = (text) => {
   if (!text) return [];
@@ -131,7 +129,7 @@ export function Chat() {
     setIsMemoVisible(!isMemoVisible);
   };
 
-  //  메모 저장
+  //메모 저장
   const saveMemo = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
@@ -154,7 +152,7 @@ export function Chat() {
     }
   };
 
-  //  메모 조회
+  //메모 조회
   const loadMemo = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
@@ -174,7 +172,7 @@ export function Chat() {
   };
 
 
-  // 메모 확정
+  //메모 확정
   const finalizeMemo = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}/finalize`, {

@@ -5,15 +5,11 @@ import { useState, useEffect } from "react";
 import { API_URLS } from "../../consts";
 import { fetchApi } from "../../utils";
 
-const ITEMS_PER_PAGE = 3;
-
 export function Main() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [items, setItems] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("진행 중");
+  const [activeCategory, setActiveCategory] = useState("PENDING");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [user, setUser] = useState(null); 
 
   const navigate = useNavigate();
 
@@ -21,124 +17,59 @@ export function Main() {
     setIsSidebarOpen((prev) => !prev);
   };
 
-  const data = [
-    {
-      postId: 1,
-      userId: 20,
-      title: "1984",
-      time: "2025-04-10 20:00",
-      representativeImage: "/assets/images/1984.jpg",
-      category: "완료",
-    },
-    {
-      postId: 2,
-      userId: 20,
-      title: "자아폭발",
-      time: "2025-04-13 16:00",
-      representativeImage: "/assets/images/TheFall.jpg",
-      category: "좋아요",
-    },
-    {
-      postId: 3,
-      title: "참을 수 없는 존재의 가벼움",
-      time: "2025-04-11 08:00",
-      representativeImage: "/assets/images/Unbearable.jpg",
-      category: "진행 중",
-    },
-    {
-      postId: 4,
-      title: "앵무새 죽이기",
-      time: "2025-04-11 10:00",
-      representativeImage: "/assets/images/mockingbird.jpg",
-      category: "좋아요",
-    },
-    {
-      postId: 5,
-      title: "데미안",
-      time: "2025-04-16 08:00",
-      representativeImage: "/assets/images/demian.jpg",
-      category: "완료",
-    },
-    {
-      postId: 6,
-      title: "죽음의 수용소에서",
-      time: "2025-04-15 08:00",
-      representativeImage: "/assets/images/searchfor.jpg",
-      category: "진행 중",
-    },
-    {
-      postId: 7,
-      title: "싯다르타",
-      time: "2025-04-15 04:00",
-      representativeImage: "/assets/images/Sidd.jpg",
-      category: "완료",
-    },
-    {
-      postId: 8,
-      title: "소크라테스 익스프레스",
-      time: "2025-04-11 06:00",
-      representativeImage: "/assets/images/socra.jpg",
-      category: "좋아요",
-    },
-    {
-      postId: 9,
-      title: "구의 증명",
-      time: "2025-04-11 08:00",
-      representativeImage: "/assets/images/goo.jpg",
-      category: "진행 중",
-    },
-  ];
-
-
   useEffect(() => {
-    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    const fetchClubs = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userId = user?.id;
 
-    const combined = [...storedPosts, ...data];
-    const unique = Array.from(
-      new Map(combined.map((item) => [item.postId || item.title, item])).values()
-    );
+        let url = "";
+        if (activeCategory === "PENDING") {
+          url = API_URLS.allBookclubs;
+        } else if (activeCategory === "COMPLETED") {
+          if (!userId) throw new Error("로그인된 사용자 정보를 찾을 수 없습니다.");
+          url = API_URLS.myCompleted(userId);
+        } else if (activeCategory === "ONGOING") {
+          if (!userId) throw new Error("로그인된 사용자 정보를 찾을 수 없습니다.");
+          url = API_URLS.myOngoing(userId);
+        }
 
-    setItems(unique);
-  }, [activeCategory, searchTerm, currentPage]);
+        const { status, data } = await fetchApi(url, { method: "GET" });
 
+        if (status !== 200) {
+          throw new Error(`서버 응답 실패: ${status}`);
+        }
 
-  /*const fetchItems = async () => {
-    try {
-      const response = await fetchApi(API_URLS.posts, {
-        method: "GET",
-      });
-  
-      console.log("게시글 API 응답:", response); 
-  
-      if (response.status === 200 && response.data?.content) {
-        setItems(response.data.content); 
-      } else {
-        console.error("게시글 데이터가 비어 있습니다:", response);
+        const mapped = data.map((item, index) => ({
+          postId: index,
+          title: item.bookTitle,
+          time: item.meetingDateTime,
+          representativeImage: item.coverImage,
+          participants: item.participants,
+          description: item.clubDescription,
+        }));
+
+        console.log("서버 응답 데이터:", data);
+        setItems(mapped);
+      } catch (error) {
+        console.error("독서 모임 데이터를 불러오지 못했습니다:", error);
+        alert("서버에서 독서 모임 정보를 불러오지 못했습니다. 나중에 다시 시도해주세요.");
         setItems([]);
       }
-    } catch (err) {
-      console.error("게시글 불러오기 실패:", err);
-    }
-  };
+    };
+
+    fetchClubs();
+  }, [activeCategory]);
+
   
-
-  useEffect(() => {
-    fetchItems();
-  }, []);*/
-
   const filteredItems = items.filter(
-  (item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    item.category === activeCategory
+    (item) =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentItems = filteredItems.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE
-  );
-
+  
+  const currentItems = filteredItems;
+  
   return (
     <S.Container>
       <Header />
@@ -147,31 +78,28 @@ export function Main() {
         {isSidebarOpen && (
           <S.SideMenu>
             <S.MenuItem
-              $active={activeCategory === "진행 중"}
+              $active={activeCategory === "PENDING"}
               onClick={() => {
-                setActiveCategory("진행 중");
-                setCurrentPage(1);
+                setActiveCategory("PENDING");
               }}
             >
-              진행 중인 독서 모임
+              전체 독서 모임
             </S.MenuItem>
             <S.MenuItem
-              $active={activeCategory === "완료"}
+              $active={activeCategory === "COMPLETED"}
               onClick={() => {
-                setActiveCategory("완료");
-                setCurrentPage(1);
+                setActiveCategory("COMPLETED");
               }}
             >
               완료된 독서모임
             </S.MenuItem>
             <S.MenuItem
-              $active={activeCategory === "좋아요"}
+              $active={activeCategory === "ONGOING"}
               onClick={() => {
-                setActiveCategory("좋아요");
-                setCurrentPage(1);
+                setActiveCategory("ONGOING");
               }}
             >
-              좋아요한 독서모임
+              진행 중인 독서모임
             </S.MenuItem>
               <S.SideMenuFooter>
                 <S.Button
@@ -199,7 +127,6 @@ export function Main() {
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                setCurrentPage(1);
               }}
             />
             <S.SearchButton>🔍</S.SearchButton>
@@ -212,12 +139,9 @@ export function Main() {
             {currentItems.length > 0 ? (
               currentItems.map(
                 ({ representativeImage, title, time, postId, category }, index) => {
-                  const isCompleted1984 = category === "완료" && title === "1984";
-                  const linkTarget = isCompleted1984 ? "/completed" : `/post/${postId}`;
-                  
                   return (
                     <Link
-                      to={linkTarget}
+                      to={`/detail/${postId}`}
                       key={postId}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
@@ -240,32 +164,6 @@ export function Main() {
             )}
 
           </S.ProductGrid>
-
-          <S.Pagination>
-            <S.PageButton
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              이전
-            </S.PageButton>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <S.PageButton
-                key={i}
-                onClick={() => setCurrentPage(i + 1)}
-                $active={currentPage === i + 1}
-              >
-                {i + 1}
-              </S.PageButton>
-            ))}
-            <S.PageButton
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-            >
-              다음
-            </S.PageButton>
-          </S.Pagination>
         </S.ContentArea>
       </S.Layout>
     </S.Container>

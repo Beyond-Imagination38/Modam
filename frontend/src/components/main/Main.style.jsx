@@ -181,27 +181,3 @@ export const NoResults = styled.p`
   color: gray;
   margin-top: 20px;
 `;
-
-export const Pagination = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-`;
-
-export const PageButton = styled.button`
-  margin: 0 5px;
-  padding: 8px 12px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-
-  &:hover {
-    background-color: #007bff;
-    color: #fff;
-  }
-
-  &:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-`;

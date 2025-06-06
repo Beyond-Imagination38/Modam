@@ -24,91 +24,47 @@ export function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newPost = {
-      postId: Date.now(), // 임시 ID
-      title,
-      time: `${meetingDate} ${time}`,
-      category: "진행 중",
-      representativeImage:
-        images.length > 0 ? images[0] : "https://via.placeholder.com/150",
-    };
+    const userId = localStorage.getItem("userId");
 
-    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
-    const updatedPosts = [newPost, ...storedPosts];
-    localStorage.setItem("posts", JSON.stringify(updatedPosts));
-
-    alert("모임이 등록되었습니다.");
-    navigate("/main");
-  };
-
-  /*
-  useEffect(() => {
-    if (isEditMode) {
-      async function fetchPostDetail() {
-        try {
-          const response = await fetchApi(`${API_URLS.posts}/${postId}`, {
-            method: "GET",
-          });
-          if (response) {
-          //추가
-          
-            if (postData.images) {
-              setImages(postData.images);
-            }
-          }
-        } catch (err) {
-          console.error(err);
-          alert("모임 정보를 불러오는 데 실패했습니다.");
-        }
-      }
-      fetchPostDetail();
+    if (!userId) {
+      alert("로그인이 필요합니다.");
+      return;
     }
-  }, [isEditMode, postId]);
-
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
     const postData = {
-      title,
-      meetingDate,
-      time,
-      content,
+      hostId: Number(userId),
+      bookTitle: title,
+      date: meetingDate,
+      time: time,
+      clubDescription: content,
     };
-    alert("모임이 등록되었습니다.");
-    navigate("/main");
+
     console.log("서버로 보낼 데이터:", JSON.stringify(postData, null, 2));
+    console.log("userId", userId);
+    console.log("postData", postData);
     
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("로그인이 필요합니다.");
-        return;
-      }
-
-      const response = await fetchApi(API_URLS.posts, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await fetchApi(`${API_URLS.api}/bookclubs`, {
+        method: "POST",   
         body: JSON.stringify(postData),
       });
 
-      console.log("모임 등록 API 응답:", response);
+      const { status, data } = response;
 
-      if (response && (response.status === 200 || response.status === 201)) {
+      console.log("응답 상태코드:", status);
+
+      if (status >= 200 && status < 300) {
         alert("모임이 등록되었습니다.");
         navigate("/main");
       } else {
-        console.error("오류 응답:", response);
-        alert(response?.message || "요청 중 오류가 발생했습니다.");
+        console.error("등록 실패 응답:", data);
+        alert(data?.message || "모임 등록에 실패했습니다.");
       }
     } catch (error) {
-      console.error("요청 실패:", error);
+      console.error("모임 등록 중 오류:", error);
       alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
     }
-  };*/
+  };
 
   return (
     <>
@@ -168,7 +124,7 @@ export function Register() {
             <Link to="/Main">
               <S.Button>돌아가기</S.Button>
             </Link>
-            <S.Button primary onClick={handleSubmit}>
+            <S.Button $primary onClick={handleSubmit}>
               등록
             </S.Button>
           </S.ButtonContainer>

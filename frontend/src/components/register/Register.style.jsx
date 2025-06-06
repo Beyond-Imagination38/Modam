@@ -65,7 +65,7 @@ export const Button = styled.button`
   cursor: pointer;
   font-size: 16px;
   color: white;
-  background-color: ${(props) => (props.primary ? "#65558f" : "#ccc")};
+  background-color: ${(props) => (props.$primary ? "#65558f" : "#ccc")};
 
   &:hover {
     background-color: ${(props) =>
