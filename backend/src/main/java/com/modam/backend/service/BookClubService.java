@@ -125,6 +125,7 @@ public class BookClubService {
         int confirmedCount = participantRepository.countByBookClubClubIdAndStatus(club.getClubId(), "CONFIRMED");
         String participantDisplay = confirmedCount + "/4";
         return new BookClubCommonDto(
+                club.getClubId(),
                 club.getBook().getCoverImage(),
                 club.getBook().getBookTitle(),
                 club.getMeetingDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
