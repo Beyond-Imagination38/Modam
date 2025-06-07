@@ -1,5 +1,5 @@
 package com.modam.backend.dto;
-/**
+/*
  * 공통 독서모임 정보 DTO
  * 전체 조회, 내 모임 조회, 상세 요약 등에서 공통적으로 사용하는 응답 포맷
  */
@@ -13,6 +13,9 @@ import lombok.*;
 @NoArgsConstructor
 @Schema(description = "공통 독서모임 정보 DTO")
 public class BookClubCommonDto {
+
+    @Schema(description = "독서모임 ID", example = "1")
+    private Integer clubId;
 
     @Schema(description = "책 커버 이미지 URL", example = "/assets/images/1984.jpg")
     private String coverImage;
