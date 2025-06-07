@@ -4,7 +4,7 @@ import * as S from "./MyPage.style";
 
 export function MyPage() {
   const [images, setImages] = useState([]);
-  const [name, setName] = useState("이화인");
+  const [name, setName] = useState("");
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -63,7 +63,7 @@ export function MyPage() {
 
             <div>
               <S.Label>아이디</S.Label>
-              <S.Input type="text" value="ewha1886" disabled />
+              <S.Input type="text" value="" disabled />
             </div>
 
             <S.NameWrapper>

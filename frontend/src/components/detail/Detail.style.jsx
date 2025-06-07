@@ -73,15 +73,3 @@ export const Button = styled.button`
     background-color: ${({ $primary }) => ($primary ? "#544270" : "#888")};
   }
 `;
-
-export const HeartIcon = styled.button`
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: none;
-  border: none;
-  font-size: 32px;
-  color: #ff6b6b;
-  cursor: pointer;
-  padding: 0;
-`;

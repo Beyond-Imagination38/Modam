@@ -36,7 +36,7 @@ export function Chat() {
   const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);//soo:demo02-2
   const { clubId } = useParams();
 
-  const accessToken = localStorage.getItem("accessToken") || "";
+  const token = localStorage.getItem("token") || "";
   
   useEffect(() => {
     const socket = new SockJS("http://localhost:8080/chat"); 
@@ -81,7 +81,7 @@ export function Chat() {
 
     client.activate(); // 연결 시작
     setStompClient(client);
-    loadMemo(); 
+    //loadMemo(); 
 
     return () => {
       client.deactivate(); // 컴포넌트 언마운트 시 연결 해제
@@ -111,7 +111,7 @@ export function Chat() {
       stompClient.publish({
         destination: `/app/chat/${clubId}`, 
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(chatMessage),
@@ -135,7 +135,7 @@ export function Chat() {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -153,12 +153,12 @@ export function Chat() {
   };
 
   //메모 조회
-  const loadMemo = async () => {
+  /*const loadMemo = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -169,7 +169,7 @@ export function Chat() {
     } catch (error) {
       console.error("메모 조회 중 오류:", error);
     }
-  };
+  };*/
 
 
   //메모 확정
@@ -178,7 +178,7 @@ export function Chat() {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}/finalize`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 

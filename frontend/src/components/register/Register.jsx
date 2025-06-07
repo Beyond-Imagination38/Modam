@@ -3,11 +3,9 @@ import Header from "../common/Header";
 import * as S from "./Register.style";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { API_URLS } from "../../consts";
-import { fetchApi } from "../../utils";
 
 export function Register() {
   const navigate = useNavigate();
-  const { postId } = useParams();
 
   const [images, setImages] = useState([]);
   const [title, setTitle] = useState("");
@@ -44,13 +42,16 @@ export function Register() {
     console.log("postData", postData);
     
     try {
-      const response = await fetchApi(`${API_URLS.api}/bookclubs`, {
-        method: "POST",   
+      const response = await fetch(`${API_URLS.api}/bookclubs`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(postData),
       });
 
       const { status, data } = response;
-
+      
       console.log("응답 상태코드:", status);
 
       if (status >= 200 && status < 300) {

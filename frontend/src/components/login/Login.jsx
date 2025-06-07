@@ -21,8 +21,6 @@ export function Login() {
       const { status, data } = response;
 
       if (response.status === 200 && data?.token && data?.userId) {
-        /*localStorage.setItem("accessToken", data.token);
-        localStorage.setItem("userId", data.userId);*/
         localStorage.setItem("user", JSON.stringify({ id: data.userId }));
 
         alert("로그인 성공!");
