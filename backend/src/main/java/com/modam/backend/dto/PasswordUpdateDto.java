@@ -1,5 +1,5 @@
 package com.modam.backend.dto;
-
+// 마이페이지 - pw 수정
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,5 +1,5 @@
 package com.modam.backend.dto;
-
+// 상세 1. 모임 반환
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
