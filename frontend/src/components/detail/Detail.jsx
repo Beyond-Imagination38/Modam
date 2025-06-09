@@ -74,7 +74,7 @@ export function Detail() {
           </div>
           <S.ButtonContainer>
             <Link to="/Chat">
-              <S.Button primary>모임 시작</S.Button>
+              <S.Button $primary>모임 시작</S.Button>
             </Link>
             <Link to="/Bookreport">
               <S.Button>독후감 작성</S.Button>

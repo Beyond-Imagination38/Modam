@@ -63,14 +63,14 @@ export const Button = styled.button`
   padding: 12px 24px;
   font-size: 16px;
   color: #fff;
-  background-color: ${({ primary }) => (primary ? "#65558f" : "#aaa")};
+  background-color: ${({ $primary }) => ($primary ? "#65558f" : "#aaa")};
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s;
 
   &:hover {
-    background-color: ${({ primary }) => (primary ? "#544270" : "#888")};
+    background-color: ${({ $primary }) => ($primary ? "#544270" : "#888")};
   }
 `;
 
