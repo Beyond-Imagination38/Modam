@@ -72,6 +72,19 @@ public class BookClubController {
         return ResponseEntity.ok(bookClubService.getBookClubStatus(clubId, userId));
     }
 
+
+    //상세 1. 모임 내용 반환
+    @Operation(summary = "모임 상세 정보 반환", description = "북클럽의 상세 정보 + 현재 유저의 참여 여부 + 상태 반환")
+    @GetMapping("/{clubId}/detail")
+    public ResponseEntity<BookClubDetailDto> getBookClubDetail(
+            @PathVariable int clubId,
+            @RequestParam int userId
+    ) {
+        return ResponseEntity.ok(bookClubService.getBookClubDetail(clubId, userId));
+    }
+
+
+
     //상세 2. 모임 신청 API (/join)
     @PostMapping("/{clubId}/join")
     @Operation(summary = "모임 신청", description = """

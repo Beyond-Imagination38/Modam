@@ -157,6 +157,39 @@ public class BookClubService {
         return new BookClubStatusDto(clubId, userId, resultStatus);
     }
 
+    //상세 1. 모임 내용 반환
+    public BookClubDetailDto getBookClubDetail(int clubId, int userId) {
+        BookClub club = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("BookClub not found"));
+
+        boolean isParticipating = participantRepository.existsByUserUserIdAndBookClubClubId(userId, clubId);
+        int currentCount = participantRepository.countByBookClubClubIdAndStatus(clubId, "CONFIRMED");
+
+        String status;
+        if (isParticipating && "COMPLETED".equals(club.getStatus())) {
+            status = "COMPLETED";
+        } else if (isParticipating && "ONGOING".equals(club.getStatus())) {
+            status = "ONGOING";
+        } else if (!isParticipating && currentCount >= 4) {
+            status = "CLOSED";
+        } else {
+            status = "OPEN";
+        }
+
+        return new BookClubDetailDto(
+                club.getClubId(),
+                club.getBook().getBookTitle(), // title
+                club.getBook().getBookTitle(), // bookTitle
+                club.getClubDescription(),
+                club.getBook().getCoverImage(),
+                club.getMeetingDate(),
+                currentCount,
+                4,
+                isParticipating,
+                status
+        );
+    }
+
     //상세 2. 모임 신청 API (/join)
     public void joinBookClub(int clubId, int userId) {
         // 1. 모임 상태 확인
