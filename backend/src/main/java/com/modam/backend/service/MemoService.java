@@ -12,15 +12,37 @@ public class MemoService {
 
     private final MemoRepository memoRepository;
 
-    public MemoDto getMemo(Integer clubId, Integer userId) {
+/*    public MemoDto getMemo(Integer clubId, Integer userId) {
         Memo memo = memoRepository.findByClubIdAndUserId(clubId, userId)
                 .orElse(new Memo(null, userId, clubId, "", null, null, false));
+        return convertToDto(memo);
+    }*/
+
+    public MemoDto getMemo(Integer clubId, Integer userId) {
+        Memo memo = memoRepository.findByClubIdAndUserId(clubId, userId)
+                .orElseGet(() -> {
+                    Memo newMemo = new Memo();
+                    newMemo.setUserId(userId);
+                    newMemo.setClubId(clubId);
+                    newMemo.setContent("");
+                    newMemo.setIsFinalized(false);
+                    return newMemo;
+                });
+
         return convertToDto(memo);
     }
 
     public MemoDto saveOrUpdateMemo(Integer clubId, Integer userId, String content) {
         Memo memo = memoRepository.findByClubIdAndUserId(clubId, userId)
-                .orElse(new Memo(null, userId, clubId, "", null, null, false));
+                .orElseGet(() -> {
+                    Memo newMemo = new Memo();
+                    newMemo.setUserId(userId);
+                    newMemo.setClubId(clubId);
+                    newMemo.setContent("");
+                    newMemo.setIsFinalized(false);
+                    return newMemo;
+                });
+
 
         if (Boolean.TRUE.equals(memo.getIsFinalized())) {
             throw new IllegalStateException("이미 확정된 메모는 수정할 수 없습니다.");
@@ -44,8 +66,8 @@ public class MemoService {
                 memo.getClubId(),
                 memo.getUserId(),
                 memo.getContent(),
-                memo.getCreated_time(),
-                memo.getUpdated_time(),
+                memo.getCreatedTime(),
+                memo.getUpdatedTime(),
                 memo.getIsFinalized()
         );
     }

@@ -17,8 +17,14 @@ public class Memo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer memoId;
 
+
     @Column(name = "user_id", nullable = false)
     private Integer userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+
 
     @Column(name = "club_id", nullable = false)
     private Integer clubId;
@@ -26,20 +32,20 @@ public class Memo {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    private LocalDateTime created_time;
-    private LocalDateTime updated_time;
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
 
     private Boolean isFinalized = false;
 
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now();
-        this.created_time = now;
-        this.updated_time = now;
+        this.createdTime = now;
+        this.updatedTime = now;
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updated_time = LocalDateTime.now();
+        this.updatedTime = LocalDateTime.now();
     }
 }

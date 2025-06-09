@@ -1,5 +1,5 @@
 package com.modam.backend.dto;
-
+// 독서모임 개설
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -115,8 +115,8 @@ public class UserController {
 
     // 회원 정보 조회( pw 제외 )
     @Operation(summary = "회원 정보 조회", description = "userId로 회원 정보를 조회합니다. 비밀번호는 반환하지 않습니다.") //add250521
-    @GetMapping("/{user_id}")
-    public ResponseEntity<UserDto> getUserinfo(@PathVariable("user_id") Integer user_id) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getUserinfo(@PathVariable("userId") Integer user_id) {
         UserDto user_dto = user_service.getUserbyuserid(user_id);
         return ResponseEntity.ok(user_dto);
 
