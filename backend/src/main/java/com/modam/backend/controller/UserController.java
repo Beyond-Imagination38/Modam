@@ -1,10 +1,12 @@
 package com.modam.backend.controller;
 
 import com.modam.backend.dto.UserDto;
+import com.modam.backend.dto.UserNameUpdateDto;
 import com.modam.backend.repository.UserRepository;
 import com.modam.backend.service.UserService;
 import com.modam.backend.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -49,6 +51,7 @@ public class UserController {
             return ResponseEntity.ok(Map.of("message","회원가입이 완료되었습니다."));
         }
         catch (DataIntegrityViolationException e){
+            e.printStackTrace();  // 로그에 어떤 컬럼 충돌인지 출력됨 soo:250609
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("error", "이미 존재하는 이메일입니다."));
         }
@@ -117,4 +120,21 @@ public class UserController {
         return ResponseEntity.ok(user_dto);
 
     }
+
+    //마이페이지: 닉네임 업데이트
+    @Operation(
+            summary = "닉네임 수정",
+            description = "사용자의 닉네임을 수정합니다.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @PatchMapping("/{userId}/name")
+    public ResponseEntity<String> updateUserName(
+            @PathVariable int userId,
+            @Valid @RequestBody UserNameUpdateDto dto) {
+
+        user_service.updateUserName(userId, dto.getUserName());
+        return ResponseEntity.ok("닉네임이 변경되었습니다.");
+    }
+
+
 }
