@@ -95,7 +95,7 @@ export const SideMenu = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 85vh;
+  height: 170vh;
 `;
 
 export const SideMenuFooter = styled.div`

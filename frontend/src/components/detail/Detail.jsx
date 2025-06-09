@@ -9,23 +9,20 @@ export function Detail() {
   const { clubId } = useParams();
   const [data, setData] = useState(null); 
   const [loading, setLoading] = useState(true);
-  
-  useEffect(() => {
-    setData(data);
-  }, [clubId]);
 
- useEffect(() => {
+  useEffect(() => {
     const getData = async () => {
       try {
-        const url = API_URLS.bookclubDetail(clubId);
-        const { status, data } = await fetchApi(url, { method: "GET" });
+        const response = await fetch(`http://localhost:8080/api/bookclubs/${clubId}/status`, {
+          method: "GET",
+        });
+        console.log("clubId 파라미터:", clubId);
+        if (!response.ok) throw new Error("서버 응답 실패");
 
-        if (status !== 200) throw new Error("서버 응답 실패");
-
-        setData(data); 
+        const result = await response.json();
+        setData(result);
       } catch (error) {
         console.error("상세 정보 로드 실패:", error);
-        alert("상세 정보를 불러오는 데 실패했습니다.");
       } finally {
         setLoading(false);
       }
@@ -49,7 +46,7 @@ export function Detail() {
             <S.Date>{data.meetingDateTime}</S.Date>
             <S.Description>{data.clubDescription}</S.Description>
             <S.Participants>
-              참여자: ({data.currentMembers}/{data.maxMembers})
+              참여자: ({data.participants}/{4})
             </S.Participants>
           </div>
           <S.ButtonContainer>

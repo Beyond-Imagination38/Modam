@@ -7,13 +7,13 @@ import { Link, useParams } from "react-router-dom";
 const formatSummary = (text) => {
   if (!text) return [];
 
-  // '주제' 키워드가 포함된 위치를 기준으로 우선 문단 나누기
+  // 문단 나누기
   const topicBlocks = text.split(/(?=주제\s*\d*:)/g);
   const formattedParagraphs = [];
 
   topicBlocks.forEach((block) => {
     const sentences = block.trim().split(/(?<=[.!?])\s+/);
-    const paragraphSize = 2;
+    const paragraphSize = 1;
 
     for (let i = 0; i < sentences.length; i += paragraphSize) {
       const para = sentences.slice(i, i + paragraphSize).join(" ");
@@ -49,14 +49,12 @@ export function Chat() {
         client.subscribe(`/topic/chat/${clubId}`, async (message) => {
           const receivedMessage = JSON.parse(message.body);
 
-          console.log("📥 [DEBUG] 받은 메시지:", receivedMessage);//debug soo:demo02
+          console.log("[DEBUG] 받은 메시지:", receivedMessage);
           
-          //soo:demo02-2
           // 자유토론 시작 메시지 감지
           if (receivedMessage.messageType === "FREE_DISCUSSION_NOTICE") {
             setIsFreeDiscussion(true);
           }
-          //soo:demo02-2
           // 자유토론 종료 (주제 전환 또는 종료)
           if (
               receivedMessage.messageType === "MAINTOPIC" ||
@@ -70,7 +68,7 @@ export function Chat() {
             await finalizeMemo(); 
           }
 
-          setMessages((prevMessages) => [...prevMessages, receivedMessage]);  //soo:demo02-2
+          setMessages((prevMessages) => [...prevMessages, receivedMessage]);  
         });
         
       },
@@ -96,9 +94,8 @@ export function Chat() {
 
     if (message.trim()) {
 
-      //soo:demo02
       const parsedClubId = parseInt(clubId);
-      console.log("📤 보낼 clubId:", parsedClubId);
+      console.log("보낼 clubId:", parsedClubId);
 
       const chatMessage = {
         messageType: isFreeDiscussion ? "FREE_DISCUSSION" : "DISCUSSION", // soo:demo02-2: 여기 조건 추가!

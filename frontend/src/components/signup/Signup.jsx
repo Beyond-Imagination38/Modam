@@ -46,7 +46,7 @@ export function Signup() {
       const { status, data } = await fetchApi(API_URLS.signup, {
         method: "POST",
         body: JSON.stringify({
-          user_name: userName,
+          userName,
           email,
           pw,
           profile_image: null,
