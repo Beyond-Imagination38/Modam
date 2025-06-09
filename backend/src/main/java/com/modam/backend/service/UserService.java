@@ -88,5 +88,18 @@ public class UserService {
         user.setUserName(newName);
     }
 
+    //마이페이지: 비밀번호 수정
+    public void updatePassword(int userId, String currentPw, String newPw) {
+        User user = user_repository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!user.getPw().equals(currentPw)) {
+            throw new RuntimeException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        user.setPw(newPw); // ※ 실제 서비스에선 암호화 필요
+        user_repository.save(user);
+    }
+
 
 }

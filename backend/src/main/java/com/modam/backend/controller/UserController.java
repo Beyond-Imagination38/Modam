@@ -1,5 +1,6 @@
 package com.modam.backend.controller;
 
+import com.modam.backend.dto.PasswordUpdateDto;
 import com.modam.backend.dto.UserDto;
 import com.modam.backend.dto.UserNameUpdateDto;
 import com.modam.backend.repository.UserRepository;
@@ -135,6 +136,19 @@ public class UserController {
         user_service.updateUserName(userId, dto.getUserName());
         return ResponseEntity.ok("닉네임이 변경되었습니다.");
     }
+
+    //마이페이지: 비밀번호 수정
+    @Operation(summary = "비밀번호 변경", description = "현재 비밀번호 확인 후 새 비밀번호로 변경합니다.",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @PatchMapping("/{userId}/password")
+    public ResponseEntity<String> updatePassword(
+            @PathVariable int userId,
+            @RequestBody PasswordUpdateDto dto) {
+
+        user_service.updatePassword(userId, dto.getCurrentPw(), dto.getNewPw());
+        return ResponseEntity.ok("비밀번호가 변경되었습니다.");
+    }
+
 
 
 }
