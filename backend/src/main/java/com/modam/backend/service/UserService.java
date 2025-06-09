@@ -6,6 +6,7 @@ import com.modam.backend.model.User;
 import com.modam.backend.repository.UserRepository;
 import com.modam.backend.util.JwtUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -78,4 +79,27 @@ public class UserService {
 
         );
     }
+
+    //마이페이지: 닉네임 업데이트
+    @Transactional
+    public void updateUserName(int userId, String newName) {
+        User user = user_repository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
+        user.setUserName(newName);
+    }
+
+    //마이페이지: 비밀번호 수정
+    public void updatePassword(int userId, String currentPw, String newPw) {
+        User user = user_repository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!user.getPw().equals(currentPw)) {
+            throw new RuntimeException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        user.setPw(newPw); // ※ 실제 서비스에선 암호화 필요
+        user_repository.save(user);
+    }
+
+
 }

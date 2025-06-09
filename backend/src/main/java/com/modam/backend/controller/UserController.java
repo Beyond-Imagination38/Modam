@@ -1,10 +1,13 @@
 package com.modam.backend.controller;
 
+import com.modam.backend.dto.PasswordUpdateDto;
 import com.modam.backend.dto.UserDto;
+import com.modam.backend.dto.UserNameUpdateDto;
 import com.modam.backend.repository.UserRepository;
 import com.modam.backend.service.UserService;
 import com.modam.backend.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -49,6 +52,7 @@ public class UserController {
             return ResponseEntity.ok(Map.of("message","회원가입이 완료되었습니다."));
         }
         catch (DataIntegrityViolationException e){
+            e.printStackTrace();  // 로그에 어떤 컬럼 충돌인지 출력됨 soo:250609
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("error", "이미 존재하는 이메일입니다."));
         }
@@ -111,10 +115,40 @@ public class UserController {
 
     // 회원 정보 조회( pw 제외 )
     @Operation(summary = "회원 정보 조회", description = "userId로 회원 정보를 조회합니다. 비밀번호는 반환하지 않습니다.") //add250521
-    @GetMapping("/{user_id}")
-    public ResponseEntity<UserDto> getUserinfo(@PathVariable("user_id") Integer user_id) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getUserinfo(@PathVariable("userId") Integer user_id) {
         UserDto user_dto = user_service.getUserbyuserid(user_id);
         return ResponseEntity.ok(user_dto);
 
     }
+
+    //마이페이지: 닉네임 업데이트
+    @Operation(
+            summary = "닉네임 수정",
+            description = "사용자의 닉네임을 수정합니다.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @PatchMapping("/{userId}/name")
+    public ResponseEntity<String> updateUserName(
+            @PathVariable int userId,
+            @Valid @RequestBody UserNameUpdateDto dto) {
+
+        user_service.updateUserName(userId, dto.getUserName());
+        return ResponseEntity.ok("닉네임이 변경되었습니다.");
+    }
+
+    //마이페이지: 비밀번호 수정
+    @Operation(summary = "비밀번호 변경", description = "현재 비밀번호 확인 후 새 비밀번호로 변경합니다.",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @PatchMapping("/{userId}/password")
+    public ResponseEntity<String> updatePassword(
+            @PathVariable int userId,
+            @RequestBody PasswordUpdateDto dto) {
+
+        user_service.updatePassword(userId, dto.getCurrentPw(), dto.getNewPw());
+        return ResponseEntity.ok("비밀번호가 변경되었습니다.");
+    }
+
+
+
 }

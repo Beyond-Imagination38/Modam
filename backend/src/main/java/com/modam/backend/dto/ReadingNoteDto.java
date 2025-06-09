@@ -16,4 +16,5 @@ public class ReadingNoteDto {
 
     @Schema(description = "사용자가 작성한 독후감 본문", example = "이 책은 전체주의의 무서움을 강하게 느끼게 했습니다. 현실과도 닮아 있어 인상 깊었습니다.")
     private String content;
+
 }
