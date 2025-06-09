@@ -136,12 +136,17 @@ public class BookClubController {
         return ResponseEntity.ok("모임 신청이 완료되었습니다.");
     }*/
 
+    // 6. 완료 모임 조회
+    @GetMapping("/{clubId}/completed-detail")
+    @Operation(summary = "완료된 독서모임 상세", description = "요약, 독후감, 메모 정보를 포함한 모임 전체 정보를 반환합니다.")
+    public ResponseEntity<BookClubCompletedDetailDto> getCompletedDetail(@PathVariable int clubId) {
+        return ResponseEntity.ok(bookClubService.getCompletedDetail(clubId));
+    }
 
 
 
 
-
-        //단건 조회용으로 추가?
+    //단건 조회용으로 추가?
     /*    @GetMapping("/{clubId}")
     public ResponseEntity<ClubListDto> getBookClubById(@PathVariable int clubId){
         return ResponseEntity.ok(bookClubService.getClubSummaryById(clubId));

@@ -17,15 +17,26 @@ public class BookClubService {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
     private final ParticipantRepository participantRepository;
+    private final SummaryRepository summaryRepository;
+    private final ReadingNoteRepository readingNoteRepository;
+    private final MemoRepository memoRepository;
 
 
     public BookClubService
-            (BookClubRepository bookClubRepository, BookRepository bookRepository,
-             UserRepository userRepository, ParticipantRepository participantRepository) {
+            (BookClubRepository bookClubRepository,
+             BookRepository bookRepository,
+             UserRepository userRepository,
+             ParticipantRepository participantRepository,
+             SummaryRepository summaryRepository,
+             ReadingNoteRepository readingNoteRepository,
+             MemoRepository memoRepository) {
         this.bookClubRepository = bookClubRepository;
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
         this.participantRepository = participantRepository;
+        this.summaryRepository = summaryRepository;
+        this.readingNoteRepository = readingNoteRepository;
+        this.memoRepository = memoRepository;
 
     }
 
@@ -253,6 +264,59 @@ public class BookClubService {
 
         bookClubRepository.save(club);            // 한 번에 저장
     }
+
+    // 6. 완료모임 상세페이지
+    public BookClubCompletedDetailDto getCompletedDetail(int clubId) {
+        BookClub club = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("해당 모임이 존재하지 않습니다."));
+
+        if (!"COMPLETED".equals(club.getStatus())) {
+            throw new IllegalStateException("완료된 모임만 조회할 수 있습니다.");
+        }
+
+        // 요약
+        List<SummaryCreateDto> summaries = summaryRepository
+                .findByBookClubClubIdOrderByTopicNumberAsc(clubId)
+                .stream()
+                .map(s -> new SummaryCreateDto(s.getTopicNumber(), s.getTopic(), s.getContent()))
+                .collect(Collectors.toList());
+
+        // 독후감
+        List<ReadingNoteDto> readingNotes = readingNoteRepository
+                .findByClubIdWithUser(clubId)
+                .stream()
+                .map(n -> new ReadingNoteDto(
+                        n.getUser().getUserId(),
+                        n.getBookClub().getClubId(),
+                        n.getContent()
+                ))
+                .collect(Collectors.toList());
+
+        // 메모
+        List<MemoDto> memos = memoRepository
+                .findByClubIdWithUser(clubId)
+                .stream()
+                .map(m -> new MemoDto(
+                        m.getUser().getUserId(),
+                        m.getClubId(),
+                        m.getContent(),
+                        m.getIsFinalized()  // ← 주의!
+                ))
+                .collect(Collectors.toList());
+
+        return new BookClubCompletedDetailDto(
+                club.getClubId(),
+                club.getBook().getBookTitle(),
+                club.getBook().getAuthor(),
+                club.getBook().getCoverImage(),
+                club.getMeetingDate(),
+                summaries,
+                readingNotes,
+                memos
+        );
+    }
+
+
 
 }
 
