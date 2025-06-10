@@ -10,35 +10,6 @@ export const Container = styled.div`
   gap: 24px;
 `;
 
-export const ProfileSection = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-`;
-
-export const ProfileImage = styled.div`
-  width: 80px;
-  height: 80px;
-  background: #e5e7eb;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-`;
-
-export const FileButton = styled.button`
-  padding: 8px 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: white;
-`;
-
-export const FileLabel = styled.span`
-  margin-left: 8px;
-  color: #888;
-`;
-
 export const Label = styled.label`
   display: block;
   font-size: 14px;

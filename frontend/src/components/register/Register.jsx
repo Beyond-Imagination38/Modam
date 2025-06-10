@@ -42,7 +42,7 @@ export function Register() {
     console.log("postData", postData);
     
     try {
-      const response = await fetch(`${API_URLS.api}/bookclubs`, {
+      const response = await fetch(`http://localhost:8080/api/bookclubs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

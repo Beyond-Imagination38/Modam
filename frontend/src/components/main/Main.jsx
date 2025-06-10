@@ -41,7 +41,7 @@ export function Main() {
         }
 
         const mapped = data.map((item, index) => ({
-          clubId: index,
+          clubId: item.clubId,
           title: item.bookTitle,
           time: item.meetingDateTime,
           representativeImage: item.coverImage,
