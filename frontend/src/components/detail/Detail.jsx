@@ -13,17 +13,13 @@ export function Detail() {
 
   useEffect(() => {
     const getData = async () => {
-      const userId = localStorage.getItem("userId");
-      
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user?.id;
+
       try {
         const response = await fetch(`http://localhost:8080/api/bookclubs/${clubId}/detail?userId=${userId}`, {
           method: "GET",
         });
-        
-        //디버깅 코드
-        console.log("clubId 파라미터:", clubId);
-        console.log("응답 status 코드:", response.status);
-        console.log("응답 headers:", [...response.headers.entries()]);
         
         if (!response.ok) throw new Error("서버 응답 실패");
 
@@ -36,19 +32,18 @@ export function Detail() {
         setLoading(false);
       }
     };
-
+    
     getData();
   }, [clubId]);
 
   if (loading) return <div>로딩 중...</div>;
   if (!data) return <div>데이터가 없습니다.</div>;
 
-
   return (
     <>
       <Header />
       <S.Container>
-        <S.BookCover src={data.coverImage} alt={data.bookTitle} />
+        <S.BookCover src={data.imageUrl} alt={data.bookTitle} />
         <S.Content>
           <div>
             <S.Title>{data.bookTitle}</S.Title>
