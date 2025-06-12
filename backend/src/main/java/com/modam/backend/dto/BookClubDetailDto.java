@@ -13,6 +13,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookClubDetailDto {
+
+    @Schema(description = "사용자 ID", example = "1")
+    private Integer userId;
+
     @Schema(description = "북클럽 고유 ID", example = "2")
     private Integer clubId;
 
