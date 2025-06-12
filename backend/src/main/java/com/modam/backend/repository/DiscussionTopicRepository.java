@@ -14,5 +14,7 @@ public interface DiscussionTopicRepository extends JpaRepository<DiscussionTopic
 
     Optional<DiscussionTopic> findFirstByClubOrderByVersionAsc(BookClub club);
 
+    Optional<DiscussionTopic> findFirstByClubOrderByVersionDesc(BookClub club);
+
     boolean existsByClub(BookClub club);
 }

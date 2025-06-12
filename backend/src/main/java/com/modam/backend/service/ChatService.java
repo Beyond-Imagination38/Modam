@@ -1,16 +1,15 @@
 package com.modam.backend.service;
 
 import com.modam.backend.dto.ChatMessageDto;
+import com.modam.backend.dto.SummaryCreateDto;
 import com.modam.backend.model.*;
-import com.modam.backend.repository.BookClubRepository;
-import com.modam.backend.repository.ChatMessageRepository;
-import com.modam.backend.repository.DiscussionTopicRepository;
-import com.modam.backend.repository.UserRepository;
+import com.modam.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -30,10 +29,49 @@ public class ChatService {
     private final BookClubRepository bookClubRepository;
     private final UserRepository userRepository;
     private final DiscussionTopicRepository discussionTopicRepository;
+    private final SummaryRepository summaryRepository;  //요약문
+
+    private final SimpMessagingTemplate messagingTemplate; // 추가
 
     private static final String GREETING_MESSAGE = "안녕하세요 이번 모임은 책 1984에 대한 내용입니다. 첫번째 주제는 다음과 같습니다.";
 
-    @SuppressWarnings("unchecked")
+    // soo:요약문+상태 - 요약문 저장 및 모임 상태 변경 메서드 추가
+/*    @Transactional
+    public void saveSummaryAndCompleteClub(int clubId, String summary) {
+        BookClub bookClub = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
+
+        bookClub.setMeetingSummary(summary); // meeting_summary 컬럼에 요약문 저장
+        bookClub.setStatus("COMPLETED");    // 상태를 완료로 변경
+
+        bookClubRepository.save(bookClub);
+    }*/
+    //요약문+상태:수정버전
+    @Transactional
+    public void saveSummaryAndCompleteClub(int clubId, List<SummaryCreateDto> summaryList) {
+        BookClub bookClub = bookClubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("BookClub not found with id: " + clubId));
+
+        // 기존 summary 삭제 (덮어쓰기 방지)
+        summaryRepository.deleteByBookClubClubId(clubId);
+
+        for (SummaryCreateDto dto : summaryList) {
+            Summary summary = new Summary();
+            summary.setBookClub(bookClub);
+            summary.setTopicNumber(dto.getTopicNumber());
+            summary.setTopic(dto.getTopic());
+            summary.setContent(dto.getContent());
+
+            summaryRepository.save(summary);
+        }
+
+        bookClub.setStatus("COMPLETED");
+        bookClubRepository.save(bookClub);
+    }
+
+
+
+
     @Transactional
     public ChatMessageDto saveChatMessage(int clubId, ChatMessageDto dto) {
         BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
@@ -93,7 +131,10 @@ public class ChatService {
         } else if (isFirstMessage) {
             messageType = MessageType.SUBTOPIC;
             order = chatMessageRepository.countByBookClubAndMessageType(bookClub, MessageType.SUBTOPIC) + 1;
-        } else {
+        } else if (dto.getMessageType() == MessageType.FREE_DISCUSSION) {
+            messageType = MessageType.FREE_DISCUSSION;
+        }
+        else {
             messageType = MessageType.DISCUSSION;
         }
 
@@ -171,17 +212,66 @@ public class ChatService {
         }
     }
 
+    //demo02: 요약
+    public void sendMeetingSummary(int clubId) {
+        String summary = summarizeDiscussion(clubId);
+
+        ChatMessageDto summaryMessage = new ChatMessageDto(
+                MessageType.SUMMARY,
+                clubId,
+                0,
+                "AI 진행자",
+                summary,
+                new Timestamp(System.currentTimeMillis())
+        );
+
+        messagingTemplate.convertAndSend("/topic/chat/" + clubId, summaryMessage);
+
+
+/*        messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                new ChatMessageDto(MessageType.SUMMARY, clubId, 0, "AI 진행자",
+                        greeting + summary,
+                        new Timestamp(System.currentTimeMillis())));*/
+    }
+
+
+    //첫번째 유저 말 -> topic
     public Optional<String> getFirstDiscussionTopic(int clubId) {
         BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
         return discussionTopicRepository.findFirstByClubOrderByVersionAsc(bookClub)
                 .map(DiscussionTopic::getContent);
     }
 
+    //n번째 유저 -> topic demo02
+    public Optional<String> getDiscussionTopicByVersion(int clubId, int version) {
+        BookClub club = bookClubRepository.findById(clubId).orElseThrow();
+        return discussionTopicRepository.findByClubOrderByVersionAsc(club).stream()
+                .filter(topic -> topic.getVersion() == version)
+                .map(DiscussionTopic::getContent)
+                .findFirst();
+    }
+
+
+
+    // 첫번째 유저의 말 -> subtopic
     public Optional<String> getFirstUserSubtopic(int clubId) {
         BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
         return chatMessageRepository.findByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC)
                 .stream().findFirst().map(ChatMessage::getContent);
     }
+
+    // n번째 user의 채팅 -> subtopic //demo02
+    public Optional<String> getNthUserSubtopic(int clubId, int order) {
+        BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
+
+        return chatMessageRepository
+                .findByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC)
+                .stream()
+                .filter(msg -> msg.getSubtopicOrder() != null && msg.getSubtopicOrder() == order)
+                .map(ChatMessage::getContent)
+                .findFirst();
+    }
+
 
     @Transactional(readOnly = true)
     public List<ChatMessageDto> getChatHistory(int clubId) {
@@ -196,4 +286,149 @@ public class ChatService {
                         m.getCreatedTime()
                 )).collect(Collectors.toList());
     }
+
+    //demo02 :요약하기
+    @Transactional(readOnly = true)
+    public String summarizeDiscussion(int clubId) {
+        BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
+
+        // 1. 대주제 목록 조회
+        List<DiscussionTopic> topics = discussionTopicRepository.findByClubOrderByVersionAsc(bookClub);
+        List<String> topicContents = topics.stream()
+                .map(DiscussionTopic::getContent)
+                .collect(Collectors.toList());
+
+        // 2. 각 대주제별 참가자 응답 수집
+        List<List<String>> allResponses = topics.stream()
+                .map(topic -> {
+                    int version = topic.getVersion();
+                    return chatMessageRepository.findByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC).stream()
+                            .filter(msg -> msg.getSubtopicOrder() != null)
+                            .skip((long) (version - 1) * 4)
+                            .limit(4)
+                            .map(ChatMessage::getContent)
+                            .toList();
+                })
+                .toList();
+
+        // 3. Flask 서버 호출
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("topics", topicContents);
+            requestBody.put("all_responses", allResponses);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+            ResponseEntity<Map> response = restTemplate.postForEntity(
+                    "http://localhost:5000/ai/summarize",
+                    entity,
+                    Map.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                List<Map<String, String>> summaries = (List<Map<String, String>>) response.getBody().get("summaries");
+
+                StringBuilder result = new StringBuilder();
+                result.append("오늘 『1984』 독서 모임 어떠셨나요?\n")
+                        .append("오늘 토의 내용을 요약해드릴게요.\n\n");
+
+                for (int i = 0; i < summaries.size(); i++) {
+                    Map<String, String> s = summaries.get(i);
+                    String topicTitle = s.get("topic");
+                    String summaryText = s.get("summary");
+
+                    result.append("주제 ").append(i + 1).append(": ").append("\"").append(topicTitle).append("\"\n\n");
+                    result.append(summaryText).append("\n\n");
+                }
+
+                return result.toString();
+            } else {
+
+
+                return "[AI 요약 실패] 서버 응답 오류";
+            }
+
+        } catch (Exception e) {
+
+            //log.error("AI 요약 실패", e);
+            return "[AI 요약 실패] " + e.getMessage();
+        }
+    }
+
+    /*public String summarizeDiscussion(int clubId) {
+        BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
+
+        // 1. 대주제 목록 조회
+        List<DiscussionTopic> topics = discussionTopicRepository.findByClubOrderByVersionAsc(bookClub);
+        List<String> topicContents = topics.stream()
+                .map(DiscussionTopic::getContent)
+                .collect(Collectors.toList());
+
+        // 2. 각 대주제별 참가자 응답 수집
+        List<List<String>> allResponses = topics.stream()
+                .map(topic -> {
+                    int version = topic.getVersion();
+                    return chatMessageRepository.findByBookClubOrderByCreatedTimeAsc(bookClub).stream()
+                            .filter(msg ->
+                                    (msg.getMessageType() == MessageType.SUBTOPIC ||
+                                            msg.getMessageType() == MessageType.DISCUSSION ||
+                                            msg.getMessageType() == MessageType.FREE_DISCUSSION)
+                            )
+                            .skip((long) (version - 1) * 4)  // version 1 → 0~3, version 2 → 4~7...
+                            .limit(100)  // 최대 100개까지 수집 (자유 토론 포함 고려) //demo02:채팅요약전달추가
+                            .map(ChatMessage::getContent)
+                            .toList();
+                })
+                .toList();
+
+        // 3. Flask 서버 호출 (요약 요청)
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("topics", topicContents);
+            requestBody.put("all_responses", allResponses);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+            ResponseEntity<Map> response = restTemplate.postForEntity(
+                    "http://localhost:5000/ai/summarize",  // Flask API endpoint
+                    entity,
+                    Map.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                List<Map<String, String>> summaries = (List<Map<String, String>>) response.getBody().get("summaries");
+
+                StringBuilder result = new StringBuilder();
+                for (int i = 0; i < summaries.size(); i++) {
+                    Map<String, String> s = summaries.get(i);
+                    result.append("대주제 ").append(i + 1).append(": ").append(s.get("topic")).append("\n");
+                    result.append("요약: ").append(s.get("summary")).append("\n\n");
+                }
+
+                return result.toString();
+            } else {
+                return "[AI 요약 실패] 서버 응답 오류";
+            }
+
+        } catch (Exception e) {
+            return "[AI 요약 실패] " + e.getMessage();
+        }
+    }*/
+
+    @Transactional(readOnly = true)
+    public int getCurrentTopicVersion(int clubId) {
+        BookClub club = bookClubRepository.findById(clubId).orElseThrow();
+        return discussionTopicRepository.findFirstByClubOrderByVersionDesc(club)
+                .map(DiscussionTopic::getVersion)
+                .orElse(1);
+    }
+
 }

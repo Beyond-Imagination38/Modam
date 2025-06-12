@@ -4,19 +4,12 @@ import { Link,useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { API_URLS } from "../../consts";
 import { fetchApi } from "../../utils";
-import img1984 from "./1984.jpg";
-import 앵무새죽이기 from "./앵무새죽이기.jpg";
-import 자아폭발 from "./자아폭발.jpg";
-
-const ITEMS_PER_PAGE = 3;
 
 export function Main() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [items, setItems] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("진행 중");
+  const [activeCategory, setActiveCategory] = useState("PENDING");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [user, setUser] = useState(null); 
 
   const navigate = useNavigate();
 
@@ -24,112 +17,59 @@ export function Main() {
     setIsSidebarOpen((prev) => !prev);
   };
 
-  const data = [
-    {
-      postId: 1,
-      userId: 10,
-      title: "1984",
-      time: "2025-04-10 20:00",
-      representativeImage: img1984,
-    },
-    {
-      postId: 2,
-      userId: 20,
-      title: "앵무새 죽이기",
-      time: "2025-04-15 21:00",
-      representativeImage: 앵무새죽이기,
-    },
-    {
-      postId: 5,
-      userId: 20,
-      title: "자아폭발",
-      time: "2025-04-13 16:00",
-      representativeImage: 자아폭발,
-    },
-    {
-      title: "참을 수 없는 존재의 가벼움",
-      time: "2.11 8시",
-      representativeImage: "https://picsum.photos/600/300?random=3",
-    },
-
-    {
-      title: "왜 나는 너를 사랑하는가",
-      time: "2.11 10시",
-      representativeImage: "https://picsum.photos/600/300?random=4",
-    },
-    {
-      title: "데미안",
-      time: "2.16 8시",
-      representativeImage: "https://picsum.photos/600/300?random=5",
-    },
-    {
-      title: "죽음의 수용소에서",
-      time: "2.15 8시",
-      representativeImage: "https://picsum.photos/600/300?random=6",
-    },
-    {
-      title: "싯다르타",
-      time: "2.15 4시",
-      representativeImage: "https://picsum.photos/600/300?random=7",
-    },
-    {
-      title: "소크라테스 익스프레스",
-      time: "2.11 6시",
-      representativeImage: "https://picsum.photos/600/300?random=8",
-    },
-    {
-      title: "소공녀",
-      time: "2.11 8시",
-      representativeImage: "https://picsum.photos/600/300?random=9",
-    },
-  ];
-
   useEffect(() => {
-    const storedData = data;
-    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
-    setItems([...storedPosts, ...storedData]);
-    
-    const storedUser = localStorage.getItem("user"); 
-    if (storedUser) {
-      setUser(JSON.parse(storedUser)); 
-    }
-  }, []);
+    const fetchClubs = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userId = user?.id;
 
-  /*const fetchItems = async () => {
-    try {
-      const response = await fetchApi(API_URLS.posts, {
-        method: "GET",
-      });
-  
-      console.log("게시글 API 응답:", response); 
-  
-      if (response.status === 200 && response.data?.content) {
-        setItems(response.data.content); 
-      } else {
-        console.error("게시글 데이터가 비어 있습니다:", response);
+        let url = "";
+        if (activeCategory === "PENDING") {
+          url = API_URLS.allBookclubs;
+        } else if (activeCategory === "COMPLETED") {
+          if (!userId) throw new Error("로그인된 사용자 정보를 찾을 수 없습니다.");
+          url = API_URLS.myCompleted(userId);
+        } else if (activeCategory === "ONGOING") {
+          if (!userId) throw new Error("로그인된 사용자 정보를 찾을 수 없습니다.");
+          url = API_URLS.myOngoing(userId);
+        }
+
+        const { status, data } = await fetchApi(url, { method: "GET" });
+
+        if (status !== 200) {
+          throw new Error(`서버 응답 실패: ${status}`);
+        }
+
+        const mapped = data.map((item, index) => ({
+          clubId: item.clubId,
+          title: item.bookTitle,
+          time: item.meetingDateTime,
+          representativeImage: item.coverImage,
+          participants: item.participants,
+          description: item.clubDescription,
+        }));
+
+        console.log("서버 응답 데이터:", data);
+        setItems(mapped);
+      } catch (error) {
+        console.error("독서 모임 데이터를 불러오지 못했습니다:", error);
+        alert("서버에서 독서 모임 정보를 불러오지 못했습니다. 나중에 다시 시도해주세요.");
         setItems([]);
       }
-    } catch (err) {
-      console.error("게시글 불러오기 실패:", err);
-    }
-  };
+    };
+
+    fetchClubs();
+  }, [activeCategory]);
+
   
-
-  useEffect(() => {
-    fetchItems();
-  }, []);*/
-
-  const filteredItems = items.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredItems = items.filter(
+    (item) =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentItems = filteredItems.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE
-  );
-
+  
+  const currentItems = filteredItems;
+  
   return (
     <S.Container>
       <Header />
@@ -138,35 +78,31 @@ export function Main() {
         {isSidebarOpen && (
           <S.SideMenu>
             <S.MenuItem
-              $active={activeCategory === "진행 중"}
+              $active={activeCategory === "PENDING"}
               onClick={() => {
-                setActiveCategory("진행 중");
-                setCurrentPage(1);
+                setActiveCategory("PENDING");
               }}
             >
-              진행 중인 독서 모임
+              전체 독서 모임
             </S.MenuItem>
             <S.MenuItem
-              $active={activeCategory === "완료"}
+              $active={activeCategory === "COMPLETED"}
               onClick={() => {
-                setActiveCategory("완료");
-                setCurrentPage(1);
+                setActiveCategory("COMPLETED");
               }}
             >
               완료된 독서모임
             </S.MenuItem>
             <S.MenuItem
-              $active={activeCategory === "좋아요"}
+              $active={activeCategory === "ONGOING"}
               onClick={() => {
-                setActiveCategory("좋아요");
-                setCurrentPage(1);
+                setActiveCategory("ONGOING");
               }}
             >
-              좋아요한 독서모임
+              진행 중인 독서모임
             </S.MenuItem>
               <S.SideMenuFooter>
                 <S.Button
-                  style={{ display: user ? "block" : "none" }} 
                   onClick={(e) => {
                     e.preventDefault();
                     const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
@@ -191,70 +127,43 @@ export function Main() {
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                setCurrentPage(1);
               }}
             />
             <S.SearchButton>🔍</S.SearchButton>
             <Link to="/Register">
               <S.RegisterButton>모임 등록하기</S.RegisterButton>
             </Link>
-            <Link to="/completed">
-              <S.RegisterButton>모임 정보</S.RegisterButton>
-            </Link>
           </S.SearchContainer>
 
           <S.ProductGrid>
             {currentItems.length > 0 ? (
               currentItems.map(
-                ({ representativeImage, title, time, postId }, index) => (
-                  <Link
-                    to={`/post/${postId || index}`}
-                    key={postId || index}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <S.ProductCard>
-                      <S.ImageContainer>
-                        <S.ProductImage
-                          src={representativeImage}
-                          alt="도서 이미지"
-                        />
-                      </S.ImageContainer>
-                      <S.ProductTitle>{title}</S.ProductTitle>
-                      <S.ProductTime>{time}</S.ProductTime>
-                    </S.ProductCard>
-                  </Link>
-                )
+                ({ representativeImage, title, time, clubId, category }, index) => {
+                  return (
+                    <Link
+                      to={`/detail/${clubId}`}
+                      key={clubId}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <S.ProductCard>
+                        <S.ImageContainer>
+                          <S.ProductImage
+                            src={representativeImage}
+                            alt="도서 이미지"
+                          />
+                        </S.ImageContainer>
+                        <S.ProductTitle>{title}</S.ProductTitle>
+                        <S.ProductTime>{time}</S.ProductTime>
+                      </S.ProductCard>
+                    </Link>
+                  );
+                }
               )
             ) : (
               <S.NoResults>검색 결과가 없습니다.</S.NoResults>
             )}
-          </S.ProductGrid>
 
-          <S.Pagination>
-            <S.PageButton
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              이전
-            </S.PageButton>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <S.PageButton
-                key={i}
-                onClick={() => setCurrentPage(i + 1)}
-                $active={currentPage === i + 1}
-              >
-                {i + 1}
-              </S.PageButton>
-            ))}
-            <S.PageButton
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-            >
-              다음
-            </S.PageButton>
-          </S.Pagination>
+          </S.ProductGrid>
         </S.ContentArea>
       </S.Layout>
     </S.Container>

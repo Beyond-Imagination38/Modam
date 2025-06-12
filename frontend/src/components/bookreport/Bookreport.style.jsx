@@ -25,7 +25,7 @@ export const Textarea = styled.textarea`
   max-width: 700px;
   height: 500px;
   padding: 10px;
-  font-size: 14px;
+  font-size: 25px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #fff;

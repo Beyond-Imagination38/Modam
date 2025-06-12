@@ -21,20 +21,24 @@ public class BookClub {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "club_id")
-    private int clubId;
+    private Integer clubId;
 
+    // hostId 원시값 필드
+    @Column(name = "host_id", nullable = false)
+    private Integer hostId;
+
+    // host와 User 연관관계 (optional: fetch=LAZY)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "host_id", nullable = false)
+    @JoinColumn(name = "host_id", insertable = false, updatable = false)
     private User host;
 
-    // camelCase 필드명 + DB 컬럼명 유지
+    @Column(name = "book_id", nullable = false)
+    private Integer bookId;
+
+    // 연관관계 매핑 추가
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", insertable = false, updatable = false)
     private Book book;
-
-    @Column(name = "book_id", nullable = false)
-    private int bookId;
-
 
     @Column(name = "meeting_date", nullable = false)
     private LocalDateTime meetingDate;
@@ -42,11 +46,16 @@ public class BookClub {
     @Column(name = "status", nullable = false, columnDefinition = "ENUM('PENDING', 'ONGOING', 'COMPLETED') DEFAULT 'PENDING'")
     private String status;
 
-    @Column(name = "likes", nullable = false, columnDefinition = "INT DEFAULT 0")
-    private int likes;
+    //@Column(name = "likes", nullable = false, columnDefinition = "INT DEFAULT 0")
+    //private int likes;
 
-    @Column(name = "summary", columnDefinition = "TEXT")
-    private String summary;
+    //모임 설명
+    @Column(name = "club_description", columnDefinition = "TEXT")
+    private String clubDescription;
+
+    //모임 내용 요약본
+    @Column(name = "meeting_summary", columnDefinition = "TEXT")
+    private String meetingSummary;
 
     @Column(name = "search_index", columnDefinition = "TEXT")
     private String searchIndex;

@@ -2,15 +2,15 @@ package com.modam.backend.model;
 
 public enum MessageType {
 
+    DISCUSSION_NOTICE,
     ENTER,                //자동으로 AI 발제문 호출
-    GREETING,             // 인사
+    MAINTOPIC,             //대주제
     TOPIC_START,          // 대주제 시작
     SUBTOPIC,             // 사용자 의견
     DISCUSSION,           // 일반 토론 메시지
-    RAISE_HAND,           // 손들기
-    NEXT_TOPIC_VOTE,      // 다음 주제 전환 투표
-    NEXT_TOPIC_RESULT,    // 투표 결과
-    SESSION_END,          // 토론 종료
+    FREE_DISCUSSION_NOTICE,      // 자유토론 알림
+    FREE_DISCUSSION,      // 자유토론
+    END_NOTICE,          // 토론 종료
     SUMMARY               // AI 요약
 
 }

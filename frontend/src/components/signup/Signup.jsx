@@ -28,8 +28,7 @@ export function Signup() {
 
   const handlepw = (e) => {
     setpw(e.target.value);
-    const regex =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/
     if (regex.test(e.target.value)) {
       setPwValid(true);
     } else {
@@ -38,31 +37,25 @@ export function Signup() {
   };
 
   const handleSignup = async () => {
-    if (!emailValid || !pwValid || pw !== pwcheck) {
-      alert("입력한 정보를 다시 확인해주세요.");
-      return;
-    }
-    alert("회원가입이 완료되었습니다!"); //연결 후 삭제
-    navigate("/login"); //연결 후 삭제
-
-    try {
-      const signupResponse = await fetchApi(API_URLS.signup, {
+  if (!emailValid || !pwValid || pw !== pwcheck || !userName.trim()) {
+    alert("입력한 정보를 다시 확인해주세요.");
+    return;
+  }
+    
+      try {
+      const { status, data } = await fetchApi(API_URLS.signup, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          user_name: userName,
+          userName,
           email,
           pw,
-          profile_image: "NULL", 
-          coin: 0,
+          profile_image: null,
         }),
       });
 
-      if (!signupResponse.ok) {
+      if (status !== 200) {
         throw new Error("회원가입에 실패했습니다. 다시 시도해주세요.");
       }
-
-      const data = await signupResponse.json();
       console.log("회원가입 성공:", data);
 
       localStorage.setItem("token", data.token);
@@ -81,7 +74,7 @@ export function Signup() {
     <S.Page>
       <S.Title onClick={() => navigate("/")}>Modam</S.Title>
       <S.ContentWrap>
-        <S.InputTitle marginTop="100px">이메일</S.InputTitle>
+        <S.InputTitle>이메일</S.InputTitle>
         <S.InputWrap>
           <S.Input type="text" value={email} onChange={handleEmail} />
         </S.InputWrap>
@@ -91,14 +84,14 @@ export function Signup() {
           )}
         </S.ErrorMessageWrap>
 
-        <S.InputTitle marginTop="26px">비밀번호</S.InputTitle>
+        <S.InputTitle>비밀번호</S.InputTitle>
         <S.InputWrap>
           <S.Input type="password" value={pw} onChange={handlepw} />
         </S.InputWrap>
         <S.ErrorMessageWrap>
           {!pwValid && pw.length > 0 && (
             <div>
-              비밀번호는 8~20자이며, 영문, 숫자, 특수문자를 포함해야 합니다.
+              비밀번호는 8~20자이며, 영문과 숫자, 특수문자를 포함해야 합니다.
             </div>
           )}
         </S.ErrorMessageWrap>

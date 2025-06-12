@@ -22,17 +22,25 @@ public class Book {
     private int bookId;
 
     @Column(name = "book_title", nullable = false)
-    private String book_title;
+    private String bookTitle;
 
-    @Column(name = "writer", nullable = false)
-    private String writer;
+    @Column(name = "author", nullable = false)
+    private String author;
 
     @Column(name = "genre", nullable = false)
     private String genre;
 
     @Column(name = "published_date")
-    private LocalDate published_date;
+    private LocalDate publishedDate;
 
-    @Column(name = "summary")
-    private String summary;
+    @Column(name = "cover_image")
+    private String coverImage;
+
+    // getTitle
+    public String getTitle() { return this.bookTitle; }  // getter 삽입
+    // coverImage
+    public String getCoverImage(){
+        return coverImage;
+    }
+
 }

@@ -1,9 +1,6 @@
 package com.modam.backend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,13 +10,15 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 public class User {
 
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", length = 50, nullable = false, unique = true)
     private int userId;
 
@@ -34,9 +33,6 @@ public class User {
 
     @Column(name = "profile_image", columnDefinition = "TEXT")
     private String profileImage;
-
-    @Column(name = "coins", nullable = false, columnDefinition = "INT DEFAULT 0")
-    private int coins;
 
     @CreationTimestamp
     @Column(name = "created_time", nullable = false, updatable = false)

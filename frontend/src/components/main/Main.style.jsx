@@ -45,7 +45,7 @@ export const SearchButton = styled.button`
 
 export const ProductGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 24px;
   padding: 0 24px;
   max-width: 600px;
@@ -95,7 +95,7 @@ export const SideMenu = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 85vh;
+  height: 170vh;
 `;
 
 export const SideMenuFooter = styled.div`
@@ -180,28 +180,4 @@ export const NoResults = styled.p`
   font-size: 16px;
   color: gray;
   margin-top: 20px;
-`;
-
-export const Pagination = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-`;
-
-export const PageButton = styled.button`
-  margin: 0 5px;
-  padding: 8px 12px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-
-  &:hover {
-    background-color: #007bff;
-    color: #fff;
-  }
-
-  &:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
 `;
