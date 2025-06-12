@@ -43,7 +43,7 @@ export function Bookreport() {
       alert(resultText);
       console.log("서버 응답:", resultText);
 
-      navigate(`/detail/${clubId}`);
+      navigate(`/main`);
     } catch (error) {
       console.error("제출 중 오류 발생:", error);
       alert("제출에 실패했습니다. 다시 시도해주세요.");

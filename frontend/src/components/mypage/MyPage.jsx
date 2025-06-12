@@ -71,10 +71,6 @@ export function MyPage() {
 
       // 비밀번호 변경 요청 (입력된 경우에만)
       if (currentPw && newPw) {
-        if (newPw.length < 8) {
-          alert("비밀번호는 최소 8자 이상이어야 합니다.");
-          return;
-        }
         if (currentPw === newPw) {
           alert("기존 비밀번호와 새 비밀번호가 같습니다.");
           return;

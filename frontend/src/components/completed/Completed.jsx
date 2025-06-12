@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as S from "./Completed.style";
 import Header from "../common/Header";
-//import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export function Completed() {
   const [activeTab, setActiveTab] = useState("요약된 내용");
@@ -9,8 +9,7 @@ export function Completed() {
   const [selectedTopic, setSelectedTopic] = useState("주제 1");
   const [bookData, setBookData] = useState(null);
 
-  //const { clubId } = useParams();
-  const clubId = 1; //clubId 임시 지정
+  const { clubId } = useParams();
 
     useEffect(() => {
     async function fetchData() {

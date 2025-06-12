@@ -130,7 +130,9 @@ export function Detail() {
             )}
 
             {data.status === "COMPLETED" && (
-              <S.Button as="button">모임 후기 보기</S.Button>
+              <Link to={`/completed/${data.clubId}`}>
+                <S.Button>모임 후기 보기</S.Button>
+              </Link>
             )}
         </S.ButtonContainer>
         </S.Content>
