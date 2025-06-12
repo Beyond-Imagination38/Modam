@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import * as S from "./Chat.style";
@@ -7,13 +7,13 @@ import { Link, useParams } from "react-router-dom";
 const formatSummary = (text) => {
   if (!text) return [];
 
-  // '주제' 키워드가 포함된 위치를 기준으로 우선 문단 나누기
+  // 문단 나누기
   const topicBlocks = text.split(/(?=주제\s*\d*:)/g);
   const formattedParagraphs = [];
 
   topicBlocks.forEach((block) => {
     const sentences = block.trim().split(/(?<=[.!?])\s+/);
-    const paragraphSize = 2;
+    const paragraphSize = 1;
 
     for (let i = 0; i < sentences.length; i += paragraphSize) {
       const para = sentences.slice(i, i + paragraphSize).join(" ");
@@ -36,7 +36,7 @@ export function Chat() {
   const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);//soo:demo02-2
   const { clubId } = useParams();
 
-  const accessToken = localStorage.getItem("accessToken") || "";
+  const token = localStorage.getItem("token") || "";
   
   useEffect(() => {
     const socket = new SockJS("http://localhost:8080/chat"); 
@@ -49,14 +49,12 @@ export function Chat() {
         client.subscribe(`/topic/chat/${clubId}`, async (message) => {
           const receivedMessage = JSON.parse(message.body);
 
-          console.log("📥 [DEBUG] 받은 메시지:", receivedMessage);//debug soo:demo02
+          console.log("[DEBUG] 받은 메시지:", receivedMessage);
           
-          //soo:demo02-2
           // 자유토론 시작 메시지 감지
           if (receivedMessage.messageType === "FREE_DISCUSSION_NOTICE") {
             setIsFreeDiscussion(true);
           }
-          //soo:demo02-2
           // 자유토론 종료 (주제 전환 또는 종료)
           if (
               receivedMessage.messageType === "MAINTOPIC" ||
@@ -70,7 +68,7 @@ export function Chat() {
             await finalizeMemo(); 
           }
 
-          setMessages((prevMessages) => [...prevMessages, receivedMessage]);  //soo:demo02-2
+          setMessages((prevMessages) => [...prevMessages, receivedMessage]);  
         });
         
       },
@@ -81,7 +79,7 @@ export function Chat() {
 
     client.activate(); // 연결 시작
     setStompClient(client);
-    loadMemo(); 
+    //loadMemo(); 
 
     return () => {
       client.deactivate(); // 컴포넌트 언마운트 시 연결 해제
@@ -96,9 +94,8 @@ export function Chat() {
 
     if (message.trim()) {
 
-      //soo:demo02
       const parsedClubId = parseInt(clubId);
-      console.log("📤 보낼 clubId:", parsedClubId);
+      console.log("보낼 clubId:", parsedClubId);
 
       const chatMessage = {
         messageType: isFreeDiscussion ? "FREE_DISCUSSION" : "DISCUSSION", // soo:demo02-2: 여기 조건 추가!
@@ -111,7 +108,7 @@ export function Chat() {
       stompClient.publish({
         destination: `/app/chat/${clubId}`, 
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(chatMessage),
@@ -135,7 +132,7 @@ export function Chat() {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -153,12 +150,12 @@ export function Chat() {
   };
 
   //메모 조회
-  const loadMemo = async () => {
+  /*const loadMemo = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -169,7 +166,7 @@ export function Chat() {
     } catch (error) {
       console.error("메모 조회 중 오류:", error);
     }
-  };
+  };*/
 
 
   //메모 확정
@@ -178,7 +175,7 @@ export function Chat() {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}/finalize`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 

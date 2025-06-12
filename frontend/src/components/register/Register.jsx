@@ -1,25 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Header from "../common/Header";
 import * as S from "./Register.style";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { API_URLS } from "../../consts";
-import { fetchApi } from "../../utils";
 
 export function Register() {
   const navigate = useNavigate();
-  const { postId } = useParams();
 
-  const [images, setImages] = useState([]);
   const [title, setTitle] = useState("");
   const [meetingDate, setMeetingDate] = useState("");
   const [time, setTime] = useState("");
   const [content, setContent] = useState("");
-
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setImages(imageUrls);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,26 +30,22 @@ export function Register() {
       clubDescription: content,
     };
 
-    console.log("서버로 보낼 데이터:", JSON.stringify(postData, null, 2));
-    console.log("userId", userId);
-    console.log("postData", postData);
-    
     try {
-      const response = await fetchApi(`${API_URLS.api}/bookclubs`, {
-        method: "POST",   
+      const response = await fetch(`http://localhost:8080/api/bookclubs`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(postData),
       });
 
       const { status, data } = response;
 
-      console.log("응답 상태코드:", status);
-
       if (status >= 200 && status < 300) {
         alert("모임이 등록되었습니다.");
         navigate("/main");
       } else {
-        console.error("등록 실패 응답:", data);
-        alert(data?.message || "모임 등록에 실패했습니다.");
+        alert(data?.message || "모임 정보를 확인해주세요.");
       }
     } catch (error) {
       console.error("모임 등록 중 오류:", error);
@@ -72,25 +59,6 @@ export function Register() {
       <S.Container>
         <S.Title>독서 모임 등록</S.Title>
         <S.Form>
-          <S.Label>이미지</S.Label>
-          <S.Input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-          />
-
-          {/* 이미지 미리보기 */}
-          <S.ImagePreviewContainer>
-            {images.map((src, index) => (
-              <S.ImagePreview
-                key={index}
-                src={src}
-                alt={`미리보기 ${index + 1}`}
-              />
-            ))}
-          </S.ImagePreviewContainer>
-
           <S.Label>책 제목</S.Label>
           <S.Input
             type="text"
@@ -104,7 +72,7 @@ export function Register() {
             type="date"
             value={meetingDate}
             onChange={(e) => setMeetingDate(e.target.value)}
-          ></S.Input>
+          />
 
           <S.Label>시간</S.Label>
           <S.Input
@@ -118,7 +86,7 @@ export function Register() {
             placeholder="설명을 입력하세요"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-          ></S.TextArea>
+          />
 
           <S.ButtonContainer>
             <Link to="/Main">
