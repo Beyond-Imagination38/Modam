@@ -12,10 +12,11 @@ export function MyPage() {
     const user = JSON.parse(localStorage.getItem("user"));
     const userId = user?.id;
 
-     console.log("token from localStorage:", localStorage.getItem("token"));
-
     if (!userId) {
-      alert("로그인 정보가 없습니다.");
+      const goToLogin = window.confirm("로그인 정보가 없습니다. 로그인 페이지로 이동하시겠습니까?");
+      if (goToLogin) {
+        window.location.href = "/login"; 
+      }
       return;
     }
 
@@ -30,8 +31,8 @@ export function MyPage() {
       })
       .then((data) => {
         console.log("Fetched user data:", data);
-        setEmail(data.email);           // 이메일 표시용
-        setUserName(data.userName);    // 닉네임
+        setEmail(data.email);           
+        setUserName(data.userName);    
       })
       .catch((err) => {
         console.error(err);
@@ -39,23 +40,19 @@ export function MyPage() {
       });
   }, []);
 
-  const handleWithdraw = () => {
-    const confirm = window.confirm("계정을 탈퇴하시겠습니까?");
-    if (confirm) {
-      window.location.href = "/";
-    }
-  };
-
   const handleSave = async () => {
     const isConfirmed = window.confirm("수정하시겠습니까?");
     if (!isConfirmed) return;
 
-    const userId = localStorage.getItem("userId");
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?.id;
     const token = localStorage.getItem("token");
+
+    let isChanged = false; 
 
     try {
       // 닉네임(이름) 서버에 반영
-      const nicknameRes = await fetch(`http://localhost:8080/user/${userId}`, {
+      const nicknameRes = await fetch(`http://localhost:8080/user/${userId}/name`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -64,29 +61,13 @@ export function MyPage() {
         body: JSON.stringify({ userName }),
       });
 
-      console.log("닉네임 변경 요청", {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ userName }),
-      });
-
       if (!nicknameRes.ok) {
         const errorText = await nicknameRes.text();
-        console.error("닉네임 수정 실패", {
-          status: nicknameRes.status,
-          userId,
-          token,
-          requestBody: { userName },
-        });
-        
         throw new Error(`닉네임 수정 실패: ${errorText}`);
       }
 
       localStorage.setItem("nickname", userName);
-      alert("닉네임이 저장되었습니다!");
+      isChanged = true;
 
       // 비밀번호 변경 요청 (입력된 경우에만)
       if (currentPw && newPw) {
@@ -110,20 +91,29 @@ export function MyPage() {
             newPw,
           }),
         });
-
+      
         if (!pwRes.ok) {
-          throw new Error("비밀번호 변경 실패");
+          const errorText = await pwRes.text();
+          console.error("비밀번호 변경 실패", {
+            status: pwRes.status,
+            userId,
+            token,
+            requestBody: { currentPw, newPw },
+            response: errorText
+          });
+          throw new Error(`비밀번호 변경 실패: ${errorText}`);
         }
-
-        alert("비밀번호가 변경되었습니다.");
+        isChanged = true;
       }
 
-      // 메인 페이지로 이동
-      window.location.href = "/main";
+      if (isChanged) {
+        alert("변경 사항이 저장되었습니다!");
+      }
     } catch (error) {
       alert(`오류 발생: ${error.message}`);
     }
   };
+
 
 
   return (
@@ -159,10 +149,6 @@ export function MyPage() {
             onChange={(e) => setNewPw(e.target.value)}
           />
         </div>
-
-        <S.RightAlignBox>
-          <S.WithdrawButton onClick={handleWithdraw}>계정 탈퇴</S.WithdrawButton>
-        </S.RightAlignBox>
         <S.SaveButton onClick={handleSave}>수정</S.SaveButton>
       </S.Container>
     </>

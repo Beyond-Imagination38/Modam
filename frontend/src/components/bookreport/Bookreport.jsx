@@ -8,7 +8,8 @@ import { fetchApi } from "../../utils";
 
 export function Bookreport() {
   const { clubId } = useParams();
-  const userId = localStorage.getItem("userId"); 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.id;
   const [input, setInput] = useState("");
   const navigate = useNavigate();
 

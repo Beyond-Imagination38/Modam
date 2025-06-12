@@ -79,7 +79,7 @@ export function Chat() {
 
     client.activate(); // 연결 시작
     setStompClient(client);
-    //loadMemo(); 
+    loadMemo(); 
 
     return () => {
       client.deactivate(); // 컴포넌트 언마운트 시 연결 해제
@@ -150,7 +150,7 @@ export function Chat() {
   };
 
   //메모 조회
-  /*const loadMemo = async () => {
+  const loadMemo = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
         method: "GET",
@@ -166,7 +166,7 @@ export function Chat() {
     } catch (error) {
       console.error("메모 조회 중 오류:", error);
     }
-  };*/
+  };
 
 
   //메모 확정
@@ -226,17 +226,16 @@ export function Chat() {
           })}
 
           </S.ChatBox>
-          <S.InputContainer>
-        <S.Input
-          type="text"
-          placeholder="여기에 내용을 입력해 주세요."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-        />
-        <S.SendButton onClick={sendMessage}>보내기</S.SendButton>
-      </S.InputContainer>
-
+            <S.InputContainer>
+              <S.Input
+                type="text"
+                placeholder="여기에 내용을 입력해 주세요."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+              />
+              <S.SendButton onClick={sendMessage}>보내기</S.SendButton>
+            </S.InputContainer>
         </S.ChatSection>
 
         {isMemoVisible && (

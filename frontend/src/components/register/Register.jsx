@@ -15,7 +15,8 @@ export function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userId = localStorage.getItem("userId");
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?.id;
 
     if (!userId) {
       alert("로그인이 필요합니다.");
