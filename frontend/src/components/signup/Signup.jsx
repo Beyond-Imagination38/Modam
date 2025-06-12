@@ -46,17 +46,12 @@ export function Signup() {
       const { status, data } = await fetchApi(API_URLS.signup, {
         method: "POST",
         body: JSON.stringify({
-          user_name: userName,
+          userName,
           email,
           pw,
           profile_image: null,
         }),
       });
-
-      if (status === 409) {
-        alert(data?.message || "이미 존재하는 계정입니다.");
-        return;
-      }
 
       if (status !== 200) {
         throw new Error("회원가입에 실패했습니다. 다시 시도해주세요.");

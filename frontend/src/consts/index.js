@@ -17,4 +17,5 @@ export const API_URLS = {
   allBookclubs: `${COMMON_API_URL}/api/bookclubs/search?sortBy=least`,
   saveMemo: (clubId) => `/api/memo/${clubId}`,
   getMemo: (clubId) => `/api/memo/${clubId}`,
+  bookclubDetail: (clubId) => `http://localhost:8080/api/bookclubs/${clubId}/status`,
 };

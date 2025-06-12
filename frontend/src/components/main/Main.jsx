@@ -41,7 +41,7 @@ export function Main() {
         }
 
         const mapped = data.map((item, index) => ({
-          postId: index,
+          clubId: item.clubId,
           title: item.bookTitle,
           time: item.meetingDateTime,
           representativeImage: item.coverImage,
@@ -138,11 +138,11 @@ export function Main() {
           <S.ProductGrid>
             {currentItems.length > 0 ? (
               currentItems.map(
-                ({ representativeImage, title, time, postId, category }, index) => {
+                ({ representativeImage, title, time, clubId, category }, index) => {
                   return (
                     <Link
-                      to={`/detail/${postId}`}
-                      key={postId}
+                      to={`/detail/${clubId}`}
+                      key={clubId}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <S.ProductCard>
