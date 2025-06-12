@@ -188,6 +188,7 @@ public class BookClubService {
         }
 
         return new BookClubDetailDto(
+                club.getHostId(),
                 club.getClubId(),
                 club.getBook().getBookTitle(), // title
                 club.getBook().getBookTitle(), // bookTitle
