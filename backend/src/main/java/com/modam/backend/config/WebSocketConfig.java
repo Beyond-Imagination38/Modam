@@ -27,8 +27,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chat")
                 .setAllowedOriginPatterns("http://localhost:3000")  // React 서버 포트 허용
-                .addInterceptors(jwtHandshakeInterceptor);// 인터셉터 등록
-                //.withSockJS()  // SockJS 활성화: 임시 주석처리 0613
+                .addInterceptors(jwtHandshakeInterceptor)// 인터셉터 등록
+                .withSockJS();  // SockJS 활성화: 임시 주석처리 0613
 
     }
 }
