@@ -40,7 +40,7 @@ function App() {
         <Route path="/chat/:clubId" element={<Chat />} />        {/* soo: /추가: clubId 있는 채팅 */}
         <Route path="/bookreport/:clubId" element={<Bookreport />} />
         <Route path="/detail/:clubId" element={<Detail />} />
-        <Route path="/completed" element={<Completed />} />
+        <Route path="/completed/:clubId" element={<Completed />} />
       </Routes>
     </BrowserRouter>
   );
