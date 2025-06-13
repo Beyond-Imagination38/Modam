@@ -27,10 +27,14 @@ public class SubtopicDiscussionManager {
 
     @Async
     public void startDiscussionFlow(int clubId) {
+        System.out.println("🟢 [Subtopic] 자동 토론 흐름 시작: clubId=" + clubId);//soo:0613
         for (int i = 1; i <= 4; i++) {
             int order = i;
 
             chatService.getNthUserSubtopic(clubId, order).ifPresent(content -> {
+
+                System.out.println("✅ 안건 " + order + " 출력: " + content);
+
                 // 의견 출력
                 messagingTemplate.convertAndSend("/topic/chat/" + clubId,
                         new ChatMessageDto(

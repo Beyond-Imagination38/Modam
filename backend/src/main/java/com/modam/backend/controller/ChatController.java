@@ -105,8 +105,19 @@ public class ChatController {
         }
 
         // 자동 토론 흐름 시작: demo02
+        //soo: 0613 발제문 3번 반복
         if (saved.isShouldTriggerFirstDiscussion()) {
-            // 자동 토론 흐름 시작 (1번~4번 소주제 순회하며 출력 + 토론)
+            int currentTopicVersion = chatService.getCurrentTopicVersion(clubId);
+
+            // 대주제 출력
+            chatService.getDiscussionTopicByVersion(clubId, currentTopicVersion).ifPresent(topic -> {
+                messagingTemplate.convertAndSend("/topic/chat/" + clubId,
+                        new ChatMessageDto(MessageType.MAINTOPIC, clubId, 0, "AI 진행자",
+                                "대주제 " + currentTopicVersion + ": " + topic,
+                                new Timestamp(System.currentTimeMillis())));
+            });
+
+            // 자동 소주제 토론 시작
             subtopicDiscussionManager.startDiscussionFlow(clubId);
         }
 

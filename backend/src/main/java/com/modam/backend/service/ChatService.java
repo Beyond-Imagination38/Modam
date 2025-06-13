@@ -130,7 +130,24 @@ public class ChatService {
             messageType = MessageType.ENTER;
         } else if (isFirstMessage) {
             messageType = MessageType.SUBTOPIC;
-            order = chatMessageRepository.countByBookClubAndMessageType(bookClub, MessageType.SUBTOPIC) + 1;
+            //order = chatMessageRepository.countByBookClubAndMessageType(bookClub, MessageType.SUBTOPIC) + 1;
+
+            //soo:0613
+            int currentVersion = getCurrentTopicVersion(clubId);
+
+            // 해당 version의 subtopic 개수만 카운트해서 order 부여
+            long versionSubCount = chatMessageRepository
+                    .findByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC)
+                    .stream()
+                    .filter(m -> m.getSubtopicOrder() != null)
+                    .filter(m -> {
+                        int orderNum = m.getSubtopicOrder();
+                        return orderNum >= (currentVersion - 1) * 4 + 1 && orderNum <= currentVersion * 4;
+                    })
+                    .count();
+
+            order = (int) ((currentVersion - 1) * 4 + versionSubCount + 1);
+
         } else if (dto.getMessageType() == MessageType.FREE_DISCUSSION) {
             messageType = MessageType.FREE_DISCUSSION;
         }
@@ -156,9 +173,23 @@ public class ChatService {
             shouldTriggerAiIntro = (enterCount == 4 && !alreadyGenerated);
         }
 
+        //soo: 0613 발제문 3번 반복
         if (messageType == MessageType.SUBTOPIC) {
-            long subCount = chatMessageRepository.countByBookClubAndMessageType(bookClub, MessageType.SUBTOPIC);
+            int currentVersion = getCurrentTopicVersion(clubId);
+
+            // 해당 버전의 subtopic 개수만 카운트하도록 수정
+            long subCount = chatMessageRepository
+                    .findByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC)
+                    .stream()
+                    .filter(m -> m.getSubtopicOrder() != null)
+                    .skip((long) (currentVersion - 1) * 4)
+                    .limit(4)
+                    .count();
+
+            System.out.println("⏱️ 현재 version=" + currentVersion + ", 해당 version의 subtopic 수: " + subCount);
+
             shouldTriggerFirstDiscussion = (subCount == 4);
+
         }
 
         return new ChatMessageDto(messageType, clubId, user.getUserId(), user.getUserName(),
@@ -192,11 +223,30 @@ public class ChatService {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
 
         try {
+
+            System.out.println("📡 [AI 요청] /ai/generate-topics 호출 시작"); //soo:0613
+
             ResponseEntity<Map> response = new RestTemplate()
                     .postForEntity("http://localhost:5000/ai/generate-topics", request, Map.class);
+
+            System.out.println("📥 [AI 응답] 상태 코드: " + response.getStatusCode());// soo:0613
+            if (response.getBody() != null) {
+                System.out.println("📦 [AI 응답 Body]: " + response.getBody());
+            } else {
+                System.out.println("⚠️ [AI 응답] Body가 null입니다.");
+            } //soo:0613
+
+
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 List<String> topics = (List<String>) response.getBody().get("topics");
+
+                if (topics == null || topics.isEmpty()) {
+                    System.out.println("⚠️ [AI 응답] topics가 비어 있음");
+                } //soo:0613
+
                 for (int i = 0; i < topics.size(); i++) {
+                    System.out.println("✅ [DB 저장] 대주제 " + (i + 1) + ": " + topics.get(i));//soo:0613
+
                     discussionTopicRepository.save(
                             DiscussionTopic.builder()
                                     .club(bookClub)
@@ -205,10 +255,12 @@ public class ChatService {
                                     .version(i + 1)
                                     .build()
                     );
+
                 }
             }
         } catch (Exception e) {
             System.err.println("AI 토픽 생성 실패: " + e.getMessage());
+            e.printStackTrace(); // 예외 전체 출력 //soo:0613
         }
     }
 
@@ -260,13 +312,16 @@ public class ChatService {
                 .stream().findFirst().map(ChatMessage::getContent);
     }
 
-    // n번째 user의 채팅 -> subtopic //demo02
+    // n번째 user의 채팅 -> subtopic //demo02, soo:0613
     public Optional<String> getNthUserSubtopic(int clubId, int order) {
         BookClub bookClub = bookClubRepository.findById(clubId).orElseThrow();
+        int currentVersion = getCurrentTopicVersion(clubId); // 현재 토픽 버전 가져오기
+        int offset = (currentVersion - 1) * 4;
 
         return chatMessageRepository
                 .findByBookClubAndMessageTypeOrderByCreatedTimeAsc(bookClub, MessageType.SUBTOPIC)
                 .stream()
+                .skip(offset) // 이전 버전 소주제는 스킵
                 .filter(msg -> msg.getSubtopicOrder() != null && msg.getSubtopicOrder() == order)
                 .map(ChatMessage::getContent)
                 .findFirst();
