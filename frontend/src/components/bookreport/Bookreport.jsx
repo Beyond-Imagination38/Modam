@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import * as S from "./Bookreport.style";
 import Header from "../common/Header";
 import { API_URLS } from "../../consts";
-import { fetchApi } from "../../utils";
 
 export function Bookreport() {
   const { clubId } = useParams();
-  const userId = localStorage.getItem("userId"); 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.id;
   const [input, setInput] = useState("");
   const navigate = useNavigate();
 
@@ -22,7 +21,7 @@ export function Bookreport() {
     console.log("서버로 전송할 데이터:", payload);
 
     try {
-      const response = await fetch("http://localhost:8080/reading-notes", {
+      const response = await fetch(API_URLS.bookreport, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +41,7 @@ export function Bookreport() {
       alert(resultText);
       console.log("서버 응답:", resultText);
 
-      navigate(`/detail/${clubId}`);
+      navigate(`/main`);
     } catch (error) {
       console.error("제출 중 오류 발생:", error);
       alert("제출에 실패했습니다. 다시 시도해주세요.");

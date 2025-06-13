@@ -37,8 +37,8 @@ export const TabHeader = styled.div`
 `;
 
 export const TabButton = styled.button`
-  background: ${(props) => (props.active ? '#5b21b6' : 'transparent')};
-  color: ${(props) => (props.active ? '#ffffff' : '#374151')};
+  background: ${(props) => (props.$active ? '#5b21b6' : 'transparent')};
+  color: ${(props) => (props.$active ? '#ffffff' : '#374151')};
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
