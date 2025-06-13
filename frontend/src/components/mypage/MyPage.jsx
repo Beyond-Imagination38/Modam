@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Header from "../common/Header";
 import * as S from "./MyPage.style";
+import { API_URLS } from "../../consts";
 
 export function MyPage() {
   const [email, setEmail] = useState("");
@@ -20,7 +21,7 @@ export function MyPage() {
       return;
     }
 
-    fetch(`http://localhost:8080/user/${userId}`, {
+    fetch(API_URLS.getUserInfo(userId), {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -52,7 +53,7 @@ export function MyPage() {
 
     try {
       // 닉네임(이름) 서버에 반영
-      const nicknameRes = await fetch(`http://localhost:8080/user/${userId}/name`, {
+      const nicknameRes = await fetch(API_URLS.updateUserName(userId), {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +77,7 @@ export function MyPage() {
           return;
         }
 
-        const pwRes = await fetch(`http://localhost:8080/user/${userId}/password`, {
+        const pwRes = await fetch(API_URLS.updateUserPassword(userId), {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

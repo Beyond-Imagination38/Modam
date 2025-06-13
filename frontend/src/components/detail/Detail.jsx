@@ -3,12 +3,12 @@ import * as S from "./Detail.style";
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { API_URLS } from "../../consts";
-import { fetchApi } from "../../utils";
 
 export function Detail() {
   const { clubId } = useParams();
   const [data, setData] = useState(null); 
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -19,7 +19,7 @@ export function Detail() {
     if (!confirmed) return;
 
     try {
-      const response = await fetch(`http://localhost:8080/api/bookclubs/${clubId}/join?userId=${userId}`, {
+      const response = await fetch(API_URLS.joinBookclub(clubId, userId), {
         method: "POST",
       });
 
@@ -54,7 +54,7 @@ export function Detail() {
     const getData = async () => {
 
       try {
-        const response = await fetch(`http://localhost:8080/api/bookclubs/${clubId}/detail?userId=${userId}`, {
+        const response = await fetch(API_URLS.bookclubDetail(clubId, userId), {
           method: "GET",
         });
         
@@ -93,10 +93,6 @@ export function Detail() {
           <S.ButtonContainer>
             {data.status === "OPEN" && (
               <>
-                {console.log("현재 로그인한 사용자 ID:", Number(userId))}
-                {console.log("이 모임을 만든 사용자 ID:", Number(data.userId))}
-                {console.log("내가 만든 모임인가?", Number(data.userId) === Number(userId))}
-
                 {data.userId === userId ? (
                   // 내가 만든 모임일 경우
                   <Link to={`/Chat/${data.clubId}`}>

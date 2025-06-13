@@ -33,7 +33,7 @@ export function Chat() {
   const [stompClient, setStompClient] = useState(null);
   const [memoContent, setMemoContent] = useState("");
   const [isMemoVisible, setIsMemoVisible] = useState(false);
-  const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);//soo:demo02-2
+  const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);
   const { clubId } = useParams();
 
   const token = localStorage.getItem("token") || "";

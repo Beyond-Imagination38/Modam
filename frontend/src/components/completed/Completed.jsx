@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import * as S from "./Completed.style";
 import Header from "../common/Header";
 import { useParams } from "react-router-dom";
+import { API_URLS } from "../../consts";
 
 export function Completed() {
   const [activeTab, setActiveTab] = useState("요약된 내용");
@@ -14,9 +15,7 @@ export function Completed() {
     useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch(
-          `http://localhost:8080/api/bookclubs/${clubId}/completed-detail`
-        );
+        const response = await fetch(API_URLS.completedDetail(clubId));
         if (!response.ok) {
           throw new Error("네트워크 응답에 문제가 있습니다");
         }

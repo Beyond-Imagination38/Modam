@@ -3,6 +3,7 @@ import Header from "../common/Header";
 import * as S from "./Register.style";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URLS } from "../../consts";
+import { fetchApi } from "../../utils";
 
 export function Register() {
   const navigate = useNavigate();
@@ -32,15 +33,10 @@ export function Register() {
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/bookclubs`, {
+      const { status, data } = await fetchApi(API_URLS.bookclubs, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(postData),
       });
-
-      const { status, data } = response;
 
       if (status >= 200 && status < 300) {
         alert("모임이 등록되었습니다.");

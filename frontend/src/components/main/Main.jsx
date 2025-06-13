@@ -18,21 +18,28 @@ export function Main() {
   };
 
   useEffect(() => {
-    const fetchClubs = async () => {
-      try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        const userId = user?.id;
+  const fetchClubs = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user?.id;
 
-        let url = "";
-        if (activeCategory === "PENDING") {
-          url = API_URLS.allBookclubs;
-        } else if (activeCategory === "COMPLETED") {
-          if (!userId) throw new Error("로그인된 사용자 정보를 찾을 수 없습니다.");
-          url = API_URLS.myCompleted(userId);
-        } else if (activeCategory === "ONGOING") {
-          if (!userId) throw new Error("로그인된 사용자 정보를 찾을 수 없습니다.");
-          url = API_URLS.myOngoing(userId);
+      let url = "";
+
+      if (activeCategory === "PENDING") {
+        url = API_URLS.allBookclubs;
+      } else if (activeCategory === "COMPLETED") {
+        if (!userId) {
+          alert("로그인 후 이용할 수 있는 메뉴입니다.");
+          return;
         }
+        url = API_URLS.myCompleted(userId);
+      } else if (activeCategory === "ONGOING") {
+        if (!userId) {
+          alert("로그인 후 이용할 수 있는 메뉴입니다.");
+          return;
+        }
+        url = API_URLS.myOngoing(userId);
+      }
 
         const { status, data } = await fetchApi(url, { method: "GET" });
 
@@ -69,7 +76,7 @@ export function Main() {
   );
   
   const currentItems = filteredItems;
-  
+
   return (
     <S.Container>
       <Header />
@@ -138,12 +145,19 @@ export function Main() {
           <S.ProductGrid>
             {currentItems.length > 0 ? (
               currentItems.map(
-                ({ representativeImage, title, time, clubId, category }, index) => {
+                ({ representativeImage, title, time, clubId }, index) => {
                   return (
-                    <Link
-                      to={`/detail/${clubId}`}
+                    <div
                       key={clubId}
-                      style={{ textDecoration: "none", color: "inherit" }}
+                      style={{ textDecoration: "none", color: "inherit", cursor: "pointer" }}
+                      onClick={() => {
+                        const user = JSON.parse(localStorage.getItem("user"));
+                        if (!user) {
+                          alert("로그인 후 이용할 수 있습니다.");
+                          return;
+                        }
+                        navigate(`/detail/${clubId}`);
+                      }}
                     >
                       <S.ProductCard>
                         <S.ImageContainer>
@@ -155,7 +169,7 @@ export function Main() {
                         <S.ProductTitle>{title}</S.ProductTitle>
                         <S.ProductTime>{time}</S.ProductTime>
                       </S.ProductCard>
-                    </Link>
+                    </div>
                   );
                 }
               )

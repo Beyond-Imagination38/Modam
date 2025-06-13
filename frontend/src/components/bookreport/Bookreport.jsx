@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import * as S from "./Bookreport.style";
 import Header from "../common/Header";
 import { API_URLS } from "../../consts";
-import { fetchApi } from "../../utils";
 
 export function Bookreport() {
   const { clubId } = useParams();
@@ -23,7 +21,7 @@ export function Bookreport() {
     console.log("서버로 전송할 데이터:", payload);
 
     try {
-      const response = await fetch("http://localhost:8080/reading-notes", {
+      const response = await fetch(API_URLS.bookreport, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
