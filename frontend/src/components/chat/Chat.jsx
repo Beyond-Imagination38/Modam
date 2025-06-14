@@ -35,13 +35,16 @@ export function Chat() {
   const [isMemoVisible, setIsMemoVisible] = useState(false);
   const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);
   const { clubId } = useParams();
-
+  
   const token = localStorage.getItem("token") || "";
   
   useEffect(() => {
     const socket = new SockJS("http://localhost:8080/chat"); 
     const client = new Client({
       webSocketFactory: () => socket,
+       connectHeaders: {
+        Authorization: `Bearer ${token}`  
+      },
       reconnectDelay: 5000, 
       onConnect: () => {
         console.log("WebSocket 연결 성공"); 
@@ -104,6 +107,7 @@ export function Chat() {
         userName: username, 
         content: message,
       };
+      console.log("🪪 메시지 전송 시 JWT 토큰:", token);
 
       stompClient.publish({
         destination: `/app/chat/${clubId}`, 
@@ -128,6 +132,7 @@ export function Chat() {
 
   //메모 저장
   const saveMemo = async () => {
+     console.log("💾 메모 저장 요청 시 JWT 토큰:", token);
     try {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
         method: "POST",

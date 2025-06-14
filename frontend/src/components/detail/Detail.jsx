@@ -39,11 +39,7 @@ export function Detail() {
         currentParticipants: prevData.currentParticipants + 1,
       }));
       alert(responseText);
-
-      setData((prevData) => ({
-        ...prevData,
-        currentParticipants: prevData.currentParticipants + 1,
-      }));
+      
     } catch (error) {
       console.error("모임 신청 중 오류 발생:", error);
       alert("모임 신청에 실패했습니다.");

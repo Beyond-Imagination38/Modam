@@ -106,7 +106,7 @@ export function Main() {
                 setActiveCategory("ONGOING");
               }}
             >
-              진행 중인 독서모임
+              진행 중인 내 독서모임
             </S.MenuItem>
               <S.SideMenuFooter>
                 <S.Button
