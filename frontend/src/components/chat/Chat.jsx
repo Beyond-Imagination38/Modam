@@ -49,6 +49,22 @@ export function Chat() {
       onConnect: () => {
         console.log("WebSocket 연결 성공"); 
         window.stompClient = client; 
+
+        client.publish({
+          destination: `/app/chat/${clubId}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messageType: "ENTER",
+            clubId: parseInt(clubId),
+            userId,
+            userName: username,
+            content: `${username}님이 입장하셨습니다.`,
+          }),
+        });
+
         client.subscribe(`/topic/chat/${clubId}`, async (message) => {
           const receivedMessage = JSON.parse(message.body);
 
@@ -107,7 +123,6 @@ export function Chat() {
         userName: username, 
         content: message,
       };
-      console.log("🪪 메시지 전송 시 JWT 토큰:", token);
 
       stompClient.publish({
         destination: `/app/chat/${clubId}`, 
@@ -132,7 +147,6 @@ export function Chat() {
 
   //메모 저장
   const saveMemo = async () => {
-     console.log("💾 메모 저장 요청 시 JWT 토큰:", token);
     try {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
         method: "POST",
