@@ -96,16 +96,17 @@ export function Detail() {
                   </Link>
                 ) : (
                   // 내가 만든 모임이 아닐 경우
+                  <>
                   <S.Button as="button" $primary onClick={handleJoinClub}>
                     모임 신청
                   </S.Button>
-                  
-                )}
+                  <Link to={`/Chat/${data.clubId}`}>
+                    <S.Button $primary>모임 시작</S.Button>
+                  </Link>
+                </>
+              )}
                 <Link to={`/Bookreport/${data.clubId}`}>
                   <S.Button>독후감 작성</S.Button>
-                </Link>
-                <Link to={`/Chat/${data.clubId}`}>
-                  <S.Button $primary>모임 시작</S.Button>
                 </Link>
               </>
             )}
