@@ -3,6 +3,7 @@ import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import * as S from "./Chat.style";
 import { Link, useParams } from "react-router-dom"; 
+import { API_URLS } from "../../consts";
 
 const formatSummary = (text) => {
   if (!text) return [];
@@ -35,6 +36,7 @@ export function Chat() {
   const [isMemoVisible, setIsMemoVisible] = useState(false);
   const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);
   const { clubId } = useParams();
+  const [data, setData] = useState(null);
   
   const token = localStorage.getItem("token") || "";
   
@@ -49,6 +51,22 @@ export function Chat() {
       onConnect: () => {
         console.log("WebSocket 연결 성공"); 
         window.stompClient = client; 
+
+        client.publish({
+          destination: `/app/chat/${clubId}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messageType: "ENTER",
+            clubId: parseInt(clubId),
+            userId,
+            userName: username,
+            content: `${username}님이 입장하셨습니다.`,
+          }),
+        });
+
         client.subscribe(`/topic/chat/${clubId}`, async (message) => {
           const receivedMessage = JSON.parse(message.body);
 
@@ -80,6 +98,23 @@ export function Chat() {
       },
     });
 
+      const fetchClubDetail = async () => {
+      try {
+        const response = await fetch(API_URLS.bookclubDetail(clubId, userId), {
+          method: "GET",
+         });
+
+        if (!response.ok) throw new Error("모임 정보 로드 실패");
+
+        const result = await response.json();
+        setData(result); // 모임 정보 저장
+
+      } catch (error) {
+        console.error("모임 상세 정보 불러오기 실패:", error);
+      }
+    };
+
+    fetchClubDetail();
     client.activate(); // 연결 시작
     setStompClient(client);
     loadMemo(); 
@@ -107,7 +142,6 @@ export function Chat() {
         userName: username, 
         content: message,
       };
-      console.log("🪪 메시지 전송 시 JWT 토큰:", token);
 
       stompClient.publish({
         destination: `/app/chat/${clubId}`, 
@@ -132,7 +166,6 @@ export function Chat() {
 
   //메모 저장
   const saveMemo = async () => {
-     console.log("💾 메모 저장 요청 시 JWT 토큰:", token);
     try {
       const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
         method: "POST",
@@ -195,7 +228,7 @@ export function Chat() {
       <S.Container>
         <S.ChatSection>
           <S.Header>
-            <S.Title>『1984』 - 조지 오웰</S.Title>
+            <S.Title>{data?.bookTitle || "독서모임"}</S.Title>
             <S.RightSection>
               <S.NoteText onClick={toggleMemo}>
                 {isMemoVisible ? "메모 닫기" : "메모 열기"}
