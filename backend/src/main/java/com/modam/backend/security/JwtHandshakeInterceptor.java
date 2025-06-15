@@ -25,6 +25,13 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
                                    WebSocketHandler wsHandler,
                                    Map<String, Object> attributes) {
 
+        // 1. SockJS 초기 요청은 GET이며 Authorization 없음 → 무조건 허용
+        if (request.getMethod().name().equals("GET") &&
+                !request.getHeaders().containsKey("Authorization")) {
+            return true;
+        }
+
+        // 2. 일반 STOMP 연결 요청 → JWT 검증
         List<String> authHeaders = request.getHeaders().get("Authorization");
         if (authHeaders != null && !authHeaders.isEmpty()) {
             String token = authHeaders.get(0).replace("Bearer ", "");
