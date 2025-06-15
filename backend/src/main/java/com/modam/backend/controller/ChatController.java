@@ -6,12 +6,15 @@ import com.modam.backend.handler.FreeDiscussionManager;
 import com.modam.backend.handler.SubtopicDiscussionManager;
 import com.modam.backend.model.BookClub;
 import com.modam.backend.model.MessageType;
+import com.modam.backend.repository.UserRepository;
 import com.modam.backend.service.BookClubService;
 import com.modam.backend.service.ChatService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +24,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/chat")
 public class ChatController {
+
+    private final UserRepository userRepository;
 
     private final ChatService chatService;
     private final SimpMessagingTemplate messagingTemplate;
@@ -32,13 +37,20 @@ public class ChatController {
 
 
     public ChatController
-            (ChatService chatService, SimpMessagingTemplate messagingTemplate, BookClubService bookClubService, SubtopicDiscussionManager subtopicDiscussionManager, FreeDiscussionManager freeDiscussionManager) {
+            (ChatService chatService,
+             SimpMessagingTemplate messagingTemplate,
+             BookClubService bookClubService,
+             SubtopicDiscussionManager subtopicDiscussionManager,
+             FreeDiscussionManager freeDiscussionManager,
+             UserRepository userRepository) {
         this.chatService = chatService;
         this.messagingTemplate = messagingTemplate;
         this.bookClubService = bookClubService;
         this.subtopicDiscussionManager = subtopicDiscussionManager;
 
         this.freeDiscussionManager = freeDiscussionManager;//test02용 demo02
+
+        this.userRepository = userRepository;
     }
 
     // soo:요약문+상태 - 요약문 저장 및 상태 변경 API 엔드포인트 추가
@@ -52,6 +64,22 @@ public class ChatController {
         return ResponseEntity.ok("요약문 저장 및 상태 변경 완료");
     }*/
     //요약문: 수정
+
+    //인증된 사용자만 메시지 전송: 0613
+    @MessageMapping("/chat.send")
+    @SendTo("/topic/public")
+    public ChatMessageDto sendMessage(ChatMessageDto messageDto, SimpMessageHeaderAccessor accessor) {
+        String userIdStr = (String) accessor.getSessionAttributes().get("userId");
+        if (userIdStr == null) throw new RuntimeException("인증되지 않은 사용자입니다.");
+
+        int userId = Integer.parseInt(userIdStr);
+        messageDto.setUserId(userId);  // 유저 ID를 DTO에 주입
+
+        return chatService.saveChatMessage(messageDto.getClubId(), messageDto);
+    }
+
+
+
     @PostMapping("/{clubId}/summary")
     @Operation(summary = "요약 저장", description = "주제별 요약을 저장하고, 모임 상태를 COMPLETED로 변경합니다.")
     public ResponseEntity<String> saveSummary(
