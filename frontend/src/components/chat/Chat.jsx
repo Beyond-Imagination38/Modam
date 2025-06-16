@@ -25,7 +25,6 @@ const formatSummary = (text) => {
   return formattedParagraphs;
 };
 
-
 export function Chat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState(""); 
