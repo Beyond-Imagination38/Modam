@@ -25,7 +25,6 @@ const formatSummary = (text) => {
   return formattedParagraphs;
 };
 
-
 export function Chat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState(""); 
@@ -41,7 +40,7 @@ export function Chat() {
   const token = localStorage.getItem("token") || "";
   
   useEffect(() => {
-    const socket = new SockJS("http://localhost:8080/chat"); 
+    const socket = new SockJS("http://3.15.72.236:8080/chat"); 
     const client = new Client({
       webSocketFactory: () => socket,
        connectHeaders: {
@@ -167,7 +166,7 @@ export function Chat() {
   //메모 저장
   const saveMemo = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
+      const response = await fetch(`http://3.15.72.236:8080/api/memo/${clubId}/${userId}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -190,7 +189,7 @@ export function Chat() {
   //메모 조회
   const loadMemo = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
+      const response = await fetch(`http://3.15.72.236:8080/api/memo/${clubId}/${userId}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -210,7 +209,7 @@ export function Chat() {
   //메모 확정
   const finalizeMemo = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}/finalize`, {
+      const response = await fetch(`http://3.15.72.236:8080/api/memo/${clubId}/${userId}/finalize`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

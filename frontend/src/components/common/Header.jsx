@@ -12,9 +12,7 @@ export default function Header() {
 
   return (
     <S.Header>
-      <Link to="/main">
         <S.Logo>Modam</S.Logo>
-      </Link>
       <S.Nav>
         <Link to="/mypage">
           <S.Button>마이페이지</S.Button>
