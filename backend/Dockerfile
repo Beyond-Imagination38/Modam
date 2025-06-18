@@ -13,7 +13,8 @@ COPY gradle ./gradle
 COPY build.gradle settings.gradle ./
 
 # 캐시용 빌드
-RUN chmod +x gradlew && ./gradlew build --stacktrace || true
+RUN chmod +x gradlew && ./gradlew clean build -x test
+#RUN chmod +x gradlew && ./gradlew build --stacktrace || true
 
 # 앱 빌드
 #RUN ./gradlew build --no-daemon
@@ -22,10 +23,12 @@ RUN chmod +x gradlew && ./gradlew build --stacktrace || true
 EXPOSE 8080
 
 # 실행할 JAR 복사
-#CMD ["java", "-jar", "build/libs/Modam-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "build/libs/Modam-0.0.1-SNAPSHOT.jar"]
+
 
 # JAR 실행
 #ENTRYPOINT ["java", "-jar", "app.jar"]
 
 #env 설정
 ENV SPRING_PROFILES_ACTIVE=2nd
+

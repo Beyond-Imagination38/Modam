@@ -12,10 +12,10 @@ services:
       - "8080:8080"
 
     #실시간 반영 설정 추가
-    volumes:
-      - ./backend:/app
-    working_dir: /app
-    command: ./gradlew bootRun
+#    volumes:
+#      - ./backend:/app
+#    working_dir: /app
+#    command: ./gradlew bootRun
 
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
@@ -44,24 +44,6 @@ services:
     networks:
       - modam-net
 
-  ##frontend
-  fe-modam:
-    build:
-      context: ./frontend
-    container_name: react-client
-    ports:
-      - "3000:3000"
-    networks:
-      - modam-net
-    depends_on:
-      - be-modam
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    command: yarn start
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-
   ##ai-server
   ai-modam:
     build:
@@ -74,7 +56,7 @@ services:
     volumes:
       - ./ai-server:/app:delegated           # 코드 수정 시 즉시 반영(해제)
     working_dir: /app              # 작업 디렉토리 명시
-    command: python app.py         # 실행 명령 (Flask 직접 실행)
+    command: flask run --host=0.0.0.0 --port=5000         # 수정!!
     environment:
       - SPRING_SERVER_URL=http://be-modam:8080
     networks:
