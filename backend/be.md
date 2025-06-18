@@ -2,22 +2,21 @@
 
 ```bash
 backend/
-├── .dockerignore                 # Docker 빌드시 제외할 파일 목록
-├── .gitattributes                # Git 속성 설정 파일
-├── .gitignore                    # Git에서 추적 제외할 파일 목록
-├── be.md                         # 문서 정리용 마크다운
-├── build.gradle                  # Gradle 빌드 설정 파일
-├── Dockerfile                    # Docker 컨테이너 환경 설정
-├── gradlew                       # Unix/macOS용 Gradle Wrapper 실행 스크립트
-├── gradlew.bat                   # Windows용 Gradle Wrapper 실행 스크립트
-├── HELP.md                       # Spring 프로젝트 기본 제공 도움말
-├── settings.gradle               # Gradle 프로젝트 설정
-├── tree.txt                      # 트리 구조 출력 저장 파일
+├── .dockerignore                 
+├── .gitattributes                
+├── .gitignore                    
+├── be.md                         
+├── build.gradle                  
+├── Dockerfile                    
+├── gradlew                       
+├── gradlew.bat                   
+├── HELP.md                       
+├── settings.gradle               
 
-├── .gradle/                      # 🔧 Gradle 빌드 캐시 (Git에 포함 X)
+├── .gradle/                      # Gradle 빌드 캐시 (Git에 포함 X)
 │   └── ...
 
-├── build/                        # 🔧 빌드 결과물 디렉토리 (Git에 포함 X)
+├── build/                        # 빌드 결과물 디렉토리 (Git에 포함 X)
 │   └── ...
 
 ├── gradle/
