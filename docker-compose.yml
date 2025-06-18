@@ -10,6 +10,8 @@ services:
     container_name: spring-server
     ports:
       - "8080:8080"
+    env_file:
+      - ./.env
 
     #실시간 반영 설정 추가
 #    volumes:
@@ -39,6 +41,8 @@ services:
 
     ports:
       - "3307:3306" # 호스트 3307 → 컨테이너 3306
+    env_file:
+      - ./.env
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
