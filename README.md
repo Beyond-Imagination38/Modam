@@ -1,304 +1,94 @@
-Data 볼륨에 대한 폴더 경로의 목록입니다.
-볼륨 일련 번호가 00000018 8AD3:DFC8입니다.
-E:\GRAD_PROJECT\FINAL_GRAD_PROJECT\MODAM\BACKEND
-│  .dockerignore
-│  .gitattributes
-│  .gitignore
-│  be.md
-│  build.gradle
-│  Dockerfile
-│  gradlew
-│  gradlew.bat
-│  HELP.md
-│  settings.gradle
-│  tree.txt
-│  
-├─.gradle
-│  │  file-system.probe
-│  │  
-│  ├─8.11.1
-│  │  │  gc.properties
-│  │  │  
-│  │  ├─checksums
-│  │  │      checksums.lock
-│  │  │      md5-checksums.bin
-│  │  │      sha1-checksums.bin
-│  │  │      
-│  │  ├─executionHistory
-│  │  │      executionHistory.bin
-│  │  │      executionHistory.lock
-│  │  │      
-│  │  ├─expanded
-│  │  ├─fileChanges
-│  │  │      last-build.bin
-│  │  │      
-│  │  ├─fileHashes
-│  │  │      fileHashes.bin
-│  │  │      fileHashes.lock
-│  │  │      resourceHashesCache.bin
-│  │  │      
-│  │  └─vcsMetadata
-│  ├─8.13
-│  │  │  gc.properties
-│  │  │  
-│  │  ├─checksums
-│  │  │      checksums.lock
-│  │  │      md5-checksums.bin
-│  │  │      sha1-checksums.bin
-│  │  │      
-│  │  ├─executionHistory
-│  │  │      executionHistory.bin
-│  │  │      executionHistory.lock
-│  │  │      
-│  │  ├─expanded
-│  │  ├─fileChanges
-│  │  │      last-build.bin
-│  │  │      
-│  │  ├─fileHashes
-│  │  │      fileHashes.bin
-│  │  │      fileHashes.lock
-│  │  │      resourceHashesCache.bin
-│  │  │      
-│  │  └─vcsMetadata
-│  ├─buildOutputCleanup
-│  │      buildOutputCleanup.lock
-│  │      cache.properties
-│  │      outputFiles.bin
-│  │      
-│  └─vcs-1
-│          gc.properties
-│          
-├─build
-│  │  resolvedMainClassName
-│  │  
-│  ├─classes
-│  │  └─java
-│  │      ├─main
-│  │      │  └─com
-│  │      │      └─modam
-│  │      │          └─backend
-│  │      │              │  ModamApplication.class
-│  │      │              │  
-│  │      │              ├─config
-│  │      │              │      RedisConfig.class
-│  │      │              │      WebSocketConfig.class
-│  │      │              │      
-│  │      │              ├─controller
-│  │      │              │      BookClubController.class
-│  │      │              │      ChatController.class
-│  │      │              │      HomeController.class
-│  │      │              │      MemoController.class
-│  │      │              │      ReadingNoteController.class
-│  │      │              │      UserController.class
-│  │      │              │      
-│  │      │              ├─dto
-│  │      │              │      AITopicRequestDto.class
-│  │      │              │      BookClubCommonDto.class
-│  │      │              │      BookClubCompletedDetailDto.class
-│  │      │              │      BookClubCreateDto.class
-│  │      │              │      BookClubDetailDto.class
-│  │      │              │      BookClubDto.class
-│  │      │              │      BookClubSearchCondition.class
-│  │      │              │      BookClubStatusDto.class
-│  │      │              │      BookDto.class
-│  │      │              │      ChatMessageDto.class
-│  │      │              │      CompletedBookClubDto.class
-│  │      │              │      MemoDto.class
-│  │      │              │      PasswordUpdateDto.class
-│  │      │              │      ReadingNoteDto.class
-│  │      │              │      SummaryCreateDto.class
-│  │      │              │      UserDto.class
-│  │      │              │      UserNameUpdateDto.class
-│  │      │              │      
-│  │      │              ├─handler
-│  │      │              │      FreeDiscussionManager.class
-│  │      │              │      SubtopicDiscussionManager.class
-│  │      │              │      
-│  │      │              ├─model
-│  │      │              │      Book.class
-│  │      │              │      BookClub.class
-│  │      │              │      ChatMessage$ChatMessageBuilder.class
-│  │      │              │      ChatMessage.class
-│  │      │              │      DiscussionTopic$DiscussionTopicBuilder.class
-│  │      │              │      DiscussionTopic.class
-│  │      │              │      Memo.class
-│  │      │              │      MessageType.class
-│  │      │              │      Participant.class
-│  │      │              │      ReadingNote.class
-│  │      │              │      Summary.class
-│  │      │              │      User.class
-│  │      │              │      VoteStatus.class
-│  │      │              │      
-│  │      │              ├─repository
-│  │      │              │      BookClubRepository.class
-│  │      │              │      BookRepository.class
-│  │      │              │      ChatMessageRepository.class
-│  │      │              │      DiscussionTopicRepository.class
-│  │      │              │      MemoRepository.class
-│  │      │              │      ParticipantRepository.class
-│  │      │              │      ReadingNoteRepository.class
-│  │      │              │      SummaryRepository.class
-│  │      │              │      UserRepository.class
-│  │      │              │      
-│  │      │              ├─security
-│  │      │              │      JwtAuthenticationFilter.class
-│  │      │              │      JwtHandshakeInterceptor.class
-│  │      │              │      SecurityConfig.class
-│  │      │              │      SwaggerConfig.class
-│  │      │              │      
-│  │      │              ├─service
-│  │      │              │      BookClubService.class
-│  │      │              │      BookService.class
-│  │      │              │      ChatService.class
-│  │      │              │      MemoService.class
-│  │      │              │      ReadingNoteService.class
-│  │      │              │      UserService.class
-│  │      │              │      
-│  │      │              └─util
-│  │      │                      JwtUtil.class
-│  │      │                      
-│  │      └─test
-│  │          └─com
-│  │              └─modam
-│  │                  └─backend
-│  │                          ModamApplicationTests.class
-│  │                          
-│  ├─generated
-│  │  └─sources
-│  │      ├─annotationProcessor
-│  │      │  └─java
-│  │      │      ├─main
-│  │      │      └─test
-│  │      └─headers
-│  │          └─java
-│  │              ├─main
-│  │              └─test
-│  ├─libs
-│  │      Modam-0.0.1-SNAPSHOT-plain.jar
-│  │      Modam-0.0.1-SNAPSHOT.jar
-│  │      
-│  ├─reports
-│  │  └─problems
-│  │          problems-report.html
-│  │          
-│  ├─resources
-│  │  └─main
-│  │      │  application.properties
-│  │      │  application_2nd.properties
-│  │      │  
-│  │      ├─static
-│  │      └─templates
-│  └─tmp
-│      ├─bootJar
-│      │      MANIFEST.MF
-│      │      
-│      ├─compileJava
-│      │      previous-compilation-data.bin
-│      │      
-│      ├─compileTestJava
-│      │      previous-compilation-data.bin
-│      │      
-│      └─jar
-│              MANIFEST.MF
-│              
-├─gradle
-│  └─wrapper
-│          gradle-wrapper.jar
-│          gradle-wrapper.properties
-│          
-└─src
-├─main
-│  ├─java
-│  │  └─com
-│  │      └─modam
-│  │          └─backend
-│  │              │  ModamApplication.java
-│  │              │  
-│  │              ├─config
-│  │              │      RedisConfig.java
-│  │              │      WebSocketConfig.java
-│  │              │      
-│  │              ├─controller
-│  │              │      BookClubController.java
-│  │              │      ChatController.java
-│  │              │      HomeController.java
-│  │              │      MemoController.java
-│  │              │      ReadingNoteController.java
-│  │              │      UserController.java
-│  │              │      
-│  │              ├─dto
-│  │              │      AITopicRequestDto.java
-│  │              │      BookClubCommonDto.java
-│  │              │      BookClubCompletedDetailDto.java
-│  │              │      BookClubCreateDto.java
-│  │              │      BookClubDetailDto.java
-│  │              │      BookClubDto.java
-│  │              │      BookClubSearchCondition.java
-│  │              │      BookClubStatusDto.java
-│  │              │      BookDto.java
-│  │              │      ChatMessageDto.java
-│  │              │      CompletedBookClubDto.java
-│  │              │      MemoDto.java
-│  │              │      PasswordUpdateDto.java
-│  │              │      ReadingNoteDto.java
-│  │              │      SummaryCreateDto.java
-│  │              │      UserDto.java
-│  │              │      UserNameUpdateDto.java
-│  │              │      
-│  │              ├─handler
-│  │              │      FreeDiscussionManager.java
-│  │              │      SubtopicDiscussionManager.java
-│  │              │      
-│  │              ├─model
-│  │              │      Book.java
-│  │              │      BookClub.java
-│  │              │      ChatMessage.java
-│  │              │      DiscussionTopic.java
-│  │              │      Memo.java
-│  │              │      MessageType.java
-│  │              │      Participant.java
-│  │              │      ReadingNote.java
-│  │              │      Summary.java
-│  │              │      User.java
-│  │              │      VoteStatus.java
-│  │              │      
-│  │              ├─repository
-│  │              │      BookClubRepository.java
-│  │              │      BookRepository.java
-│  │              │      ChatMessageRepository.java
-│  │              │      DiscussionTopicRepository.java
-│  │              │      MemoRepository.java
-│  │              │      ParticipantRepository.java
-│  │              │      ReadingNoteRepository.java
-│  │              │      SummaryRepository.java
-│  │              │      UserRepository.java
-│  │              │      
-│  │              ├─security
-│  │              │      JwtAuthenticationFilter.java
-│  │              │      JwtHandshakeInterceptor.java
-│  │              │      SecurityConfig.java
-│  │              │      SwaggerConfig.java
-│  │              │      
-│  │              ├─service
-│  │              │      BookClubService.java
-│  │              │      BookService.java
-│  │              │      ChatService.java
-│  │              │      MemoService.java
-│  │              │      ReadingNoteService.java
-│  │              │      UserService.java
-│  │              │      
-│  │              └─util
-│  │                      JwtUtil.java
-│  │                      
-│  └─resources
-│      │  application.properties
-│      │  
-│      ├─static
-│      └─templates
-└─test
-└─java
-└─com
-└─modam
-└─backend
-ModamApplicationTests.java
-                            
+## ⚙️ 개발환경 설정
+
+### ✅ 사전 준비 사항
+
+- Python 3.10 이상  
+- pip 23.x 이상  
+- Docker, Docker Compose 설치  
+- VSCode 설치 (권장)
+
+---
+
+### 🖥️ 프로젝트 클론
+
+```bash
+git clone https://github.com/your-org/modam-project.git
+cd modam-project
+```
+
+### AI 서버 (Flask) 설정
+1. 가상환경 설정
+
+```bash
+python -m venv venv
+.\venv\Scripts\activate       # (Windows)
+source venv/bin/activate      # (macOS / Linux)
+```
+
+2. 환경변수 설정
+
+modam-project/ai-server 경로에 .env 파일 생성
+
+아래 형식으로 작성
+
+ini
+
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+SPRING_SERVER_URL=http://localhost:8080
+
+3. 패키지 설치
+
+```bash
+pip install -r requirements.txt
+```
+
+4. 실행
+
+```bash
+python app.py
+```
+
+### 백엔드 (Spring Boot) 설정
+
+1. 환경 변수 설정
+
+modam-project/ 루트 디렉토리에 .env 파일 생성
+
+아래 형식에 맞춰 작성
+
+ini
+
+MYSQL_ROOT_PASSWORD=0000
+SPRING_DATASOURCE_URL=jdbc:mysql://db-modam:3306/modam_db?serverTimezone=Asia/Seoul
+SPRING_DATASOURCE_USERNAME=root
+SPRING_DATASOURCE_PASSWORD=0000
+
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRATION=86400000
+
+AI_SERVER_URL=http://localhost:5000
+WEBSOCKET_ALLOWED_ORIGIN=http://localhost:3000
+2. 실행 (Docker 기반)
+
+```bash
+docker compose up --build
+```
+
+실행 후 다음 경로에서 확인 가능:
+
+백엔드 API: http://localhost:8080
+
+Flask AI 서버: http://localhost:5000
+
+DB: localhost:3307 (내부 포트는 3306)
+
+### 🗂️ 폴더 구조 요약
+```bash
+
+modam-project/
+├── backend/         # Spring Boot 서버
+├── ai-server/       # Flask AI 서버
+├── frontend/        # React 프론트엔드 (선택)
+├── docker-compose.yml
+└── .env             # 환경변수 파일
+```
