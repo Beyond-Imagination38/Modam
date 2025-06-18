@@ -38,7 +38,7 @@ python app.py
 ### 백엔드 (Spring Boot) 설정
 
 1. 환경 변수 설정
-modam-project 루트에 .env 파일을 생성한 후, 아래 형식에 맞춰 작성합니다.
+modam-project 루트에 .env 파일을 생성한 후, 아래 형식에 맞춰 작성합니다. <br>
 .env 민감 정보는 개인 메일로 교수님께 전달해드렸습니다.
 
 ```ini
@@ -87,9 +87,9 @@ cd modam
 docker compose up --build
 ```
 
-실행 후 다음 경로에서 확인 가능:
-백엔드 API: http://localhost:8080
-Flask AI 서버: http://localhost:5000
+실행 후 다음 경로에서 확인 가능:<br>
+백엔드 API: http://localhost:8080 <br>
+Flask AI 서버: http://localhost:5000 <br>
 DB: localhost:3307 (내부 포트는 3306)
 
 ### 🗂️ 폴더 구조 요약
