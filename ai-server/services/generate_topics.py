@@ -6,9 +6,12 @@ import re
 import numpy as np
 from dotenv import load_dotenv
 from flask import request, jsonify
-from langchain.vectorstores import Chroma
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.chat_models import ChatOpenAI
+
+from langchain_chroma import Chroma  # soo:0618
+from langchain_openai import ChatOpenAI  # soo:0618
+
+#from langchain.vectorstores import Chroma # soo:0618
+#from langchain.embeddings.openai import OpenAIEmbeddings # soo:0618
 #from langchain.chains import RetrievalQA
 from langchain.embeddings.base import Embeddings
 from sentence_transformers import SentenceTransformer
@@ -38,7 +41,7 @@ class RAGBookEngine:
         embedding = HuggingFaceEmbeddings()
         self.db = load_chroma(self.book_id)
         self.retriever = self.db.as_retriever()
-        self.llm = ChatOpenAI(model_name="gpt-4", api_key=self.api_key)
+        self.llm = ChatOpenAI(model="gpt-4", api_key=self.api_key)  # soo:0618 model_name → model로 변경
 
     def generate_topics(self, user_responses):
         # 프롬프트 구성
@@ -63,7 +66,7 @@ class RAGBookEngine:
         user_query = " ".join(user_responses)  # 쿼리로 감상문 전체 사용
         
         # 감상문 기반으로 책 내용 검색
-        context_docs = self.retriever.get_relevant_documents(user_query)
+        context_docs = self.retriever.invoke(user_query) # soo:0618
         context_text = "\n".join(doc.page_content for doc in context_docs)
 
         prompt = (
