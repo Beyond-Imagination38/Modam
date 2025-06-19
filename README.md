@@ -262,7 +262,24 @@ cd modam
 docker compose up --build
 ```
 
+### 프론트엔드 (React) 설정
+
+1. 의존성 설치
+
+```bash
+cd frontend
+npm install
+npm install @stomp/stompjs sockjs-client
+```
+
+2. 실행
+```bash
+npm start
+```
+
+
 실행 후 다음 경로에서 확인 가능:<br>
+프론트엔드 서버: http://localhost:3000 <br>
 백엔드 API: http://localhost:8080 <br>
 Flask AI 서버: http://localhost:5000 <br>
 DB: localhost:3307 (내부 포트는 3306)
