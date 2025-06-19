@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import * as S from "./Login.style";
 import { API_URLS } from "../../consts";
-import { fetchApi } from "../../utils";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -11,7 +10,7 @@ export function Login() {
 
   const onClickConfirmButton = async () => {
     try {
-      const response = await fetchApi(`${API_URLS.user}/login`, {
+      const response = await fetch(`${API_URLS.user}/login`, {
         method: "POST",
         body: JSON.stringify({ email, pw }),
       });
