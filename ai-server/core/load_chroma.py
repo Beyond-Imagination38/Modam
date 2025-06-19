@@ -3,7 +3,7 @@
 
 import os
 from langchain_chroma import Chroma  # soo:0618 최신 방식
-from .langchain_huggingface import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 def load_chroma(book_id, chroma_root="chroma_store"):
     """
