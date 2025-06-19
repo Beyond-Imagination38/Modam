@@ -26,6 +26,7 @@ frontend
 │   │   └── index.js          
 │   ├── App.jsx                # 전체 앱 구조 및 라우팅 설정
 │   └── index.jsx             
-├── package.json               
+├── package.json
+├── vercel.json               
 └── README.md 
 ```
