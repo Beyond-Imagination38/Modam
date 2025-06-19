@@ -33,7 +33,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat")
+        registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns(allowedOrigin)  // React 서버 포트 허용
                 .addInterceptors(jwtHandshakeInterceptor)// 인터셉터 등록
                 .withSockJS();  // SockJS 활성화: 임시 주석처리 0613
