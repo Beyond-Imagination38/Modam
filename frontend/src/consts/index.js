@@ -1,4 +1,4 @@
-export const COMMON_API_URL = "";
+export const COMMON_API_URL = "/api";
 
 export const API_URLS = {
   user: `${COMMON_API_URL}/user`,
