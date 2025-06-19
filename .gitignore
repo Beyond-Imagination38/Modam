@@ -32,3 +32,4 @@ backend/.gradle/
 #ai-server/core/chroma_store/**/*.pickle
 #!ai-server/core/chroma_store/**/chroma.sqlite3
 
+book_pdf/

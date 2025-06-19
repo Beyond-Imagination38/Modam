@@ -1,17 +1,13 @@
 ```
 📦 ai-server
 ├── 📁 book_pdf # 책 pdf 폴더
-│   ├── 📄 1984.pdf
-│   └── 
 │
 ├── 📁 core # 책 pdf를 ChromaDB에 저장, 로드하는 기능
 │   ├── 📁 chroma_store # 벡터화된 책 DB
-│   │   ├── 📁 book1    # 책 1984 DB(폴더 이름은 예시)
-│   │   └── 📁
 │   ├── 📄 chroma_book.py   # pdf를 chromaDB에 벡터화->저장
 │   ├── 📄 load_chroma.py   # chromaDB에 있는 책을 로드
 │   ├── 📄 test_chroma.py   # chroma_book.py 테스트
-│   └── 📄 test_load_chroma.csv     # load_chroma.py 테스트
+│   └── 📄 test_load_chroma.py     # load_chroma.py 테스트
 │
 ├── 📁 services # 주요 기능 폴더
 │   ├── 📄 __init__.py 
