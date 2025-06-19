@@ -1,6 +1,4 @@
-export const BASE_URL = "http://3.15.72.236:8080";
-
-export const COMMON_API_URL = `${BASE_URL}/api`;
+export const COMMON_API_URL = "/api";
 
 export const API_URLS = {
   user: `${COMMON_API_URL}/user`,
