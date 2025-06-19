@@ -52,6 +52,7 @@ public class SecurityConfig {
                                 "/api/bookclubs",                //독서 모임 메인 페이지
                                 "/api/bookclubs/**",
                                 "/chat/**",
+                                "/ws/**",
                                 "/reading-notes",
                                 "/actuator/health"
                                 //독서 모임 메인 페이지
