@@ -17,7 +17,8 @@ export function Login() {
 
       console.log("로그인 API 응답:", response);
 
-      const { status, data } = response;
+      const data = await response.json();  
+      const status = response.status;
 
       if (response.status === 200 && data?.token && data?.userId) {
         localStorage.setItem("user", JSON.stringify({ id: data.userId }));
