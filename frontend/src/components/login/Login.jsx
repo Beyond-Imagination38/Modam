@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import * as S from "./Login.style";
 import { API_URLS } from "../../consts";
+import { fetchApi } from "../../utils";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -10,17 +11,14 @@ export function Login() {
 
   const onClickConfirmButton = async () => {
     try {
-      const response = await fetch(`${API_URLS.user}/login`, {
+      const response = await fetchApi(`${API_URLS.user}/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ email, pw }),
       });
 
       console.log("로그인 API 응답:", response);
 
-      const data = await response.json();
+      const { status, data } = response;
 
       if (response.status === 200 && data?.token && data?.userId) {
         localStorage.setItem("user", JSON.stringify({ id: data.userId }));
