@@ -8,9 +8,9 @@
       "source": "/p/:path*",
       "destination": "http://3.15.72.236:8080/:path*"
     },
-     {
-      "source": "/ws",
-      "destination": "http://3.15.72.236:8080/chat"
+    {
+      "source": "/ws/:path*",
+      "destination": "http://3.15.72.236:8080/chat/:path*"
     }
   ]
 }
