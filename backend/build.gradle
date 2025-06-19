@@ -84,3 +84,8 @@ tasks.named('test') {
 tasks.withType(Test).configureEach {
 	enabled = false
 }
+
+bootJar {
+	mainClass = 'com.modam.backend.ModamApplication'
+}
+
