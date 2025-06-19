@@ -1,6 +1,7 @@
 package com.modam.backend.security;
 
 import com.modam.backend.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,6 +27,9 @@ public class SecurityConfig {
         this.jwtUtil = jwtUtil;
     }
 
+    @Value("${websocket.allowed.origin}")
+    private String allowedOrigin;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance(); // 평문 비번 그대로 사용
@@ -40,15 +44,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() //permitAll 추가
                         .requestMatchers(
-                                "/swagger-ui/**",              // soo: swagger 예외처리
-                                "/v3/api-docs/**",             // soo: swagger 예외처리
-                                "/swagger-ui.html",             // soo: swagger 예외처리
+                                //"/swagger-ui/**",              // soo: swagger 예외처리
+                                //"/v3/api-docs/**",             // soo: swagger 예외처리
+                                //"/swagger-ui.html",             // soo: swagger 예외처리
                                 "/user/login",
                                 "/user/signup",
                                 "/api/bookclubs",                //독서 모임 메인 페이지
                                 "/api/bookclubs/**",
                                 "/chat/**",
-                                "/reading-notes"
+                                "/reading-notes",
+                                "/actuator/health"
                                 //독서 모임 메인 페이지
                                 //완료된 독서모임 페이지
                                 //
@@ -65,28 +70,12 @@ public class SecurityConfig {
     }
 
 
-    //우선적으로 적용되도록 설정
-/*    @Bean
-    public FilterRegistrationBean<CorsFilter> corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
-        config.setAllowedMethods(List.of("*"));
-        config.setAllowedHeaders(List.of("*"));
-        source.registerCorsConfiguration("/**", config);
-
-        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
-        bean.setOrder(0);
-        return bean;
-    }*/
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
-        config.setAllowedMethods(List.of("*"));
+        config.setAllowedOrigins(List.of(allowedOrigin));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

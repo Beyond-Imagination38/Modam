@@ -3,6 +3,7 @@ import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import * as S from "./Chat.style";
 import { Link, useParams } from "react-router-dom"; 
+import { API_URLS } from "../../consts";
 
 const formatSummary = (text) => {
   if (!text) return [];
@@ -24,7 +25,6 @@ const formatSummary = (text) => {
   return formattedParagraphs;
 };
 
-
 export function Chat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState(""); 
@@ -33,19 +33,39 @@ export function Chat() {
   const [stompClient, setStompClient] = useState(null);
   const [memoContent, setMemoContent] = useState("");
   const [isMemoVisible, setIsMemoVisible] = useState(false);
-  const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);//soo:demo02-2
+  const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);
   const { clubId } = useParams();
-
+  const [data, setData] = useState(null);
+  
   const token = localStorage.getItem("token") || "";
   
   useEffect(() => {
-    const socket = new SockJS("http://localhost:8080/chat"); 
+    const socket = new SockJS("http://3.15.72.236:8080/chat"); 
     const client = new Client({
       webSocketFactory: () => socket,
+       connectHeaders: {
+        Authorization: `Bearer ${token}`  
+      },
       reconnectDelay: 5000, 
       onConnect: () => {
         console.log("WebSocket 연결 성공"); 
         window.stompClient = client; 
+
+        client.publish({
+          destination: `/app/chat/${clubId}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messageType: "ENTER",
+            clubId: parseInt(clubId),
+            userId,
+            userName: username,
+            content: `${username}님이 입장하셨습니다.`,
+          }),
+        });
+
         client.subscribe(`/topic/chat/${clubId}`, async (message) => {
           const receivedMessage = JSON.parse(message.body);
 
@@ -77,9 +97,26 @@ export function Chat() {
       },
     });
 
+      const fetchClubDetail = async () => {
+      try {
+        const response = await fetch(API_URLS.bookclubDetail(clubId, userId), {
+          method: "GET",
+         });
+
+        if (!response.ok) throw new Error("모임 정보 로드 실패");
+
+        const result = await response.json();
+        setData(result); // 모임 정보 저장
+
+      } catch (error) {
+        console.error("모임 상세 정보 불러오기 실패:", error);
+      }
+    };
+
+    fetchClubDetail();
     client.activate(); // 연결 시작
     setStompClient(client);
-    //loadMemo(); 
+    loadMemo(); 
 
     return () => {
       client.deactivate(); // 컴포넌트 언마운트 시 연결 해제
@@ -129,7 +166,7 @@ export function Chat() {
   //메모 저장
   const saveMemo = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
+      const response = await fetch(`http://3.15.72.236:8080/api/memo/${clubId}/${userId}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -150,9 +187,9 @@ export function Chat() {
   };
 
   //메모 조회
-  /*const loadMemo = async () => {
+  const loadMemo = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}`, {
+      const response = await fetch(`http://3.15.72.236:8080/api/memo/${clubId}/${userId}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -166,13 +203,13 @@ export function Chat() {
     } catch (error) {
       console.error("메모 조회 중 오류:", error);
     }
-  };*/
+  };
 
 
   //메모 확정
   const finalizeMemo = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/memo/${clubId}/${userId}/finalize`, {
+      const response = await fetch(`http://3.15.72.236:8080/api/memo/${clubId}/${userId}/finalize`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -190,7 +227,7 @@ export function Chat() {
       <S.Container>
         <S.ChatSection>
           <S.Header>
-            <S.Title>『1984』 - 조지 오웰</S.Title>
+            <S.Title>{data?.bookTitle || "독서모임"}</S.Title>
             <S.RightSection>
               <S.NoteText onClick={toggleMemo}>
                 {isMemoVisible ? "메모 닫기" : "메모 열기"}
@@ -226,17 +263,16 @@ export function Chat() {
           })}
 
           </S.ChatBox>
-          <S.InputContainer>
-        <S.Input
-          type="text"
-          placeholder="여기에 내용을 입력해 주세요."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-        />
-        <S.SendButton onClick={sendMessage}>보내기</S.SendButton>
-      </S.InputContainer>
-
+            <S.InputContainer>
+              <S.Input
+                type="text"
+                placeholder="여기에 내용을 입력해 주세요."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+              />
+              <S.SendButton onClick={sendMessage}>보내기</S.SendButton>
+            </S.InputContainer>
         </S.ChatSection>
 
         {isMemoVisible && (
