@@ -1,4 +1,4 @@
-export const COMMON_API_URL = "http://3.15.72.236:8080";
+export const COMMON_API_URL = "";
 
 export const API_URLS = {
   user: `${COMMON_API_URL}/user`,
@@ -9,12 +9,12 @@ export const API_URLS = {
   bookclubs: `${COMMON_API_URL}/api/bookclubs`,
   myOngoing: (userId) => `${COMMON_API_URL}/api/bookclubs/my/ongoing?userId=${userId}`,
   myCompleted: (userId) => `${COMMON_API_URL}/api/bookclubs/my/completed?userId=${userId}`,
-  allBookclubs: `${COMMON_API_URL}/api/bookclubs/search?sortBy=least`,
+  allBookclubs: `${COMMON_API_URL}/api/bookclubs/search?sortBy=latest`,
   memo: (clubId, userId) => `${COMMON_API_URL}/api/memo/${clubId}/${userId}`,
   finalizeMemo: (clubId, userId) => `${COMMON_API_URL}/api/memo/${clubId}/${userId}/finalize`,
-  bookclubDetail: (clubId, userId) =>`${COMMON_API_URL}/api/bookclubs/${clubId}/detail?userId=${userId}`,
-  joinBookclub: (clubId, userId) =>`${COMMON_API_URL}/api/bookclubs/${clubId}/join?userId=${userId}`,
-  completedDetail: (clubId) =>`${COMMON_API_URL}/api/bookclubs/${clubId}/completed-detail`,
+  bookclubDetail: (clubId, userId) => `${COMMON_API_URL}/api/bookclubs/${clubId}/detail?userId=${userId}`,
+  joinBookclub: (clubId, userId) => `${COMMON_API_URL}/api/bookclubs/${clubId}/join?userId=${userId}`,
+  completedDetail: (clubId) => `${COMMON_API_URL}/api/bookclubs/${clubId}/completed-detail`,
   getUserInfo: (userId) => `${COMMON_API_URL}/user/${userId}`,
   updateUserName: (userId) => `${COMMON_API_URL}/user/${userId}/name`,
   updateUserPassword: (userId) => `${COMMON_API_URL}/user/${userId}/password`,
