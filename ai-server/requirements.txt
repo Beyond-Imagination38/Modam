@@ -5,7 +5,7 @@ langchain==0.3.25
 langchain-core==0.3.65
 langchain-community==0.3.20
 langchain-openai==0.3.24
-#langchain-huggingface==0.0.3
+langchain-huggingface==0.0.3
 langchain-text-splitters==0.3.8
 langchain-chroma==0.2.4
 
