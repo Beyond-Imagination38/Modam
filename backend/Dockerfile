@@ -8,12 +8,13 @@ WORKDIR /app
 
 # 로컬에서 빌드된 JAR 파일만 복사
 #COPY Modam-0.0.1-SNAPSHOT.jar app.jar
-COPY gradlew .
-COPY gradle ./gradle
-COPY build.gradle settings.gradle ./
+COPY . .
+# 현재 context는 backend/ 이므로 여기에는 gradlew, build.gradle 등이 있음
+
 
 # 캐시용 빌드
-RUN chmod +x gradlew && ./gradlew clean build -x test
+RUN chmod +x ./gradlew \
+  && ./gradlew clean build -x test
 #RUN chmod +x gradlew && ./gradlew build --stacktrace || true
 
 # 앱 빌드
@@ -29,6 +30,4 @@ CMD ["java", "-jar", "build/libs/Modam-0.0.1-SNAPSHOT.jar"]
 # JAR 실행
 #ENTRYPOINT ["java", "-jar", "app.jar"]
 
-#env 설정
-ENV SPRING_PROFILES_ACTIVE=2nd
 
