@@ -12,12 +12,15 @@ export function Login() {
     try {
       const response = await fetch(`${API_URLS.user}/login`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ email, pw }),
       });
 
       console.log("로그인 API 응답:", response);
 
-      const { status, data } = response;
+      const data = await response.json();
 
       if (response.status === 200 && data?.token && data?.userId) {
         localStorage.setItem("user", JSON.stringify({ id: data.userId }));
