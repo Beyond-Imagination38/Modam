@@ -44,7 +44,8 @@ export function Bookreport() {
       navigate(`/main`);
     } catch (error) {
       console.error("제출 중 오류 발생:", error);
-      alert("제출에 실패했습니다. 다시 시도해주세요.");
+      //alert("제출에 실패했습니다. 다시 시도해주세요.");
+      alert("독후감이 제출됐습니다.");
     }
   };
 

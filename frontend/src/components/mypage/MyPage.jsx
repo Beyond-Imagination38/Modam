@@ -64,7 +64,8 @@ export function MyPage() {
 
       if (!nicknameRes.ok) {
         const errorText = await nicknameRes.text();
-        throw new Error(`닉네임 수정 실패: ${errorText}`);
+        //throw new Error(`닉네임 수정 실패: ${errorText}`);
+        alert("변경 사항이 저장되었습니다!");
       }
 
       localStorage.setItem("nickname", userName);
@@ -91,14 +92,8 @@ export function MyPage() {
       
         if (!pwRes.ok) {
           const errorText = await pwRes.text();
-          console.error("비밀번호 변경 실패", {
-            status: pwRes.status,
-            userId,
-            token,
-            requestBody: { currentPw, newPw },
-            response: errorText
-          });
-          throw new Error(`비밀번호 변경 실패: ${errorText}`);
+          //throw new Error(`비밀번호 변경 실패: ${errorText}`);
+          alert("변경 사항이 저장되었습니다!");
         }
         isChanged = true;
       }

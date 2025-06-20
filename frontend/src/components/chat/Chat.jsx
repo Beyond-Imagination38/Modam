@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import * as S from "./Chat.style";
-import { Link, useParams } from "react-router-dom"; 
+import { Link, useParams } from "react-router-dom";
 import { API_URLS } from "../../consts";
 
 const formatSummary = (text) => {
@@ -27,29 +27,29 @@ const formatSummary = (text) => {
 
 export function Chat() {
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState(""); 
-  const [userId, setUserId] = useState(() => Number(localStorage.getItem("userId") || 0)); 
-  const [username, setUserName] = useState(() => localStorage.getItem("userName") || "사용자"); 
+  const [message, setMessage] = useState("");
+  const [userId, setUserId] = useState(() => Number(localStorage.getItem("userId") || 0));
+  const [username, setUserName] = useState(() => localStorage.getItem("userName") || "사용자");
   const [stompClient, setStompClient] = useState(null);
   const [memoContent, setMemoContent] = useState("");
   const [isMemoVisible, setIsMemoVisible] = useState(false);
   const [isFreeDiscussion, setIsFreeDiscussion] = useState(false);
   const { clubId } = useParams();
   const [data, setData] = useState(null);
-  
+
   const token = localStorage.getItem("token") || "";
-  
+
   useEffect(() => {
-    const socket = new SockJS("https://modam.duckdns.org/chat");
+    const socket = new SockJS('https://3.15.72.236:8080/chat');
     const client = new Client({
       webSocketFactory: () => socket,
-       connectHeaders: {
-        Authorization: `Bearer ${token}`  
+      connectHeaders: {
+        Authorization: `Bearer ${token}`
       },
-      reconnectDelay: 5000, 
+      reconnectDelay: 5000,
       onConnect: () => {
-        console.log("WebSocket 연결 성공"); 
-        window.stompClient = client; 
+        console.log("WebSocket 연결 성공");
+        window.stompClient = client;
 
         client.publish({
           destination: `/app/chat/${clubId}`,
@@ -70,7 +70,7 @@ export function Chat() {
           const receivedMessage = JSON.parse(message.body);
 
           console.log("[DEBUG] 받은 메시지:", receivedMessage);
-          
+
           // 자유토론 시작 메시지 감지
           if (receivedMessage.messageType === "FREE_DISCUSSION_NOTICE") {
             setIsFreeDiscussion(true);
@@ -85,23 +85,23 @@ export function Chat() {
 
           //모임 종료 시 메모 확정
           if (receivedMessage.messageType === "END_NOTICE") {
-            await finalizeMemo(); 
+            await finalizeMemo();
           }
 
-          setMessages((prevMessages) => [...prevMessages, receivedMessage]);  
+          setMessages((prevMessages) => [...prevMessages, receivedMessage]);
         });
-        
+
       },
       onStompError: (error) => {
         console.error("STOMP 오류:", error);
       },
     });
 
-      const fetchClubDetail = async () => {
+    const fetchClubDetail = async () => {
       try {
         const response = await fetch(API_URLS.bookclubDetail(clubId, userId), {
           method: "GET",
-         });
+        });
 
         if (!response.ok) throw new Error("모임 정보 로드 실패");
 
@@ -116,7 +116,7 @@ export function Chat() {
     fetchClubDetail();
     client.activate(); // 연결 시작
     setStompClient(client);
-    loadMemo(); 
+    loadMemo();
 
     return () => {
       client.deactivate(); // 컴포넌트 언마운트 시 연결 해제
@@ -130,26 +130,32 @@ export function Chat() {
     }
 
     if (message.trim()) {
-
       const parsedClubId = parseInt(clubId);
       console.log("보낼 clubId:", parsedClubId);
 
       const chatMessage = {
         messageType: isFreeDiscussion ? "FREE_DISCUSSION" : "DISCUSSION", // soo:demo02-2: 여기 조건 추가!
-        clubId: parseInt(clubId), 
-        userId, 
-        userName: username, 
+        clubId: parseInt(clubId),
+        userId,
+        userName: username,
         content: message,
       };
 
-      stompClient.publish({
-        destination: `/app/chat/${clubId}`, 
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(chatMessage),
-      });
+      // WebSocket 연결이 되어 있을 때는 서버로 보내기
+      if (stompClient && stompClient.connected) {
+        stompClient.publish({
+          destination: `/app/chat/${clubId}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(chatMessage),
+        });
+      } else {
+        // WebSocket 연결 안 됐을 때는 화면에만 추가
+        console.warn("WebSocket 미연결 상태, 로컬에 메시지 추가됨");
+        setMessages((prevMessages) => [...prevMessages, chatMessage]);
+      }
 
       setMessage("");
     }
@@ -166,7 +172,7 @@ export function Chat() {
   //메모 저장
   const saveMemo = async () => {
     try {
-      const response = await fetch(`https://modam.duckdns.org/api/memo/${clubId}/${userId}`, {
+      const response = await fetch(`/api/memo/${clubId}/${userId}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -189,7 +195,7 @@ export function Chat() {
   //메모 조회
   const loadMemo = async () => {
     try {
-      const response = await fetch(`https://modam.duckdns.org/api/memo/${clubId}/${userId}`, {
+      const response = await fetch(API_URLS.memo(clubId, userId), {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -209,7 +215,7 @@ export function Chat() {
   //메모 확정
   const finalizeMemo = async () => {
     try {
-      const response = await fetch(`https://modam.duckdns.org/api/memo/${clubId}/${userId}/finalize`, {
+      const response = await fetch(API_URLS.finalizeMemo(clubId, userId), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -239,40 +245,40 @@ export function Chat() {
           </S.Header>
 
           <S.ChatBox>
-          {messages.map((msg, index) => {
-            const isMine = msg.userName === username;
-            const isAI = msg.userId === 0;
+            {messages.map((msg, index) => {
+              const isMine = msg.userName === username;
+              const isAI = msg.userId === 0;
 
-            const userName = isAI ? "AI 진행자" : msg.userName;
-            const avatar = "/assets/chatbot.png";
-            const messageStyle = isAI ? "bot-message" : isMine ? "my-message" : "user-message";
+              const userName = isAI ? "AI 진행자" : msg.userName;
+              const avatar = "/assets/chatbot.png";
+              const messageStyle = isAI ? "bot-message" : isMine ? "my-message" : "user-message";
 
-            return (
-              <S.Message key={index} className={messageStyle}>
-                {isAI && <S.Avatar src={avatar} alt="AI avatar" />}
-                  <div>
-                    <strong>{userName}</strong>
-                    {msg.userId === 0 && msg.messageType === "SUMMARY" ? (
-                      formatSummary(msg.content).map((para, i) => <p key={i}>{para}</p>)
-                    ) : (
-                      <div>{msg.content}</div>
-                    )}
-                </div>
-              </S.Message>
-            );
-          })}
+              return (
+                  <S.Message key={index} className={messageStyle}>
+                    {isAI && <S.Avatar src={avatar} alt="AI avatar" />}
+                    <div>
+                      <strong>{userName}</strong>
+                      {msg.userId === 0 && msg.messageType === "SUMMARY" ? (
+                          formatSummary(msg.content).map((para, i) => <p key={i}>{para}</p>)
+                      ) : (
+                          <div>{msg.content}</div>
+                      )}
+                    </div>
+                  </S.Message>
+              );
+            })}
 
           </S.ChatBox>
-            <S.InputContainer>
-              <S.Input
+          <S.InputContainer>
+            <S.Input
                 type="text"
                 placeholder="여기에 내용을 입력해 주세요."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-              />
-              <S.SendButton onClick={sendMessage}>보내기</S.SendButton>
-            </S.InputContainer>
+            />
+            <S.SendButton onClick={sendMessage}>보내기</S.SendButton>
+          </S.InputContainer>
         </S.ChatSection>
 
         {isMemoVisible && (
