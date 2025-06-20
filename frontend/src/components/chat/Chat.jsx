@@ -40,7 +40,7 @@ export function Chat() {
   const token = localStorage.getItem("token") || "";
   
   useEffect(() => {
-    const socket = new SockJS('/ws');
+    const socket = new SockJS('https://3.15.72.236:8080/chat');
     const client = new Client({
       webSocketFactory: () => socket,
        connectHeaders: {
@@ -130,7 +130,6 @@ export function Chat() {
     }
 
     if (message.trim()) {
-
       const parsedClubId = parseInt(clubId);
       console.log("보낼 clubId:", parsedClubId);
 
@@ -142,14 +141,21 @@ export function Chat() {
         content: message,
       };
 
-      stompClient.publish({
-        destination: `/app/chat/${clubId}`, 
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(chatMessage),
-      });
+      // WebSocket 연결이 되어 있을 때는 서버로 보내기
+      if (stompClient && stompClient.connected) {
+        stompClient.publish({
+          destination: `/app/chat/${clubId}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(chatMessage),
+        });
+      } else {
+        // WebSocket 연결 안 됐을 때는 화면에만 추가
+        console.warn("WebSocket 미연결 상태, 로컬에 메시지 추가됨");
+        setMessages((prevMessages) => [...prevMessages, chatMessage]);
+      }
 
       setMessage("");
     }
