@@ -40,7 +40,7 @@ export function Chat() {
   const token = localStorage.getItem("token") || "";
 
   useEffect(() => {
-    const socket = new SockJS('https://3.15.72.236:8080/chat');
+    const socket = new SockJS('https://modam.duckdns.org/chat');
     const client = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
