@@ -1,19 +1,21 @@
-export const API_URLS = {
-  myOngoing: (userId) => `/a/bookclubs/my/ongoing?userId=${userId}`,
-  myCompleted: (userId) => `/a/bookclubs/my/completed?userId=${userId}`,
-  allBookclubs: "/a/bookclubs/search?sortBy=latest",
-  memo: (clubId, userId) => `/a/memo/${clubId}/${userId}`,
-  finalizeMemo: (clubId, userId) => `/a/memo/${clubId}/${userId}/finalize`,
-  bookclubDetail: (clubId, userId) => `/a/bookclubs/${clubId}/detail?userId=${userId}`,
-  joinBookclub: (clubId, userId) => `/a/bookclubs/${clubId}/join?userId=${userId}`,
-  completedDetail: (clubId) => `/a/bookclubs/${clubId}/completed-detail`,
-  bookreport: "/a/reading-notes",
+const BASE = "https://3.15.72.236:8080";
 
-  signup: "/p/user/signup",
-  user: "/p/user",
-  getUserInfo: (userId) => `/p/user/${userId}`,
-  updateUserName: (userId) => `/p/user/${userId}/name`,
-  updateUserPassword: (userId) => `/p/user/${userId}/password`,
-  chat: "/p/chat",
-  mypage: "/p/mypage"
+export const API_URLS = {
+  myOngoing: (userId) => `${BASE}/api/bookclubs/my/ongoing?userId=${userId}`,
+  myCompleted: (userId) => `${BASE}/api/bookclubs/my/completed?userId=${userId}`,
+  allBookclubs: `${BASE}/api/bookclubs/search?sortBy=latest`,
+  memo: (clubId, userId) => `${BASE}/api/memo/${clubId}/${userId}`,
+  finalizeMemo: (clubId, userId) => `${BASE}/api/memo/${clubId}/${userId}/finalize`,
+  bookclubDetail: (clubId, userId) => `${BASE}/api/bookclubs/${clubId}/detail?userId=${userId}`,
+  joinBookclub: (clubId, userId) => `${BASE}/api/bookclubs/${clubId}/join?userId=${userId}`,
+  completedDetail: (clubId) => `${BASE}/api/bookclubs/${clubId}/completed-detail`,
+  bookreport: `${BASE}/api/reading-notes`,
+
+  signup: `${BASE}/user/signup`,
+  user: `${BASE}/user`,
+  getUserInfo: (userId) => `${BASE}/user/${userId}`,
+  updateUserName: (userId) => `${BASE}/user/${userId}/name`,
+  updateUserPassword: (userId) => `${BASE}/user/${userId}/password`,
+  chat: `${BASE}/chat`,
+  mypage: `${BASE}/mypage`
 };
