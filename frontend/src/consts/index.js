@@ -1,4 +1,4 @@
-const BASE = "https://3.15.72.236:8080";
+const BASE = "https://modam.duckdns.org";
 
 export const API_URLS = {
   myOngoing: (userId) => `${BASE}/api/bookclubs/my/ongoing?userId=${userId}`,
