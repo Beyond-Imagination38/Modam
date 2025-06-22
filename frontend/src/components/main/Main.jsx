@@ -18,30 +18,36 @@ export function Main() {
   };
 
   useEffect(() => {
-  const fetchClubs = async () => {
-    try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const userId = user?.id;
+    console.log("useEffect 실행됨", activeCategory);
 
-      let url = "";
+    const fetchClubs = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userId = user?.id;
+        console.log("user 확인:", user);
 
-      if (activeCategory === "PENDING") {
-        url = API_URLS.allBookclubs;
-      } else if (activeCategory === "COMPLETED") {
-        if (!userId) {
-          alert("로그인 후 이용할 수 있는 메뉴입니다.");
-          return;
+        let url = "";
+
+        if (activeCategory === "PENDING") {
+          url = API_URLS.allBookclubs;
+        } else if (activeCategory === "COMPLETED") {
+          if (!userId) {
+            alert("로그인 후 이용할 수 있는 메뉴입니다.");
+            return;
+          }
+          url = API_URLS.myCompleted(userId);
+        } else if (activeCategory === "ONGOING") {
+          if (!userId) {
+            alert("로그인 후 이용할 수 있는 메뉴입니다.");
+            return;
+          }
+          url = API_URLS.myOngoing(userId);
         }
-        url = API_URLS.myCompleted(userId);
-      } else if (activeCategory === "ONGOING") {
-        if (!userId) {
-          alert("로그인 후 이용할 수 있는 메뉴입니다.");
-          return;
-        }
-        url = API_URLS.myOngoing(userId);
-      }
+
+        console.log("불러올 URL:", url);
 
         const { status, data } = await fetchApi(url, { method: "GET" });
+        console.log("API 호출 완료:", status, data);
 
         if (status !== 200) {
           throw new Error(`서버 응답 실패: ${status}`);
@@ -56,17 +62,17 @@ export function Main() {
           description: item.clubDescription,
         }));
 
-        console.log("서버 응답 데이터:", data);
         setItems(mapped);
       } catch (error) {
-        console.error("독서 모임 데이터를 불러오지 못했습니다:", error);
-        alert("서버에서 독서 모임 정보를 불러오지 못했습니다. 나중에 다시 시도해주세요.");
+        console.error("에러 발생:", error);
+        alert("서버에서 독서 모임 정보를 불러오지 못했습니다.");
         setItems([]);
       }
     };
 
     fetchClubs();
   }, [activeCategory]);
+
 
   
   const filteredItems = items.filter(
