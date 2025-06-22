@@ -40,7 +40,21 @@ export function Chat() {
   const token = localStorage.getItem("token") || "";
   
   useEffect(() => {
+    console.log("[SOCKJS] 연결 시도: https://modam.duckdns.org/chat");
+  
     const socket = new SockJS('https://modam.duckdns.org/chat');
+
+    // console: 소켓 연결 후 이벤트 확인
+    socket.onopen = () => {
+      console.log("[SOCKJS] 소켓 연결 성공");
+    };
+    socket.onclose = (e) => {
+      console.error("[SOCKJS] 소켓 연결 종료됨:", e);
+    };
+    socket.onerror = (e) => {
+      console.error("[SOCKJS] 소켓 오류 발생:", e);
+    };
+    
     const client = new Client({
       webSocketFactory: () => socket,
        connectHeaders: {
